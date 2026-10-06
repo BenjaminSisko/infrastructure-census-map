@@ -1,0 +1,6 @@
+---
+# COPY to <parent-ansible-repo>/playbooks/collect-infrastructure-census.yml.
+# Preserve the complete source kit at vendor/infrastructure-census-map/.
+# Run this separate entry point; do not append existing patch/configuration plays.
+- name: Run the complete census workflow
+  ansible.builtin.import_playbook: ../vendor/infrastructure-census-map/playbooks/collect-census.yml

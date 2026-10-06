@@ -18,6 +18,16 @@ ansible-playbook -i inventories/example/hosts.yml playbooks/collect-census.yml \
   --syntax-check -e census_run_id=syntax-check
 ```
 
+## Optional existing-repository integration tests
+
+With the qualified Ansible runtime/collections installed, enable the fictional nested-parent fixtures explicitly:
+
+```bash
+CENSUS_RUN_INTEGRATION_TESTS=1 python -m unittest discover -s tests -p test_integration.py -v
+```
+
+They create a disposable parent repository with a nested kit, a separate wrapper, two inventory sources and existing inventory-adjacent variables. They verify alias/config preservation, localhost normalization and a full gap export. The fixture's collector interpreter intentionally does not exist, so no actual host metadata is collected. Existing maintenance files are not imported. These tests require no real inventory or credentials and are skipped in ordinary Python-only test runs. They qualify this fixture on the test runtime, not every parent variable layout or production platform.
+
 ## Optional browser tests
 
 Node/Playwright are developer test dependencies only. The generated workbench has no npm/CDN runtime dependency. On a connected developer machine:

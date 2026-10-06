@@ -1,6 +1,14 @@
 # Validation record — 2026-10-05
 
-The current source release is 0.3.0. Earlier version checks below are preserved. No production credentials or host facts are included in the generic release, no live Windows/network collection occurred, and no production remoting, packages or network configuration was changed. Private documentation examples remain outside the public release.
+The current source release is 0.3.1. Earlier version checks below are preserved. No production credentials or host facts are included in the generic release, no live Windows/network collection occurred, and no production remoting, packages or network configuration was changed. Private documentation examples remain outside the public release.
+
+## Existing-repository integration - 0.3.1
+
+The opt-in fictional parent fixture passed on ansible-core 2.21.1 / Python 3.14.6. The nested top-level import resolves the kit's collector/tool paths, two inventory sources retain exact aliases and inventory-adjacent variables, the overlay normalizes explicitly misconfigured inline localhost variables, and explicit census settings override play defaults. A nonexistent collector interpreter produces a retained gap and the complete seal/render/WinSCP export. Parent config and the unrelated maintenance playbook remain byte-identical; no remote host or actual metadata query is performed. Higher-precedence localhost host_vars and vendor child-group overlaps require separate integration checks described in the guide.
+
+This does not qualify arbitrary parent root/playbook variable layouts, global extra-vars, AAP export paths or production platforms. The integration task requires inspection and separately scoped canary authority rather than assuming those inputs. GitHub's qualified Ansible job runs these two fixtures; Python-only matrix jobs skip them.
+
+Release checks: all 37 Python tests passed with integration fixtures enabled; the complete isolated-browser suite passed against regenerated fictional products. Python compilation, combined Ansible syntax, reporting doctor and the public-source gate passed. No actual parent Ansible repository was modified.
 
 ## Passed local checks
 

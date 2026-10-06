@@ -2,6 +2,10 @@
 
 Run the agent where production evidence is authorized to remain. This kit needs no cloud model. Codex or Claude Code can follow AGENTS.md/CLAUDE.md with a local or approved model connection; the kit does not configure that model or send data anywhere.
 
+## Integrating with your normal Ansible repository
+
+Use [integrate-existing-ansible.md](integrate-existing-ansible.md) and the [paste-ready integration task](llm-integration-prompt.md) before adding the kit alongside existing playbooks. The agent inspects the parent repository and preserves its inventory, config, credentials, runtime and maintenance workflows. A separate wrapper runs the complete census; it is not appended to patching plays. The task authorizes additive repository work and local validation only, unless the operator separately approves a named production canary. Templates are in model/integration/.
+
 ## Collection to products
 
 1. Read README.md, CONTEXT.md, the platform guide, and COLLECTION-SUMMARY.md.

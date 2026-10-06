@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 - 2026-10-06
+
+Added a self-contained existing-Ansible-repository integration guide, local LLM task/input worksheet, separate wrapper, private inventory overlay and explicit settings templates. Documented config/variable precedence, controller interpreter/dependencies, full-workflow limits, output privacy and production authorization boundaries. Added opt-in fictional nested-parent tests to the qualified Ansible CI job. Existing playbooks and real repositories are not modified or executed by this documentation release.
+
 ## 0.3.0 - 2026-10-06
 
 Finished pilot operator workflow with doctor/demo/collect/finish CLI, user-owned census-output defaults, automatic playbook rendering and WinSCP transfer archives with explicit file allowlists. Added matching-system offline staging/install helpers, public-source release/privacy gate, qualification/developer/WinSCP guides and MIT license. Enforced Linux query limits while reading, protected existing seals, retained missing expected assets in products, aligned browser/manual validation and corrected visible manual-versus-measured attribution. Production platform qualification remains a separate canary gate.

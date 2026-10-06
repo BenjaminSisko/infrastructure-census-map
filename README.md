@@ -4,7 +4,7 @@ A portable Ansible census kit for an offline production environment. Collect Lin
 
 ![Fictional offline workbench example](examples/synthetic-with-manual-products/workbench.png)
 
-Version 0.3.0 completes the pilot operator workflow: collect, seal, render, and export a private WinSCP-downloadable archive. The kit has an interactive map and editable notes/context. Local/CI validation is separate from live platform qualification. The generic source contains no real environment address, credential, or service assumption.
+Version 0.3.1 includes the pilot operator workflow and instructions for integrating alongside existing Ansible playbooks: collect, seal, render, and export a private WinSCP-downloadable archive. The kit has an interactive map and editable notes/context. Local/CI validation is separate from live platform qualification. The generic source contains no real environment address, credential, or service assumption.
 
 ## Quick start and output download
 
@@ -38,7 +38,7 @@ Use `--output-root /path/to/approved/census-output` to choose another writable l
 
 Use a Linux control node for mixed Windows/network production collection. The controller needs Ansible and the chosen collections/connection libraries; managed network devices do not need Python. Linux baseline collection needs an existing Python 3.6+ interpreter and SSH. Windows uses installed PowerShell 5.1+ and an existing WinRM management endpoint.
 
-Copy ansible.cfg.example to your privately managed Ansible configuration. Create a private inventory based on inventories/example/hosts.yml. Existing host-key trust, management access, and credential handling should be supplied by your environment. The collector never enables WinRM, NETCONF, LLDP, or firewall rules.
+For a **new standalone kit**, copy ansible.cfg.example to a privately managed Ansible configuration and create a private inventory based on inventories/example/hosts.yml. **Already have an Ansible repo? Preserve its config and inventory.** Use [the integration guide](docs/integrate-existing-ansible.md), [paste-ready local LLM task](docs/llm-integration-prompt.md) and [wrapper/overlay/settings templates](model/integration/) to add a separate census entry point beside your current playbooks. Existing host-key trust, management access, and credential handling should be supplied by your environment. The collector never enables WinRM, NETCONF, LLDP, or firewall rules.
 
 ```bash
 ansible-inventory -i inventories/private/hosts.yml --graph
@@ -92,6 +92,8 @@ These five fictional assets include Linux, Windows, and switches with TCP and ne
 - docs/linux-collection.md: bounded allowlisted baseline and capability limits.
 - docs/offline-controller.md: how to stage collections and Python dependencies for the production control node.
 - docs/agent-workflow.md: how an offline Codex or Claude agent consumes evidence and generates diagrams.
+- docs/integrate-existing-ansible.md: preserve the current Ansible repo and add a separate, qualified census entry point.
+- docs/llm-integration-prompt.md: input worksheet and paste-ready task for the agent performing that integration.
 - docs/manual-context.md: enter hypervisors, VM placement, ownership, storage, backup and dependency relationships in YAML or JSON; generate combined or manual-only maps.
 - docs/dynamic-workbench.md: click hosts, edit notes/context, add manual assets/relationships, and export edits for the agent.
 - docs/VALIDATION.md: exact checks and live testing still required.

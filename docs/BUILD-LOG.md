@@ -4,6 +4,24 @@
 
 Provide a portable infrastructure census for an air-gapped work environment. Operators collect metadata without intentional managed configuration changes, add their own infrastructure notes, and generate editable offline diagrams and reports.
 
+## Release 0.3.1 - 2026-10-06
+
+The operator asked for instructions a local LLM can use to integrate the product into their normal Ansible repository alongside current playbooks. Added docs/integrate-existing-ansible.md, docs/llm-integration-prompt.md and model/integration/ templates. Agent routing and README now distinguish a fresh standalone kit from preserving an existing parent repository.
+
+The approach vendors a reviewed complete kit, adds a separate top-level wrapper, reuses existing aliases/config/credential mechanisms with a minimal private overlay, and supplies explicit census settings. It does not modify the operator's actual Ansible repository or authorize a production run. Documented variable-loading/config/interpreter pitfalls, private output/ignore rules, canary limits including localhost, offline runtime preparation and rollback preserving evidence.
+
+Validation commands for the new behavior:
+
+```bash
+CENSUS_RUN_INTEGRATION_TESTS=1 python -m unittest discover -s tests -p test_integration.py -v
+CENSUS_RUN_INTEGRATION_TESTS=1 python -m unittest discover -s tests -v
+python tools/release.py --check-only
+```
+
+The two integration fixtures use a temporary fictional parent and deliberately nonexistent collector interpreter. They prove the nested import, inventory-adjacent variable reuse, controller normalization and complete gap export without importing existing maintenance plays. The qualified GitHub Ansible job now includes them; ordinary Python jobs skip these opt-in cases. Production variable layouts/runtime/export integration remain qualification inputs, not inferred facts.
+
+Independent read-only review prompted explicit effective-localhost checks (higher-precedence host_vars can override overlay values) and exactly one vendor adapter per network alias (the platform guard does not check vendor-child overlaps). Both cautions are in the operator guide, paste-ready task and template comments. All 37 Python tests, the full isolated-browser suite, Python compilation, combined playbook syntax and local reporting doctor passed. Public-source checks are required before publication; real parent inventory or managed systems were not inspected or changed.
+
 ## Release 0.3.0 - 2026-10-06
 
 The release finishes the operator workflow: tools/census.py provides doctor, demo, collect and finish commands; the main playbook renders and exports after collection. The default output is the executing controller account's census-output directory. A private run folder and a separate tar.gz/checksum pair can be downloaded over an existing approved SFTP path using WinSCP.
