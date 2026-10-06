@@ -407,7 +407,7 @@ def normalize(evidence=None, declared=None, manual=None, capacity_warning_percen
 
     context = {'schema_version': 1, 'assets': document.get('assets', []), 'relationships': document.get('relationships', [])}
     workspace_data = {'census': census_details, 'manual_context': context, 'evidence_relationships': evidence_relationships}
-    model = {"schema_version": 1, "renderer_version": "0.4.0", "nodes": sorted(nodes.values(), key=lambda node: node["id"]),
+    model = {"schema_version": 1, "renderer_version": "0.4.1", "nodes": sorted(nodes.values(), key=lambda node: node["id"]),
             "census_nodes": census_nodes, "census_details": census_details,
             "evidence_relationships": evidence_relationships, "manual_context": context,
             "workspace_id": hashlib.sha256(json.dumps(workspace_data, sort_keys=True).encode()).hexdigest()[:24],

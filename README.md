@@ -4,7 +4,7 @@ A portable Ansible census kit for an offline production environment. Collect Lin
 
 ![Fictional offline workbench example](examples/synthetic-with-manual-products/workbench.png)
 
-Version 0.4.0 adds administrator, ISSO, ISSE and leadership dashboards, active/configured storage mount mapping and selected read-only health evidence. It retains the collect/seal/render/WinSCP workflow and existing-Ansible integration instructions. Local/CI validation is separate from live platform qualification. The generic source contains no real environment address, credential, or service assumption.
+Version 0.4.1 includes administrator, ISSO, ISSE and leadership dashboards, active/configured storage mount mapping, selected read-only health evidence and validated dashboard navigation. It retains the collect/seal/render/WinSCP workflow and existing-Ansible integration instructions. Local/CI validation is separate from live platform qualification. The generic source contains no real environment address, credential, or service assumption.
 
 ## Administrator and leadership dashboards
 

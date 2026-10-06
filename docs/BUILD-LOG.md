@@ -4,6 +4,10 @@
 
 Provide a portable infrastructure census for an air-gapped work environment. Operators collect metadata without intentional managed configuration changes, add their own infrastructure notes, and generate editable offline diagrams and reports.
 
+## Release 0.4.1 - final navigation validation
+
+The core 0.4.0 artifact was published before the final invalid-bookmark guard merged. Its tag/archive remain intact. Version 0.4.1 packages the complete final source and validates supported own dashboard view keys, with invalid/inherited-key browser regressions and regenerated fictional products. No managed-host collection, remediation or sealed-evidence edits were needed. The final package is built and checksum-verified separately rather than replacing retained media.
+
 ## Release 0.4.0 - storage and administration dashboards
 
 The operator requested active and configured mount relationships plus useful storage, uptime, patching, system-administrator, ISSO, ISSE and leadership dashboards. Implementation extends the same portable offline kit, not the operator's actual parent repository or managed hosts.
