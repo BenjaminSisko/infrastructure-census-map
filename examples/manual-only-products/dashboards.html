@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Infrastructure census · Operations dashboards</title>
+  <style>:root {
+  --ink: #172b3a; --navy: #112737; --navy-soft: #203e50; --paper: #f3f4ef;
+  --panel: #fffefa; --muted: #536772; --line: #cfd9d9; --teal: #076b6c;
+  --teal-wash: #e2efeb; --amber: #a05a00; --amber-wash: #fff0d7;
+  --red: #a43332; --red-wash: #fce7e3; --body: "Segoe UI", "Trebuchet MS", sans-serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --serif: Georgia, Cambria, "Times New Roman", serif;
+  font-family: var(--body); font-size: 14px; color: var(--ink); background: var(--paper);
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, input, select { font: inherit; }
+button, .primary-link { cursor: pointer; border: 1px solid var(--line); border-radius: 2px; color: var(--ink); background: var(--panel); padding: 9px 13px; font-weight: 600; }
+button:hover { background: #e8eeea; border-color: #758f98; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, [tabindex]:focus-visible { outline: 3px solid #bb730d; outline-offset: 3px; }
+a { color: var(--teal); text-underline-offset: 3px; }
+button:disabled { opacity: .6; cursor: default; }
+[hidden] { display: none !important; }
+.skip-link { position: fixed; left: 12px; top: -80px; background: var(--panel); padding: 12px; z-index: 100; }
+.skip-link:focus { top: 12px; }
+.masthead { background: var(--navy); color: #f9f6ee; padding: 20px 30px; display: flex; gap: 24px; align-items: center; justify-content: space-between; border-bottom: 3px solid #bb7d26; }
+.wordmark { color: inherit; text-decoration: none; display: flex; align-items: center; gap: 14px; }
+.brand-symbol { font: 34px var(--mono); color: #d0aa60; }
+.wordmark strong { display: block; font: 25px var(--serif); letter-spacing: -.025em; }
+.eyebrow, .section-label { font: 10px var(--mono); font-weight: 600; letter-spacing: .12em; }
+.eyebrow { margin: 0 0 7px; color: var(--teal); display: block; }
+.masthead .eyebrow { color: #b7cbd1; font-size: 9px; }
+.masthead-actions { display: flex; align-items: center; gap: 10px; }
+.masthead-actions a { color: #e4ecec; text-decoration: none; padding: 8px 12px; font-size: 12px; }
+.masthead-actions button { color: #e9f1ee; border-color: #627583; background: transparent; font-size: 12px; }
+.masthead-actions button:hover { background: #2b4657; }
+.masthead-actions #export-csv { border-color: #c0934f; color: #ffe5b6; }
+.snapshot-banner { padding: 10px 30px; background: #f5e6c9; border-bottom: 1px solid #d8c09a; display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; font-size: 12px; color: #583d15; }
+.snapshot-mark { font: 20px var(--mono); }
+#snapshot-at { font: 11px var(--mono); }
+.banner-mode { margin-left: auto; font: 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.desk-layout { display: grid; grid-template-columns: 248px minmax(0, 1fr); align-items: stretch; }
+.sidebar { background: #e8edeb; border-right: 1px solid var(--line); padding: 28px 14px 22px; min-width: 0; }
+.sidebar > .section-label { padding-left: 13px; color: var(--muted); margin: 0 0 18px; }
+.view-button { padding: 13px 12px; width: 100%; margin-bottom: 3px; border: 1px solid transparent; display: flex; align-items: start; gap: 12px; text-align: left; background: transparent; font-size: 13px; font-weight: 600; line-height: 1.45; }
+.view-button small { display: block; font-weight: 400; font-size: 11px; color: var(--muted); margin-top: 3px; }
+.nav-number { font: 10px var(--mono); color: #627883; margin-top: 4px; }
+.view-button.active { background: var(--navy); color: #f5f8f4; border-color: var(--navy); box-shadow: 3px 0 0 #be852f inset; }
+.view-button.active small, .view-button.active .nav-number { color: #c0d5d8; }
+.view-button:hover:not(.active) { background: #dce5df; border-color: #c5d3cc; }
+.sidebar-note { margin: 30px 12px 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+.mini-rule { display: block; height: 2px; width: 32px; background: #ae7a30; margin-bottom: 16px; }
+.sidebar-note p:last-child { font: 10px/1.8 var(--mono); margin-top: 22px; }
+main { padding: 34px 38px 0; min-width: 0; background-image: linear-gradient(#d8dfdd22 1px, transparent 1px); background-size: 100% 28px; }
+.page-heading { display: flex; justify-content: space-between; gap: 28px; align-items: flex-start; margin-bottom: 25px; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+h1 { font-size: clamp(30px, 2.8vw, 43px); letter-spacing: -.035em; margin: 0 0 10px; line-height: 1.12; }
+.page-heading > div:first-child { max-width: 710px; }
+#view-description { color: var(--muted); font-size: 13px; line-height: 1.65; margin: 0; }
+.run-stamp { border-left: 1px solid #9cacae; padding: 2px 0 2px 19px; text-align: left; min-width: 156px; flex-shrink: 0; }
+.run-stamp .section-label { color: var(--muted); display: block; font-size: 9px; }
+.run-stamp strong { font: 17px var(--mono); display: block; margin: 11px 0 5px; }
+.run-stamp > span:last-child { font: 10px var(--mono); color: var(--muted); }
+.filter-bar { display: flex; gap: 12px; align-items: end; flex-wrap: wrap; margin: 0 0 25px; padding: 17px 19px; border: 1px solid var(--line); background: #fafbf6; }
+.filter-bar label { display: block; width: 175px; }
+.filter-bar .search-control { flex: 1; min-width: 215px; }
+.filter-bar label > span { display: block; font-size: 10px; font-weight: 600; color: var(--muted); margin-bottom: 7px; }
+.filter-bar input, .filter-bar select { width: 100%; min-height: 37px; border: 1px solid #b9c9c9; background: white; border-radius: 2px; padding: 8px 10px; color: var(--ink); font-size: 12px; }
+.filter-count { font: 10px/1.5 var(--mono); color: var(--muted); min-width: 85px; margin: 0 0 9px auto; }
+.quiet-button { background: transparent; font-size: 11px; min-height: 37px; }
+.metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin-bottom: 22px; }
+.metric { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--teal); padding: 19px 19px 15px; min-width: 0; }
+.metric.warning { border-top-color: #bb7d26; }
+.metric .metric-label { font: 10px var(--mono); color: var(--muted); letter-spacing: .025em; }
+.metric strong { display: block; font: 36px var(--mono); letter-spacing: -.06em; line-height: 1.2; margin: 12px 0 8px; }
+.metric p { color: var(--muted); font-size: 11px; line-height: 1.55; margin: 0; }
+.metric strong.unknown { font-size: 24px; color: #746045; letter-spacing: -.03em; margin: 17px 0 12px; }
+.panel { background: var(--panel); border: 1px solid var(--line); margin-bottom: 22px; min-width: 0; }
+.panel-header { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 19px 22px; border-bottom: 1px solid var(--line); }
+.panel-header h2 { font-size: 23px; margin: 0; letter-spacing: -.015em; }
+.panel-kicker { font: 9px var(--mono); color: var(--teal); letter-spacing: .11em; margin: 0 0 5px; }
+.panel-count { color: var(--muted); border: 1px solid #c8d4d2; background: #eef2ed; font: 10px var(--mono); padding: 5px 8px; white-space: nowrap; }
+.panel-note { margin: 0; padding: 14px 22px; background: #f2f5ee; color: var(--muted); font-size: 11px; line-height: 1.6; border-bottom: 1px solid #dbe3dd; }
+.panel-evidence { padding: 11px 22px; margin: 0; font: 10px/1.65 var(--mono); color: var(--muted); border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+.panel-evidence strong { font-weight: 600; color: var(--ink); }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+thead { background: #edf1ee; }
+th { padding: 0; font: 10px var(--mono); font-weight: 600; color: #48606b; border-bottom: 1px solid #b9c9c9; white-space: nowrap; vertical-align: top; }
+th button { background: transparent; border: 0; border-radius: 0; padding: 13px 15px; text-align: left; width: 100%; font: inherit; display: flex; gap: 12px; justify-content: space-between; }
+th button:hover { background: #dce6df; }
+.sort-icon { color: #718790; font-size: 11px; }
+td { padding: 14px 15px; border-bottom: 1px solid #e0e6df; vertical-align: top; line-height: 1.55; overflow-wrap: anywhere; max-width: 360px; }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: #f3f7f0; }
+.asset-button { padding: 0; background: none; border: 0; color: var(--teal); text-align: left; font-size: 12px; font-weight: 650; line-height: 1.5; text-decoration: underline; text-decoration-color: #96bebb; text-underline-offset: 3px; }
+.asset-button:hover { background: none; color: #123a44; }
+.cell-sub { display: block; margin-top: 5px; color: var(--muted); font: 10px/1.65 var(--mono); }
+.cell-sub.code { overflow-wrap: anywhere; }
+.mono { font-family: var(--mono); font-size: 11px; }
+.pill { display: inline-block; font: 10px/1.45 var(--mono); padding: 3px 6px; border: 1px solid #c9d6d3; background: #eaf1ed; color: #37616b; border-radius: 2px; }
+.pill.unknown, .pill.warning { background: var(--amber-wash); border-color: #e0c297; color: #765014; }
+.pill.critical { background: var(--red-wash); border-color: #e4b3ac; color: #882b2d; }
+.pill.attested { background: #e8ebf2; color: #4e5c77; border-color: #c6cddc; }
+.unknown-text { color: #80603b; }
+.capacity-cell { min-width: 130px; }
+.capacity-line { display: flex; align-items: center; gap: 9px; }
+.capacity-meter { background: #dbe4dd; height: 5px; flex: 1; min-width: 52px; overflow: hidden; }
+.capacity-meter > span { height: 100%; display: block; background: var(--teal); }
+.capacity-meter.warning > span { background: #b37815; }
+.capacity-meter.critical > span { background: var(--red); }
+.split-panels { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.callout { padding: 20px 22px; border: 1px solid #dcc6a3; background: #fff5e5; margin-bottom: 22px; }
+.callout h2 { margin: 0 0 8px; font-size: 21px; }
+.callout p { color: #6e5636; font-size: 12px; margin: 0; line-height: 1.7; }
+.finding-list { padding: 0 22px; }
+.finding { padding: 16px 0; border-bottom: 1px solid #dce3dc; }
+.finding:last-child { border-bottom: 0; }
+.finding-top { display: flex; gap: 9px; align-items: center; margin-bottom: 7px; }
+.finding h3 { font: 13px var(--body); font-weight: 650; margin: 0; }
+.finding p { margin: 7px 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+.finding .asset-button { font-size: 11px; }
+.evidence-basis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; padding: 20px 22px; }
+.evidence-basis strong { font: 11px var(--mono); color: var(--teal); }
+.evidence-basis p { margin: 8px 0 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+.empty-state { padding: 28px 22px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+.empty-state strong { display: block; font: 21px var(--serif); color: var(--ink); margin-bottom: 7px; }
+.empty-state p { margin: 0; }
+.evidence-details { margin-top: 6px; font-size: 10px; }
+.evidence-details summary { cursor: pointer; color: var(--teal); padding: 3px 0; }
+.evidence-details ul { padding-left: 14px; margin: 6px 0; font: 9px/1.6 var(--mono); color: var(--muted); overflow-wrap: anywhere; }
+.evidence-details pre { white-space: pre-wrap; overflow-wrap: anywhere; font: 10px/1.6 var(--mono); background: #edf2ec; padding: 11px; max-height: 380px; overflow-y: auto; }
+.section-list { display: flex; gap: 5px; flex-wrap: wrap; max-width: 310px; }
+.section-chip { font: 9px/1.5 var(--mono); padding: 2px 5px; background: #e8f0eb; border: 1px solid #cad9d1; color: #37616b; }
+.section-chip.gap { background: #fff0d7; color: #765014; border-color: #e0c297; }
+.desk-footer { border-top: 1px solid #bdcdcb; padding: 21px 0 26px; display: flex; gap: 15px; justify-content: space-between; color: var(--muted); font: 9px/1.6 var(--mono); }
+.export-status { font-size: 11px; color: var(--teal); min-height: 15px; margin: 0 0 12px; }
+dialog { position: fixed; inset: 0 0 0 auto; margin: 0; width: min(620px, 92vw); max-width: none; height: 100%; max-height: 100vh; padding: 0; border: 0; border-left: 3px solid #b7802c; background: var(--panel); color: var(--ink); box-shadow: -20px 0 80px #0c233444; overflow-y: auto; }
+dialog::backdrop { background: #142b3e7a; }
+.drawer-heading { padding: 26px 27px 22px; display: flex; justify-content: space-between; gap: 20px; background: var(--navy); color: #fbf7ea; }
+.drawer-heading .eyebrow { color: #b9d0d0; font-size: 9px; }
+.drawer-heading h2 { font-size: 31px; margin: 0; overflow-wrap: anywhere; }
+.drawer-heading p:last-child { font: 11px/1.65 var(--mono); color: #bbd2d5; margin: 10px 0 0; }
+.drawer-heading button { background: none; color: white; border-color: #7c959e; font-size: 25px; padding: 0 10px; align-self: start; }
+#drawer-content { padding: 22px 27px; }
+.drawer-section { margin: 0 0 24px; }
+.drawer-section h3 { font-size: 21px; margin: 0 0 12px; }
+.drawer-section p { font-size: 12px; line-height: 1.7; color: var(--muted); }
+.fact-list { margin: 0; display: grid; grid-template-columns: 130px minmax(0, 1fr); }
+.fact-list dt, .fact-list dd { margin: 0; padding: 9px 0; border-bottom: 1px solid #dce4df; font-size: 11px; line-height: 1.65; overflow-wrap: anywhere; }
+.fact-list dt { color: var(--muted); padding-right: 14px; }
+.fact-list dd { font-family: var(--mono); }
+.drawer-evidence { list-style: none; padding: 0; }
+.drawer-evidence li { padding: 9px 0; border-bottom: 1px solid #dce4df; font: 10px/1.6 var(--mono); }
+.drawer-evidence li strong { display: block; color: var(--ink); }
+.drawer-evidence li span { display: block; color: var(--muted); overflow-wrap: anywhere; }
+.drawer-footer { padding: 17px 27px; display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--line); background: #eaf0e9; position: sticky; bottom: 0; }
+.primary-link { background: var(--teal); border-color: var(--teal); color: white; text-decoration: none; font-size: 11px; }
+.drawer-footer button { margin-left: auto; font-size: 11px; }
+.no-script { margin: 24px; border: 1px solid #dbbc88; background: #fff2dc; padding: 20px; }
+.sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (min-width: 1800px) { main { padding-left: 52px; padding-right: 52px; } .desk-layout { grid-template-columns: 270px minmax(0, 1fr); } td { padding-top: 17px; padding-bottom: 17px; } }
+@media (max-width: 1250px) { .desk-layout { grid-template-columns: 212px minmax(0, 1fr); } main { padding: 28px 24px 0; } .view-button { gap: 8px; font-size: 12px; padding: 12px 8px; } .run-stamp { min-width: 137px; } .metric { padding: 16px 13px; } .metric strong { font-size: 30px; } .split-panels { grid-template-columns: 1fr; gap: 0; } }
+@media (max-width: 1000px) { .desk-layout { grid-template-columns: 1fr; } .sidebar { padding: 15px 18px 10px; border-right: 0; border-bottom: 1px solid var(--line); } .sidebar > .section-label, .sidebar-note { display: none; } #view-navigation { display: flex; overflow-x: auto; gap: 7px; padding-bottom: 5px; } .view-button { flex-shrink: 0; width: auto; min-width: 140px; margin: 0; padding: 10px 12px; } .nav-number { display: none; } .masthead { padding: 19px 24px; } .snapshot-banner { padding-left: 24px; padding-right: 24px; } .evidence-basis { gap: 14px; } }
+@media (max-width: 650px) { .masthead { padding: 17px 18px; flex-wrap: wrap; gap: 16px; } .wordmark strong { font-size: 23px; } .masthead-actions { gap: 7px; flex-wrap: wrap; } .masthead-actions a { padding-left: 0; } .masthead-actions button { font-size: 11px; padding: 8px 10px; } .snapshot-banner { padding: 11px 18px; gap: 7px 10px; } .snapshot-mark { display: none; } .banner-mode { width: 100%; margin-left: 0; } .sidebar { padding-left: 12px; padding-right: 12px; } main { padding: 25px 15px 0; } .page-heading { flex-direction: column; gap: 15px; margin-bottom: 19px; } h1 { font-size: 32px; } .run-stamp { border-left: 0; border-top: 1px solid #b2c3c2; padding: 11px 0 0; width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 7px 15px; } .run-stamp strong { font-size: 13px; margin: 0; } .run-stamp .section-label { display: none; } .filter-bar { padding: 13px; gap: 10px; } .filter-bar .search-control { flex-basis: 100%; } .filter-bar label { width: calc(50% - 5px); } .filter-count { margin-bottom: 9px; } .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .metric .metric-label { font-size: 9px; } .metric p { font-size: 10px; } .metric strong { font-size: 28px; } .panel-header { padding: 17px 15px; } .panel-header h2 { font-size: 21px; } .panel-note, .panel-evidence { padding-left: 15px; padding-right: 15px; } .evidence-basis { grid-template-columns: 1fr; padding: 18px 15px; } .finding-list { padding: 0 15px; } .desk-footer { display: block; } .desk-footer span { display: block; margin-bottom: 7px; } .drawer-heading, #drawer-content { padding-left: 20px; padding-right: 20px; } .fact-list { grid-template-columns: 108px minmax(0, 1fr); } }
+@media (prefers-reduced-motion: no-preference) { #dashboard-view { animation: settle .2s ease-out; } @keyframes settle { from { opacity: .5; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } } }
+@media print {
+  @page { size: landscape; margin: 12mm; }
+  :root { background: white; color: #111; font-size: 11px; }
+  .sidebar, .masthead-actions, .filter-bar button, .skip-link, dialog, .export-status { display: none !important; }
+  .masthead { padding: 0 0 12px; background: white; color: #111; border-bottom: 2px solid #555; }
+  .masthead .eyebrow, .brand-symbol { color: #333; }
+  .snapshot-banner { background: white; padding: 10px 0; border-bottom: 1px solid #999; color: #222; }
+  .desk-layout { display: block; } main { padding: 18px 0 0; background: white; }
+  .page-heading { margin-bottom: 14px; } h1 { font-size: 27px; }
+  .filter-bar { padding: 9px; margin-bottom: 15px; background: white; }
+  .filter-bar input, .filter-bar select { border: 0; padding: 2px 0; min-height: 0; background: white; }
+  .filter-bar label { width: 150px; } .filter-count { margin: 0; }
+  .metric-grid { gap: 10px; } .metric { background: white; padding: 12px; break-inside: avoid; }
+  .metric strong { font-size: 25px; margin: 9px 0; }
+  .panel { break-inside: auto; background: white; } .panel-header { padding: 13px 15px; }
+  .table-scroll { overflow: visible; } table { font-size: 10px; table-layout: auto; }
+  thead { display: table-header-group; } tr { break-inside: avoid; }
+  th button { padding: 9px 10px; } td { padding: 9px 10px; max-width: 240px; }
+  .sort-icon { display: none; } .cell-sub, .panel-evidence { font-size: 8px; }
+  .pill { font-size: 8px; } .asset-button { font-size: 10px; }
+  .evidence-details { display: none; } .callout { background: white; }
+  .split-panels { display: block; } .finding { break-inside: avoid; }
+  .desk-footer { padding: 12px 0; } a { color: #173f44; }
+}
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to dashboard</a>
+  <header class="masthead">
+    <a class="wordmark" href="dependency-map.html" aria-label="Open infrastructure workbench"><span class="brand-symbol" aria-hidden="true">▥</span><span><span class="eyebrow">INFRASTRUCTURE CENSUS</span><strong>Operations desk</strong></span></a>
+    <div class="masthead-actions"><a href="dependency-map.html">Open workbench <span aria-hidden="true">↗</span></a><button id="export-csv">Export filtered CSV <span aria-hidden="true">↓</span></button><button id="print-view" aria-label="Print current dashboard">Print</button></div>
+  </header>
+  <div class="snapshot-banner" id="snapshot-banner"><span class="snapshot-mark" aria-hidden="true">◷</span><strong>Snapshot, not live monitoring</strong><span id="snapshot-at">Collection time: Unknown</span><span class="banner-mode" id="collection-mode"></span></div>
+  <div class="desk-layout">
+    <aside class="sidebar" aria-label="Dashboard views">
+      <p class="section-label">AUDIENCE &amp; TASK</p>
+      <nav id="view-navigation" aria-label="Choose dashboard">
+        <button class="view-button active" data-view="overview" aria-current="page"><span class="nav-number">01</span><span>Overview<small>Leadership &amp; operations</small></span></button>
+        <button class="view-button" data-view="storage"><span class="nav-number">02</span><span>Storage<small>Capacity &amp; mount map</small></span></button>
+        <button class="view-button" data-view="resources"><span class="nav-number">03</span><span>Uptime &amp; resources<small>System administration</small></span></button>
+        <button class="view-button" data-view="patch"><span class="nav-number">04</span><span>Patch &amp; reboot<small>Maintenance evidence</small></span></button>
+        <button class="view-button" data-view="services"><span class="nav-number">05</span><span>Services &amp; agents<small>Platform operations</small></span></button>
+        <button class="view-button" data-view="security"><span class="nav-number">06</span><span>Security evidence<small>ISSO review</small></span></button>
+        <button class="view-button" data-view="dependencies"><span class="nav-number">07</span><span>Dependencies &amp; exposure<small>ISSE review</small></span></button>
+        <button class="view-button" data-view="coverage"><span class="nav-number">08</span><span>Evidence coverage<small>Collection &amp; follow-up</small></span></button>
+      </nav>
+      <div class="sidebar-note"><span class="mini-rule" aria-hidden="true"></span><p>Audience labels guide review. Every view contains the same underlying evidence; this file has no access controls or redaction.</p><p>Offline · self-contained<br>No external requests</p></div>
+    </aside>
+    <main id="main-content" tabindex="-1">
+      <div class="page-heading"><div><p class="eyebrow" id="view-audience">LEADERSHIP / OPERATIONS</p><h1 id="view-title">The infrastructure picture.</h1><p id="view-description">A dated view of assets, capacity pressure and the evidence still needed to make decisions.</p></div><div class="run-stamp"><span class="section-label">EVIDENCE SNAPSHOT</span><strong id="run-date">Unknown</strong><span id="run-count">Loading assets…</span></div></div>
+      <section class="filter-bar" aria-label="Global asset filters">
+        <label class="search-control"><span>Find an asset</span><input id="asset-search" type="search" autocomplete="off" placeholder="Name, address, owner, role…"></label>
+        <label><span>Platform</span><select id="platform-filter"><option value="all">All platforms</option></select></label>
+        <label><span>Criticality · attested</span><select id="criticality-filter"><option value="all">All criticality</option></select></label>
+        <button id="reset-filters" class="quiet-button">Reset</button>
+        <span id="filter-count" class="filter-count" role="status" aria-live="polite"></span>
+      </section>
+      <div id="dashboard-view"></div>
+      <div id="export-status" class="export-status" role="status" aria-live="polite"></div>
+      <footer class="desk-footer"><span>INFRASTRUCTURE CENSUS / GENERATED PRODUCT</span><span>Review facts in their source context. Unknown is a useful result.</span></footer>
+    </main>
+  </div>
+  <dialog id="asset-drawer" aria-labelledby="drawer-title">
+    <div class="drawer-heading"><div><p class="eyebrow">ASSET / EVIDENCE RECORD</p><h2 id="drawer-title">Asset</h2><p id="drawer-subtitle"></p></div><button id="close-drawer" aria-label="Close asset details">×</button></div>
+    <div id="drawer-content"></div>
+    <div class="drawer-footer"><a id="drawer-map-link" class="primary-link" href="dependency-map.html">Inspect in workbench ↗</a><button id="drawer-done">Done</button></div>
+  </dialog>
+  <noscript><p class="no-script">Enable JavaScript to explore this offline dashboard. The same evidence is available in map.json, dependency-matrix.csv and collection-report.md.</p></noscript>
+  <script id="dashboard-data" type="application/json">{"census_details": {}, "census_nodes": [], "collection_mode": "manual_only", "conflicts": [], "dashboards": {"assets": [{"addresses": [], "asset_id": "app01", "backup_attestation": {"entries": [], "status": "unknown", "value": "Unknown"}, "boot_time": "Unknown", "collected_at": "Not collected", "context": [], "coverage": {"collected_sections": [], "gap_sections": [], "status": "not collected"}, "criticality": "Unknown", "evidence": "context.yml#/assets/1", "failed_services": {"evidence": ["context.yml#/assets/1#/sections/services", "context.yml#/assets/1#/sections/failed_services"], "names": [], "status": "unknown"}, "freshness": {"age_seconds": null, "status": "unknown"}, "kernel": "Unknown", "label": "Application VM 01", "latest_patch_observation": {"description": "Unknown", "evidence": [], "observed_at": null, "precision": "unknown", "status": "unknown"}, "memory_available_percent": null, "os": "Guest OS Needs Validation", "owner": "Unknown", "patch_evidence": {"evidence": [], "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency", "status": "unknown"}, "platform": "linux", "reboot_pending": {"evidence": ["context.yml#/assets/1#/sections/reboot_pending"], "status": "unknown", "value": null}, "role": "Unknown", "security": {"agent": {"evidence": ["context.yml#/assets/1#/sections/services"], "names": [], "status": "unknown", "value": "Unknown"}, "audit": {"collection_status": "not collected", "evidence": ["context.yml#/assets/1#/sections/audit"], "status": "unknown", "value": "Unknown"}, "firewall": {"collection_status": "not collected", "evidence": ["context.yml#/assets/1#/sections/firewall"], "status": "unknown", "value": "Unknown"}, "listeners": {"evidence": ["context.yml#/assets/1#/sections/tcp", "context.yml#/assets/1#/sections/udp"], "items": [], "status": "unknown"}, "selinux": {"collection_status": "not collected", "evidence": ["context.yml#/assets/1#/sections/selinux"], "status": "unknown", "value": "Unknown"}, "service_presence": {"evidence": ["context.yml#/assets/1#/sections/services"], "names": [], "status": "unknown"}, "time_sync": {"collection_status": "not collected", "evidence": ["context.yml#/assets/1#/sections/time_sync"], "status": "unknown", "value": "Unknown"}}, "source_kind": "manual", "storage_consumer_count": 0, "uptime_seconds": null}, {"addresses": ["192.0.2.40"], "asset_id": "hv01", "backup_attestation": {"entries": [], "status": "unknown", "value": "Unknown"}, "boot_time": "Unknown", "collected_at": "Not collected", "context": [{"evidence": "context.yml#/assets/0", "field": "owner", "reviewed_at": "2026-10-05", "source": "Fictional operator-entered example", "value": "Example virtualization team"}, {"evidence": "context.yml#/assets/0", "field": "cluster", "reviewed_at": "2026-10-05", "source": "Fictional operator-entered example", "value": "Example cluster A"}, {"evidence": "context.yml#/assets/0", "field": "memory_gib", "reviewed_at": "2026-10-05", "source": "Fictional operator-entered example", "value": 256}], "coverage": {"collected_sections": [], "gap_sections": [], "status": "not collected"}, "criticality": "Unknown", "evidence": "context.yml#/assets/0", "failed_services": {"evidence": ["context.yml#/assets/0#/sections/services", "context.yml#/assets/0#/sections/failed_services"], "names": [], "status": "unknown"}, "freshness": {"age_seconds": null, "status": "unknown"}, "kernel": "Unknown", "label": "Hypervisor 01", "latest_patch_observation": {"description": "Unknown", "evidence": [], "observed_at": null, "precision": "unknown", "status": "unknown"}, "memory_available_percent": null, "os": "Hypervisor OS Needs Validation", "owner": "Example virtualization team", "patch_evidence": {"evidence": [], "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency", "status": "unknown"}, "platform": "infrastructure", "reboot_pending": {"evidence": ["context.yml#/assets/0#/sections/reboot_pending"], "status": "unknown", "value": null}, "role": "Unknown", "security": {"agent": {"evidence": ["context.yml#/assets/0#/sections/services"], "names": [], "status": "unknown", "value": "Unknown"}, "audit": {"collection_status": "not collected", "evidence": ["context.yml#/assets/0#/sections/audit"], "status": "unknown", "value": "Unknown"}, "firewall": {"collection_status": "not collected", "evidence": ["context.yml#/assets/0#/sections/firewall"], "status": "unknown", "value": "Unknown"}, "listeners": {"evidence": ["context.yml#/assets/0#/sections/tcp", "context.yml#/assets/0#/sections/udp"], "items": [], "status": "unknown"}, "selinux": {"collection_status": "not collected", "evidence": ["context.yml#/assets/0#/sections/selinux"], "status": "unknown", "value": "Unknown"}, "service_presence": {"evidence": ["context.yml#/assets/0#/sections/services"], "names": [], "status": "unknown"}, "time_sync": {"collection_status": "not collected", "evidence": ["context.yml#/assets/0#/sections/time_sync"], "status": "unknown", "value": "Unknown"}}, "source_kind": "manual", "storage_consumer_count": 0, "uptime_seconds": null}], "findings": [], "limitations": ["A census is a point-in-time snapshot. Uptime is time since boot, not an availability SLA or outage history.", "Patch inventory and install dates do not establish patch currency. An approved applicable baseline and comparison are not supplied.", "Configured storage is not proof of an active mount, remote reachability, required business dependency, or authorization.", "Provider identity uses exact inventory IDs, names, or IPs in this model. No DNS lookup or hostname expansion is performed; manual matches remain assertions.", "Capacity is filesystem or logical-volume evidence, not SMART, RAID, SAN fabric, backup, or restore health.", "Security controls, agents, services and listeners are observations, not a compliance score or proof of effective enforcement or received telemetry.", "Missing or failed collection is an evidence gap, not proof that an asset or service is unhealthy, offline, disconnected, or retired.", "Freshness is relative to the latest valid collection timestamp in this snapshot, not the time this page is opened."], "schema_version": 1, "storage_capacity": [], "storage_mounts": [], "summary": {"active_storage_mount_count": 0, "asset_count": 2, "assets_with_gaps": 0, "capacity_critical_count": 0, "capacity_thresholds": {"critical_percent": 90, "warning_percent": 80}, "capacity_warning_count": 0, "collected_asset_count": 0, "collection_gap_count": 0, "configured_only_storage_mount_count": 0, "coverage": {"expected": 0, "percent": null, "returned": 0}, "expected_asset_count": 0, "finding_count": 0, "freshness_basis": "relative to latest collection timestamp", "snapshot_at": "Unknown", "storage_provider_count": 0, "unknown_criticality_count": 2, "unknown_owner_count": 1}}, "evidence_relationships": [], "gaps": [], "interpretation": "Observed endpoints do not establish TCP initiator, purpose, authorization, or criticality.", "manual_context": {"assets": [{"addresses": ["192.0.2.40"], "asset_type": "hypervisor", "attributes": {"cluster": "Example cluster A", "memory_gib": 256}, "entered_by": "Example operator", "id": "hv01", "label": "Hypervisor 01", "os": "Hypervisor OS Needs Validation", "owner": "Example virtualization team", "platform": "infrastructure", "reviewed_at": "2026-10-05", "source": "Fictional operator-entered example"}, {"asset_type": "virtual_machine", "entered_by": "Example operator", "id": "app01", "label": "Application VM 01", "os": "Guest OS Needs Validation", "platform": "linux", "reviewed_at": "2026-10-05", "source": "Fictional operator-entered example"}], "relationships": [{"entered_by": "Example operator", "kind": "hosts", "purpose": "Hypervisor hosts this virtual machine.", "reviewed_at": "2026-10-05", "source": "hv01", "source_reference": "Fictional VM inventory declaration", "target": "app01"}], "schema_version": 1}, "manual_source": {"path": "examples/manual-only/context.yml", "sha256": "75d80ba79bb266e5d7203ba253d02b1f74206bacfceb100f625f0304d5be2e4b"}, "nodes": [{"address_provenance": {}, "addresses": [], "asset_type": "virtual_machine", "collected_at": "Not collected", "domain": "", "evidence": "context.yml#/assets/1", "external": false, "field_provenance": {"asset_type": "context.yml#/assets/1"}, "id": "app01", "label": "Application VM 01", "manual_information": [{"entered_by": "Example operator", "evidence": "context.yml#/assets/1", "fields": {"addresses": [], "asset_type": "virtual_machine", "label": "Application VM 01", "os": "Guest OS Needs Validation", "platform": "linux"}, "reviewed_at": "2026-10-05", "source": "Fictional operator-entered example"}], "os": "Guest OS Needs Validation", "platform": "linux", "source_kind": "manual"}, {"address_provenance": {"192.0.2.40": "manual assertion"}, "addresses": ["192.0.2.40"], "asset_type": "hypervisor", "attributes": {"cluster": "Example cluster A", "memory_gib": 256}, "collected_at": "Not collected", "domain": "", "evidence": "context.yml#/assets/0", "external": false, "field_provenance": {"asset_type": "context.yml#/assets/0", "attributes": "context.yml#/assets/0", "owner": "context.yml#/assets/0"}, "id": "hv01", "label": "Hypervisor 01", "manual_information": [{"entered_by": "Example operator", "evidence": "context.yml#/assets/0", "fields": {"addresses": ["192.0.2.40"], "asset_type": "hypervisor", "attributes": {"cluster": "Example cluster A", "memory_gib": 256}, "label": "Hypervisor 01", "os": "Hypervisor OS Needs Validation", "owner": "Example virtualization team", "platform": "infrastructure"}, "reviewed_at": "2026-10-05", "source": "Fictional operator-entered example"}], "os": "Hypervisor OS Needs Validation", "owner": "Example virtualization team", "platform": "infrastructure", "source_kind": "manual"}], "relationships": [{"evidence": ["context.yml#/relationships/0"], "id": "3bb4bf20606058c4", "kind": "manual_relationship", "manual_information": {"entered_by": "Example operator", "evidence": "context.yml#/relationships/0", "reviewed_at": "2026-10-05", "source": "hv01"}, "notes": "", "protocol": null, "purpose": "Hypervisor hosts this virtual machine.", "relationship_type": "hosts", "remote_port": null, "source": "hv01", "source_origin": "manual", "status": "manual_declared", "target": "app01"}], "renderer_version": "0.4.0", "schema_version": 1, "storage_mounts": [], "workspace_id": "7c6800f6865539b9cce140cb"}</script>
+  <script>/* Portable generated dashboards. Evidence is data: use text nodes, never HTML. */
+(() => {
+  'use strict';
+  let model = {};
+  try { model = JSON.parse(document.getElementById('dashboard-data').textContent); }
+  catch { /* The empty state also works when a model cannot be read. */ }
+  const dashboards = model.dashboards || {};
+  const summary = dashboards.summary || {};
+  const warningPercent = typeof (summary.capacity_thresholds || {}).warning_percent === 'number' ? summary.capacity_thresholds.warning_percent : 80;
+  const criticalPercent = typeof (summary.capacity_thresholds || {}).critical_percent === 'number' ? summary.capacity_thresholds.critical_percent : 90;
+  const nodes = new Map((model.nodes || []).filter(n => !n.external).map(n => [n.id, n]));
+  const rawAssets = Array.isArray(dashboards.assets) ? dashboards.assets : [...nodes.values()].map(n => ({asset_id:n.id}));
+  const assets = rawAssets.map(a => ({...(nodes.get(a.asset_id || a.id) || {}), ...a, asset_id:a.asset_id || a.id}));
+  const byId = new Map(assets.map(a => [a.asset_id, a]));
+  const details = model.census_details || {};
+  const $ = id => document.getElementById(id);
+  const text = value => {
+    if (value === null || value === undefined || value === '') return 'Unknown';
+    if (Array.isArray(value)) return value.length ? value.map(text).join(', ') : 'None recorded';
+    if (typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+  };
+  const known = value => value !== null && value !== undefined && value !== '' && !/^(unknown|not supplied|not collected|not returned|needs validation)$/i.test(String(value));
+  const list = value => Array.isArray(value) ? value : [];
+  function el(tag, className, value) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (value !== undefined) node.textContent = text(value);
+    return node;
+  }
+  function join(parent, ...children) { children.filter(Boolean).forEach(child => parent.append(child)); return parent; }
+  function refs(value) {
+    if (!value) return [];
+    if (Array.isArray(value)) return value.flatMap(refs);
+    if (typeof value === 'object') return refs(value.evidence || value.reference || value.path);
+    return [String(value)];
+  }
+  function unique(values) { return [...new Set(values)]; }
+  function section(asset, name) { return ((details[asset.asset_id] || {}).sections || {})[name] || {}; }
+  function sectionData(asset, name) {
+    const value = section(asset, name);
+    return /^(ok|collected|success|partial)$/.test(value.status || '') ? value.data : null;
+  }
+  function evidenceFor(asset, names) {
+    const source = (details[asset.asset_id] || {}).evidence || asset.evidence;
+    return names.map(name => source ? source + '#/sections/' + name : 'Unknown source / ' + name);
+  }
+  function number(value) { return typeof value === 'number' && Number.isFinite(value) ? value : null; }
+  function numeric(value, suffix = '', digits = 0) {
+    return number(value) === null ? 'Unknown' : value.toLocaleString('en-US', {maximumFractionDigits:digits}) + suffix;
+  }
+  function bytes(value) {
+    if (number(value) === null) return 'Unknown';
+    const units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+    let i = 0, amount = value;
+    while (amount >= 1024 && i < units.length - 1) { amount /= 1024; i++; }
+    return numeric(amount, ' ' + units[i], i ? 1 : 0);
+  }
+  function duration(value) {
+    if (number(value) === null) return 'Unknown';
+    const days = Math.floor(value / 86400), hours = Math.floor(value % 86400 / 3600), minutes = Math.floor(value % 3600 / 60);
+    return (days ? days + 'd ' : '') + hours + 'h ' + minutes + 'm';
+  }
+  function pill(value, tone) {
+    const label = text(value);
+    return el('span', 'pill ' + (tone || (!known(value) ? 'unknown' : '')), label);
+  }
+  function cell(value, sub, mono = false) {
+    const box = el('div', mono ? 'mono' : '');
+    box.append(el('span', !known(value) ? 'unknown-text' : '', value));
+    if (sub) box.append(el('span', 'cell-sub', sub));
+    return box;
+  }
+  function evidenceList(evidence, label = 'Source references') {
+    const values = unique(refs(evidence));
+    const box = el('details', 'evidence-details');
+    box.append(el('summary', '', values.length ? label + ' (' + values.length + ')' : 'Source: Unknown'));
+    const items = el('ul');
+    (values.length ? values : ['Unknown — source evidence is needed']).forEach(value => items.append(el('li', '', value)));
+    box.append(items);
+    return box;
+  }
+  function evidenceCell(evidence, observedAt) {
+    return join(el('div'), cell(observedAt || 'Unknown', 'Collection / observation time', true), evidenceList(evidence));
+  }
+  function assetCell(id) {
+    const asset = byId.get(id) || {asset_id:id};
+    const box = el('div');
+    if (byId.has(id)) {
+      const button = el('button', 'asset-button', asset.label || id);
+      button.type = 'button'; button.dataset.assetId = id;
+      button.addEventListener('click', () => selectAsset(id));
+      box.append(button);
+    } else box.append(el('span', '', asset.label || id || 'Unknown'));
+    box.append(el('span', 'cell-sub', asset.platform || 'Unknown platform'));
+    if (asset.label && asset.label !== id) box.append(el('span', 'cell-sub', id));
+    return box;
+  }
+  function factValue(value) {
+    if (!value || typeof value !== 'object') return {value:text(value), status:known(value) ? 'observed' : 'unknown', evidence:[]};
+    const raw = value.status === 'unknown' ? 'Unknown' : value.value ?? value.state ?? value.mode ?? value.description ?? value.names ?? value.data;
+    const display = typeof raw === 'boolean' ? (raw ? 'Yes' : 'No') : text(raw);
+    return {value:display, status:value.status || (!known(raw) ? 'unknown' : 'observed'), reason:value.reason, evidence:refs(value.evidence)};
+  }
+  function factCell(value) {
+    const fact = factValue(value);
+    const preview = str => str.length > 250 ? str.slice(0,247) + '…' : str;
+    const truncated = fact.value.length > 250;
+    const box = join(el('div'), pill(preview(fact.value), /unknown|unsupported|denied|missing|unavailable|not_collected/.test(fact.status) ? 'unknown' : ''));
+    box.append(el('span', 'cell-sub', preview(text(fact.reason || 'Evidence state: ' + fact.status + (value && value.collection_status ? ' · Collection: ' + value.collection_status : '')))));
+    if (value && value.names && value.value && value.names.length) box.append(el('span', 'cell-sub', preview(text(value.names))));
+    if (truncated) box.append(el('span','cell-sub','Display shortened; inspect source facts (JSON) in asset details for the full record.'));
+    if (fact.evidence.length) box.append(evidenceList(fact.evidence));
+    return box;
+  }
+  const views = {
+    overview:{title:'The infrastructure picture.', audience:'LEADERSHIP / OPERATIONS', description:'Assets, capacity pressure and the evidence still needed to make decisions. Counts follow the current asset filters.'},
+    storage:{title:'Capacity, consumers, context.', audience:'STORAGE / SYSTEM ADMINISTRATION', description:'Filesystem capacity and storage mounts from the snapshot, with provider identity and mount state kept explicit.'},
+    resources:{title:'A point in system time.', audience:'SYSTEM ADMINISTRATION / OPERATIONS', description:'Boot uptime, kernel and resource observations. These are host facts from a collection, not service availability or SLA measurements.'},
+    patch:{title:'What maintenance evidence says.', audience:'PATCH / REBOOT / CHANGE REVIEW', description:'Historical patch observations and reboot indicators. Patch currentness remains Unknown without an approved baseline and assessment.'},
+    services:{title:'Services and agent presence.', audience:'PLATFORM OPERATIONS', description:'Recorded service states, failed units and security agent presence. A listed or running agent does not prove source-attributed telemetry coverage.'},
+    security:{title:'Evidence for security review.', audience:'ISSO / SECURITY OPERATIONS', description:'Collected configuration facts, agent evidence and attested context. This view does not calculate compliance or authorize flows.'},
+    dependencies:{title:'Relationships and exposure.', audience:'ISSE / ARCHITECTURE REVIEW', description:'Keep observed endpoints, physical neighbors and declared requirements distinct. Local listeners do not prove remote reachability or approval.'},
+    coverage:{title:'Know the evidence boundary.', audience:'COLLECTION / FOLLOW-UP', description:'Returned sections, missing records and collection gaps. Failure to collect a section is not evidence of a failed service.'}
+  };
+  let currentView = 'overview', lastFocus = null;
+  const sorting = new Map();
+  let currentExports = [];
+  function filteredAssets() {
+    const query = $('asset-search').value.trim().toLowerCase();
+    const platform = $('platform-filter').value, criticality = $('criticality-filter').value;
+    return assets.filter(a => (platform === 'all' || text(a.platform) === platform) &&
+      (criticality === 'all' || text(a.criticality) === criticality) &&
+      (!query || [a.asset_id, a.label, a.owner, a.role, a.os, ...list(a.addresses)].map(text).join(' ').toLowerCase().includes(query)));
+  }
+  function times(rows) {
+    const values = unique(rows.map(a => a.collected_at).filter(known)).sort();
+    return values.length ? (values.length === 1 ? values[0] : values[0] + ' to ' + values[values.length - 1]) : 'Unknown / no returned collection time';
+  }
+  function panel(title, kicker, note, rows, source, gapNote) {
+    const box = el('section', 'panel');
+    const heading = join(el('div'), el('p', 'panel-kicker', kicker), el('h2', '', title));
+    const header = join(el('header', 'panel-header'), heading);
+    if (rows !== undefined) header.append(el('span', 'panel-count', rows + ' records'));
+    box.append(header);
+    if (note) box.append(el('p', 'panel-note', note));
+    box._footer = el('p', 'panel-evidence');
+    join(box._footer, el('strong', '', 'Evidence basis: '), document.createTextNode(source || 'Unknown'), document.createTextNode(' · Collection time: ' + times(filteredAssets()) + ' · ' + (gapNote || 'Unknown values and collection gaps remain explicit.')));
+    return box;
+  }
+  function finishPanel(box) { box.append(box._footer); return box; }
+  function empty(message, detail) {
+    return join(el('div', 'empty-state'), el('strong', '', message), el('p', '', detail || 'Unknown. No corresponding records were returned for the selected assets. Check collection scope, section status and source evidence.'));
+  }
+  function tablePanel(id, title, kicker, note, columns, rows, source, gapNote, emptyDetail) {
+    const box = panel(title, kicker, note, rows.length, source, gapNote);
+    if (!rows.length) { box.append(empty('No records in this view.', emptyDetail)); return finishPanel(box); }
+    const scroll = el('div', 'table-scroll');
+    scroll.tabIndex = 0; scroll.setAttribute('aria-label', title + ' table; scroll horizontally if needed');
+    const table = el('table');
+    const caption = el('caption', 'sr-only', title); table.append(caption);
+    const head = el('thead'), headRow = el('tr');
+    const selected = sorting.get(id);
+    columns.forEach(column => {
+      const th = el('th'); th.scope = 'col';
+      if (selected && selected.key === column.key) th.setAttribute('aria-sort', selected.desc ? 'descending' : 'ascending');
+      const button = el('button'); button.type = 'button'; button.dataset.sort = column.key;
+      join(button, el('span', '', column.label), el('span', 'sort-icon', selected && selected.key === column.key ? (selected.desc ? '↓' : '↑') : '↕'));
+      button.setAttribute('aria-label', 'Sort ' + title + ' by ' + column.label + (selected && selected.key === column.key ? ', currently ' + (selected.desc ? 'descending' : 'ascending') : ''));
+      button.addEventListener('click', () => {
+        sorting.set(id, {key:column.key, desc:!!(selected && selected.key === column.key && !selected.desc)});
+        render();
+        const target = $('dashboard-view').querySelector('[data-table="' + id + '"] [data-sort="' + column.key + '"]');
+        if (target) target.focus();
+      });
+      th.append(button); headRow.append(th);
+    });
+    head.append(headRow); table.append(head); table.dataset.table = id;
+    const body = el('tbody');
+    const sorted = rows.slice();
+    if (selected) {
+      const column = columns.find(c => c.key === selected.key);
+      sorted.sort((a, b) => {
+        const x = column.value ? column.value(a) : a[column.key], y = column.value ? column.value(b) : b[column.key];
+        const comparison = number(x) !== null && number(y) !== null ? x - y : text(x).localeCompare(text(y), 'en', {numeric:true});
+        return selected.desc ? -comparison : comparison;
+      });
+    }
+    sorted.forEach(row => {
+      const tr = el('tr');
+      columns.forEach(column => {
+        const td = el('td');
+        const value = column.render ? column.render(row) : cell(column.value ? column.value(row) : row[column.key]);
+        td.append(value); tr.append(td);
+      });
+      body.append(tr);
+    });
+    table.append(body); scroll.append(table); box.append(scroll);
+    return finishPanel(box);
+  }
+  const assetColumn = {key:'asset_id', label:'Asset', render:r => assetCell(r.asset_id)};
+  function metric(label, value, detail, warning = false) {
+    const box = el('article', 'metric' + (warning ? ' warning' : ''));
+    return join(box, el('span', 'metric-label', label), el('strong', !known(value) ? 'unknown' : '', value), el('p', '', detail));
+  }
+  function capacities(ids) { return list(dashboards.storage_capacity).filter(r => ids.has(r.asset_id)); }
+  function mounts(ids) { return list(dashboards.storage_mounts).filter(r => ids.has(r.asset_id)); }
+  function findings(ids) { return list(dashboards.findings).filter(r => !r.asset_id || ids.has(r.asset_id)); }
+  function gapRows(asset) {
+    return list(model.gaps).filter(g => g.asset_id === asset.asset_id);
+  }
+  function coverage(asset) {
+    const entries = Object.entries((details[asset.asset_id] || {}).sections || {});
+    const supplied = asset.coverage || {};
+    const collected = list(supplied.collected_sections).length ? supplied.collected_sections : entries.filter(([,v]) => /^(ok|collected|success)$/.test(v.status || '')).map(([key]) => key);
+    const gaps = list(supplied.gap_sections).length ? supplied.gap_sections : gapRows(asset).map(g => ({section:g.section, status:g.status, evidence:g.evidence}));
+    return {collected, gaps, status:supplied.status || (entries.length ? (gaps.length ? 'gaps present' : 'returned sections') : 'not collected')};
+  }
+  function coverageCell(asset, which) {
+    const value = coverage(asset)[which];
+    if (!value.length) return cell(which === 'gaps' && details[asset.asset_id] ? 'None recorded' : 'Unknown', which === 'gaps' ? 'See section scope and limitations' : 'No returned sections');
+    const box = el('div', 'section-list');
+    value.forEach(item => {
+      const name = typeof item === 'string' ? item : item.section || item.name;
+      const gap = gapRows(asset).find(g => g.section === name);
+      const label = which === 'gaps' ? text(name) + ': ' + text(typeof item === 'object' ? item.status : gap && gap.status || section(asset, name).status || 'Unknown') : text(name);
+      box.append(el('span', 'section-chip' + (which === 'gaps' ? ' gap' : ''), label));
+    });
+    return box;
+  }
+  function capacityCell(row) {
+    const amount = number(row.used_percent), box = el('div', 'capacity-cell');
+    const tone = row.status === 'critical' ? 'critical' : row.status === 'warning' ? 'warning' : '';
+    const line = join(el('div', 'capacity-line'), el('span', 'mono', numeric(amount, '%', 1)));
+    if (amount !== null) {
+      const meter = el('span', 'capacity-meter ' + tone), fill = el('span');
+      fill.style.width = Math.max(0, Math.min(100, amount)) + '%'; meter.append(fill); line.append(meter);
+    }
+    box.append(line); box.append(el('span', 'cell-sub', amount === null ? 'Capacity evidence: Unknown' : (tone ? tone + ' threshold' : 'Below warning threshold')));
+    return box;
+  }
+  function makeFindingList(rows) {
+    const body = el('div', 'finding-list');
+    if (!rows.length) return empty('No derived findings for this selection.', 'This is not a health or compliance assessment. Missing evidence and known limitations still need review.');
+    rows.slice().sort((a,b) => ({critical:0,warning:1,info:2}[a.severity] ?? 3) - ({critical:0,warning:1,info:2}[b.severity] ?? 3)).forEach(row => {
+      const item = el('article', 'finding');
+      join(item, join(el('div', 'finding-top'), pill(row.severity || 'info', row.severity), el('h3', '', row.title)), el('p', '', row.detail));
+      if (row.asset_id) item.append(assetCell(row.asset_id));
+      item.append(evidenceList(row.evidence)); body.append(item);
+    });
+    return body;
+  }
+  function callout(title, message) { return join(el('aside', 'callout'), el('h2', '', title), el('p', '', message)); }
+  function overview(rows, ids, root) {
+    const caps = capacities(ids), relevant = findings(ids), gaps = rows.filter(a => coverage(a).gaps.length || !details[a.asset_id]);
+    const returned = rows.filter(a => details[a.asset_id]).length;
+    const grid = el('div', 'metric-grid');
+    join(grid, metric('ASSETS IN VIEW', rows.length, returned + ' have returned census records; ' + (rows.length - returned) + ' have no returned census record.'),
+      metric('ASSETS WITH EVIDENCE GAPS', gaps.length, 'Includes missing records and non-successful sections.', true),
+      metric('FILESYSTEMS AT ≥' + warningPercent + '% USED', caps.filter(c => number(c.used_percent) !== null && c.used_percent >= warningPercent).length, caps.length + ' capacity records; unknown capacity is kept separate.', true),
+      metric('PATCH CURRENTNESS', 'Unknown', 'An approved patch baseline and assessment are not included.', true));
+    root.append(grid);
+    const split = el('div', 'split-panels');
+    const attention = panel('Attention queue', 'DERIVED FROM SNAPSHOT', 'Findings point to evidence to inspect. They do not establish an outage, compliance failure or approved change.', relevant.length, 'Dashboard findings retain source references.');
+    attention.append(makeFindingList(relevant.slice(0,4)));
+    if(relevant.length > 4) {
+      const more=el('button','quiet-button','Review collection coverage & limits →');
+      more.addEventListener('click',()=>selectView('coverage'));
+      const wrap=el('div','finding-list'); wrap.append(join(el('div','finding'),el('p','', 'Showing the first 4 of ' + relevant.length + ' findings. Full source and gap details are available in each asset record.'),more)); attention.append(wrap);
+    }
+    split.append(finishPanel(attention));
+    const context = panel('What the snapshot can support', 'READ THE BOUNDARY', '', undefined, 'Census, declarations and manual context retain separate provenance.');
+    const basis = el('div', 'evidence-basis');
+    [['Observed','A host fact at one collection time. Boot uptime is not an SLA. Capacity is not SMART or RAID health.'], ['Attested','Ownership, criticality, backups and risk statements are entered context with their named sources and review dates.'], ['Unknown','A missing section, unreturned record or absent approval stays visible. Zero findings does not mean verified health.']].forEach(([title,description]) => basis.append(join(el('div'),el('strong','',title),el('p','',description))));
+    context.append(basis); split.append(finishPanel(context)); root.append(split);
+    const cols = [assetColumn, {key:'addresses',label:'Addresses',render:a => cell(list(a.addresses).length ? text(a.addresses) : 'Unknown', 'Identity source: ' + text(a.source_kind),true)},
+      {key:'owner',label:'Owner · attested',render:a => cell(a.owner,'Manual source in asset details')}, {key:'criticality',label:'Criticality · attested',render:a => pill(a.criticality, known(a.criticality) ? 'attested' : 'unknown')},
+      {key:'coverage',label:'Evidence coverage',value:a => coverage(a).gaps.length,render:a => join(el('div'),pill(coverage(a).status,coverage(a).gaps.length || !details[a.asset_id] ? 'warning' : ''),el('span','cell-sub',coverage(a).collected.length + ' returned sections · ' + coverage(a).gaps.length + ' gaps'))},
+      {key:'collected_at',label:'Collection time',render:a => evidenceCell(a.evidence,a.collected_at)}];
+    root.append(tablePanel('overview-assets','Asset register','FILTERED INVENTORY','Select an asset for measured facts, context sources and its collection record.',cols,rows,'Asset identity, census section status and attributed context.'));
+    currentExports = rows.map(a => ({asset_id:a.asset_id,label:a.label,platform:a.platform,addresses:text(list(a.addresses)),owner_attested:a.owner,criticality_attested:a.criticality,collected_at:a.collected_at,evidence:a.evidence}));
+  }
+  function storage(rows, ids, root) {
+    const caps = capacities(ids), allMounts = mounts(ids);
+    const providers = unique(allMounts.map(m => m.provider_asset_id || m.provider).filter(known));
+    const validCapacity = row => number(row.used_percent) !== null && row.used_percent >= 0 && row.used_percent <= 100;
+    const invalidCapacityCount = caps.filter(c => !validCapacity(c)).length;
+    const grid = el('div', 'metric-grid');
+    join(grid,metric('CAPACITY RECORDS',caps.length,'Local filesystem and logical-volume records can overlap; totals are not summed.'),
+      metric('ACTIVE REMOTE MOUNTS',allMounts.filter(m => m.active_observed || /^(active|mounted|active mount)$/i.test(m.mount_state || '')).length,'A configured mount alone does not prove that it is active.'),
+      metric('STORAGE PROVIDERS',providers.length,'Unresolved provider names remain explicit; identity basis is retained.'),
+      metric('CAPACITY NOT KNOWN',rows.filter(a => !caps.some(c => c.asset_id === a.asset_id && validCapacity(c))).length,'Assets without a valid used-capacity percentage. ' + invalidCapacityCount + ' returned record' + (invalidCapacityCount === 1 ? ' has' : 's have') + ' invalid or unknown capacity.',true));
+    root.append(grid);
+    const capCols = [assetColumn,{key:'target',label:'Filesystem / volume',render:r=>cell(r.target,text(r.fstype),true)},
+      {key:'used_percent',label:'Used capacity',render:capacityCell}, {key:'total_bytes',label:'Total',render:r=>cell(bytes(r.total_bytes),text(r.scope),true)},
+      {key:'available_bytes',label:'Available',render:r=>cell(bytes(r.available_bytes),number(r.available_bytes) === null ? 'Available space: Unknown' : 'Available space reported',true)},
+      {key:'inodes_free',label:'Inodes free',render:r=>cell(numeric(r.inodes_free),'Total: ' + numeric(r.inodes_total),true)},
+      {key:'evidence',label:'Source',render:r=>evidenceCell(r.evidence,(byId.get(r.asset_id)||{}).collected_at)}];
+    root.append(tablePanel('storage-capacity','Filesystem capacity','CAPACITY / NOT DISK HEALTH','Warning ≥' + warningPercent + '% and critical ≥' + criticalPercent + '% used are review thresholds. Capacity does not establish SMART, RAID, storage-array or backup health.',capCols,caps,'filesystem / logical-volume census sections.','Unavailable metrics are Unknown; provider capacity is not inferred from a client mount.'));
+    const mountCols=[assetColumn,{key:'provider',label:'Provider',render:r=>join(el('div'),byId.has(r.provider_asset_id) ? assetCell(r.provider_asset_id) : cell(r.provider,'Unresolved / external provider identity'),el('span','cell-sub',r.identity_basis || 'Unknown identity basis'))},
+      {key:'remote_path',label:'Remote path',render:r=>cell(r.remote_path,text(r.fstype),true)}, {key:'target',label:'Client target',render:r=>cell(r.target,null,true)},
+      {key:'mount_state',label:'Mount evidence',render:r=>join(el('div'),pill(text(r.mount_state).replace(/_/g,' '),r.mount_state === 'active' ? '' : 'warning'),el('span','cell-sub',r.active_observed ? 'Active mount observed' : 'Not observed / activity Unknown'),el('span','cell-sub',r.configured_observed ? 'Configuration observed' : 'Configuration not observed / configuration Unknown'),el('span','cell-sub','Collection: ' + text(r.collection_status)))},
+      {key:'evidence',label:'Source',render:r=>evidenceCell([...refs(r.evidence),...refs(r.provider_identity_evidence)],(byId.get(r.asset_id)||{}).collected_at)}];
+    root.append(tablePanel('storage-mounts','Storage mount map','CONSUMER → PROVIDER','This table records mounting evidence. A storage mount is not proof of an authorized application dependency.',mountCols,allMounts,'Active mount records and configured mount declarations; provider identity source kept per record.'));
+    const providerIndex=new Map();
+    allMounts.forEach(row=>{
+      const key=row.provider_asset_id || row.provider || 'Unknown';
+      if(!providerIndex.has(key)) providerIndex.set(key,{asset_id:row.provider_asset_id,provider:row.provider,active_consumers:new Set(),configured_rows:0,unknown_activity_rows:0,identity_basis:new Set(),evidence:[],consumer_ids:new Set()});
+      const provider=providerIndex.get(key); provider.consumer_ids.add(row.asset_id);
+      if(row.active_observed) provider.active_consumers.add(row.asset_id);
+      else provider.unknown_activity_rows++;
+      if(row.configured_observed) provider.configured_rows++;
+      provider.identity_basis.add(row.identity_basis || 'Unknown'); provider.evidence.push(...refs(row.evidence),...refs(row.provider_identity_evidence));
+    });
+    const providerRows=[...providerIndex.values()];
+    const providerCols=[{key:'provider',label:'Provider',render:r=>byId.has(r.asset_id) ? assetCell(r.asset_id) : cell(r.provider,'Unresolved / external provider identity')},
+      {key:'active_consumer_count',label:'Observed active clients',value:r=>r.active_consumers.size,render:r=>cell(r.active_consumers.size,[...r.active_consumers].join(', ') || 'No active clients observed in this scope',true)},
+      {key:'configured_rows',label:'Configured mount records',render:r=>cell(r.configured_rows,'Configuration records; activity is independent',true)},
+      {key:'unknown_activity_rows',label:'Activity Unknown',render:r=>cell(r.unknown_activity_rows,'Mount records without an active observation',true)},
+      {key:'identity_basis',label:'Identity basis',value:r=>[...r.identity_basis].join(', '),render:r=>cell([...r.identity_basis].join(', '),'Manual identity matches remain assertions')},
+      {key:'evidence',label:'Source',render:r=>evidenceCell(r.evidence,times([...r.consumer_ids].map(id=>byId.get(id)).filter(Boolean)))}];
+    root.append(tablePanel('storage-providers','Observed storage consumers','PROVIDER CONCENTRATION / FILTERED SCOPE','Client counts are distinct assets with active mount observations in this filtered snapshot. They do not establish complete blast radius, approved dependencies or provider availability.',providerCols,providerRows,'Mount observations and provider identity evidence.','Unknown activity and uncollected consumers are excluded from observed active-client counts.'));
+    currentExports=[...caps.map(r=>({record_type:'capacity',...r})),...allMounts.map(r=>({record_type:'mount',...r})),...providerRows.map(r=>({record_type:'provider_concentration',provider_asset_id:r.asset_id,provider:r.provider,observed_active_client_count:r.active_consumers.size,observed_active_clients:[...r.active_consumers],configured_mount_records:r.configured_rows,activity_unknown_records:r.unknown_activity_rows,identity_basis:[...r.identity_basis],evidence:unique(r.evidence)}))];
+  }
+  function resources(rows, ids, root) {
+    root.append(callout('Uptime describes this boot.', 'Boot uptime is a point-in-time operating-system fact. No service SLA, availability window, workload trend or latency/error telemetry is available in this product.'));
+    const loadValues = asset => {
+      const data=sectionData(asset,'load') || {};
+      return ['load_1','load_5','load_15'].map(key=>number(data[key]) !== null && data[key] >= 0 ? data[key] : null);
+    };
+    const cols=[assetColumn,{key:'uptime_seconds',label:'Boot uptime',render:a=>cell(duration(a.uptime_seconds),'Boot: ' + text(a.boot_time),true)},
+      {key:'memory_available_percent',label:'Memory available',render:a=>cell(numeric(a.memory_available_percent,'%',1),'Snapshot metric; not a utilization trend',true)},
+      {key:'load',label:'Load average',value:a=>loadValues(a)[0],render:a=>cell(loadValues(a).map(v=>numeric(v,'',2)).join(' / '),'1m / 5m / 15m; not CPU percentage',true)},
+      {key:'kernel',label:'Kernel / OS',render:a=>cell(a.kernel,text(a.os),true)},
+      {key:'freshness',label:'Relative age',value:a=>number((a.freshness||{}).age_seconds),render:a=>cell(duration((a.freshness||{}).age_seconds),(a.freshness||{}).status || 'Unknown timestamp; relative to latest collected snapshot',true)},
+      {key:'collected_at',label:'Source',render:a=>evidenceCell([...evidenceFor(a,['uptime','memory','load','identity']),...refs(a.evidence)],a.collected_at)}];
+    root.append(tablePanel('resources','Uptime & resource observations','HOST SNAPSHOT','Memory and boot facts can be missing or unsupported independently of other collected sections. Relative age compares records within this bundle, not against the current clock.',cols,rows,'System / identity census sections.','Unknown values need a successful, timestamped resource collection.'));
+    currentExports=rows.map(a=>({asset_id:a.asset_id,uptime_seconds:a.uptime_seconds,boot_time:a.boot_time,memory_available_percent:a.memory_available_percent,load_average_1m:loadValues(a)[0],load_average_5m:loadValues(a)[1],load_average_15m:loadValues(a)[2],kernel:a.kernel,os:a.os,collected_at:a.collected_at,evidence:a.evidence}));
+  }
+  function patch(rows, ids, root) {
+    root.append(callout('Patch currentness: Unknown.', 'An installed package date, update history entry or hotfix record is historical evidence. An approved baseline, applicability review and assessment are required to establish patch currentness.'));
+    const cols=[assetColumn,{key:'patch_status',label:'Patch currentness',render:a=>cell('Unknown',(a.patch_evidence||{}).reason || 'No approved baseline and assessment supplied')},
+      {key:'patch_observed_at',label:'Latest patch observation',value:a=>(a.latest_patch_observation||{}).observed_at,render:a=>cell((a.latest_patch_observation||{}).observed_at,(a.latest_patch_observation||{}).description || 'Unknown historical patch evidence',true)},
+      {key:'reboot_pending',label:'Reboot indicator',value:a=>factValue(a.reboot_pending).value,render:a=>factCell(a.reboot_pending)},
+      {key:'kernel',label:'Running kernel / OS',render:a=>cell(a.kernel,text(a.os),true)},
+      {key:'evidence',label:'Source',render:a=>evidenceCell([...refs((a.patch_evidence||{}).evidence),...refs((a.latest_patch_observation||{}).evidence),...refs((a.reboot_pending||{}).evidence)],a.collected_at)}];
+    root.append(tablePanel('patch','Patch & reboot evidence','MAINTENANCE REVIEW','Reboot indicators have platform-specific meanings. Unknown reboot evidence is not equivalent to “no reboot needed.”',cols,rows,'Collected package / update history / reboot-indicator evidence.','Patch assessment and baseline approval are Unknown.'));
+    currentExports=rows.map(a=>({asset_id:a.asset_id,patch_currentness:'Unknown',patch_reason:(a.patch_evidence||{}).reason,latest_patch_observation:(a.latest_patch_observation||{}).observed_at,patch_description:(a.latest_patch_observation||{}).description,reboot_indicator:factValue(a.reboot_pending).value,collected_at:a.collected_at,evidence:refs((a.latest_patch_observation||{}).evidence)}));
+  }
+  function serviceRecords(rows) {
+    return rows.flatMap(a=> {
+      const data=sectionData(a,'services'), records=list(Array.isArray(data) ? data : (data||{}).services);
+      if (!records.length) return [{asset_id:a.asset_id,name:'Unknown',state:'Unknown',start_mode:'Unknown',evidence:evidenceFor(a,['services']),gap:section(a,'services').status || 'not collected'}];
+      return records.map((r,i)=>({asset_id:a.asset_id,name:r.name || r.Name || r.unit || r.service,state:r.state || r.State || r.active || r.status,start_mode:r.start_mode || r.StartMode || r.sub || r.sub_state,description:r.description || r.DisplayName,evidence:evidenceFor(a,['services']).map(p=>p + '/data/' + i),collected_at:a.collected_at}));
+    });
+  }
+  function services(rows, ids, root) {
+    root.append(callout('Presence is one piece of agent evidence.', 'Installed or running agents do not establish unique enrollment, telemetry transport, persistence or searchable source-attributed logs. Collection failure is an evidence gap, not proof that an application failed.'));
+    const hostCols=[assetColumn,{key:'failed_services',label:'Failed service evidence',value:a=>factValue(a.failed_services).value,render:a=>factCell(a.failed_services)},
+      {key:'agent',label:'Security agent evidence',value:a=>factValue((a.security||{}).agent).value,render:a=>factCell((a.security||{}).agent)},
+      {key:'service_presence',label:'Recorded agent / service names',render:a=>factCell((a.security||{}).service_presence)},
+      {key:'evidence',label:'Source',render:a=>evidenceCell([...evidenceFor(a,['services']),...refs((a.failed_services||{}).evidence),...refs(((a.security||{}).agent||{}).evidence)],a.collected_at)}];
+    root.append(tablePanel('agents','Services & agent evidence','HOST LEVEL','Names and states come from bounded platform metadata. Application-level logging and coverage still need separate validation.',hostCols,rows,'Services and security agent census sections.','Coverage: Unknown without fresh, source-attributed log evidence.'));
+    const records=serviceRecords(rows);
+    root.append(tablePanel('service-list','Service state register','COLLECTED SERVICE RECORDS','The collector may bound returned services. State applies to the named record at collection time.',[assetColumn,{key:'name',label:'Service',render:r=>cell(r.name,r.description,true)},
+      {key:'state',label:'State',render:r=>cell(r.state,r.gap ? 'Section: ' + r.gap : 'Observed service state')},{key:'start_mode',label:'Start mode / substate'},
+      {key:'evidence',label:'Source',render:r=>evidenceCell(r.evidence,r.collected_at || (byId.get(r.asset_id)||{}).collected_at)}],records,'Services census section.'));
+    currentExports=records;
+  }
+  function security(rows, ids, root) {
+    root.append(callout('Configuration evidence is not a compliance score.', 'Review the section sources, collection gaps and approved requirements together. Backup and risk context below are manual attestations, not measured controls or completed restore tests.'));
+    const cols=[assetColumn,...[['selinux','SELinux'],['firewall','Firewall'],['time_sync','Time synchronization'],['audit','Audit evidence'],['agent','Security agent']].map(([key,label])=>({key,label,value:a=>factValue((a.security||{})[key]).value,render:a=>factCell((a.security||{})[key])})),
+      {key:'collected_at',label:'Collection time',render:a=>cell(a.collected_at,'Source references in each fact / asset drawer',true)}];
+    root.append(tablePanel('security','Security configuration evidence','ISSO / OBSERVED FACTS','A firewall state or local listener does not establish approved clients, source allowlists, rule correctness or remote reachability.',cols,rows,'Security and platform configuration sections.','Control compliance, exceptions and authorization: Unknown.'));
+    const contextCols=[assetColumn,{key:'owner',label:'Owner · attested',render:a=>cell(a.owner,'Manual context; inspect source in asset details')},
+      {key:'backup_attestation',label:'Backup · attested',render:a=>{
+        const item=a.backup_attestation || {};
+        const box=join(el('div'),pill(known(item.value) ? text(item.value) : 'Unknown',known(item.value) ? 'attested' : 'unknown'));
+        const assertions=list(item.entries);
+        if(assertions.length) assertions.forEach(c=>join(box,el('span','cell-sub',text(c.field) + ': ' + text(c.value)),el('span','cell-sub','Source: ' + text(c.source) + ' · Reviewed: ' + text(c.reviewed_at)),evidenceList(c.evidence)));
+        else join(box,el('span','cell-sub','Source: ' + text(item.source) + ' · Reviewed: ' + text(item.reviewed_at)),evidenceList(item.evidence));
+        return box;
+      }}, {key:'risk',label:'Risk / security context · attested',render:a=>{
+        const context=list(a.context).filter(c=>/stig|cis|poam|scan|vulnerab|baseline|patch|exception|approval|authority|risk|security|compliance|backup|restore/i.test(c.field || ''));
+        if(!context.length) return cell('Unknown','No attributed security / assurance context supplied');
+        const box=el('div'); context.forEach(c=>join(box,pill(text(c.field) + ': ' + text(c.value),'attested'),el('span','cell-sub','Source: ' + text(c.source) + ' · Reviewed: ' + text(c.reviewed_at)),evidenceList(c.evidence))); return box;
+      }}];
+    root.append(tablePanel('security-context','Owner, backup & risk context','MANUAL ATTESTATIONS','Entered sources and review dates are retained. A backup statement does not verify retention, recoverability or a restore exercise.',contextCols,rows,'Manual context source and review date per assertion.'));
+    currentExports=rows.map(a=>({asset_id:a.asset_id,...Object.fromEntries(['selinux','firewall','time_sync','audit','agent'].map(k=>[k, factValue((a.security||{})[k]).value])),owner_attested:a.owner,backup_attested:(a.backup_attestation||{}).value,backup_assertions:(a.backup_attestation||{}).entries,collected_at:a.collected_at}));
+  }
+  function dependencyRows(ids) {
+    return list(model.relationships).filter(r=>ids.has(r.source) || ids.has(r.target)).map(r=>({...r,asset_id:r.source,peer:r.target,basis:r.kind==='observed_connection' || r.kind==='observed_tcp' ? 'Observed endpoint' : r.kind==='physical_neighbor' ? 'Physical neighbor' : r.kind==='declared_dependency' ? 'Declared requirement' : r.kind==='manual_relationship' ? 'Manual: ' + text(r.relationship_type) : r.kind==='storage_mount' ? 'Storage: ' + text(r.status) : text(r.kind)}));
+  }
+  function listenerRecords(rows) {
+    return rows.flatMap(a=> {
+      const compound=(a.security||{}).listeners;
+      const records=list(compound && (compound.items || compound.value || compound.records || compound.data || compound));
+      if(!records.length) return [{asset_id:a.asset_id,local_address:'Unknown',local_port:null,protocol:'Unknown',process:'Unknown',status:compound && compound.status || 'not collected',evidence:refs(compound && compound.evidence)}];
+      return records.map(r=>({asset_id:a.asset_id,...r,evidence:refs(r.evidence).length ? r.evidence : refs(compound.evidence),collected_at:a.collected_at}));
+    });
+  }
+  function dependencies(rows, ids, root) {
+    root.append(callout('Observation does not establish permission.', 'Sockets retain unknown initiator and purpose. Declared relationships retain their supplied authority; a declaration alone does not grant approval. Physical neighbors describe adjacency. Listeners describe local exposure, not remote reachability.'));
+    const relationships=dependencyRows(ids);
+    const cols=[assetColumn,{key:'peer',label:'Peer / dependency',render:r=>assetCell(r.peer)}, {key:'basis',label:'Evidence basis',render:r=>pill(r.basis,/Manual|Declared/.test(r.basis) ? 'attested' : '')},
+      {key:'remote_port',label:'Endpoint / interface',render:r=>cell((r.protocol || (r.remote_port ? 'Protocol unknown' : 'Unknown')) + (r.remote_port ? ' / ' + r.remote_port : ''),r.local_interface || r.remote_address || 'Initiator: Unknown',true)},
+      {key:'purpose',label:'Purpose / authority',render:r=>cell(r.purpose || 'Unknown', 'Authority: ' + text(r.authority || (r.manual_information||{}).source))},
+      {key:'evidence',label:'Source',render:r=>evidenceCell(r.evidence,r.observed_at || (byId.get(r.asset_id)||{}).collected_at)}];
+    root.append(tablePanel('relationships','Relationship register','ISSE / IDENTITY & PURPOSE', 'A row remains attached to its source asset and evidence reference. Filtering includes relationships touching a selected asset.',cols,relationships,'Observed sockets / neighbor sections / separately declared or entered relationships.','Initiator, required purpose and approval remain Unknown unless explicitly sourced.'));
+    const listeners=listenerRecords(rows);
+    root.append(tablePanel('listeners','Local listener evidence','HOST EXPOSURE','Listener address and port are local endpoints. No controller or browser connectivity probe is performed.',[assetColumn,
+      {key:'local_address',label:'Local address',render:r=>cell(r.local_address || r.address,null,true)}, {key:'local_port',label:'Port / protocol',render:r=>cell(text(r.local_port ?? r.port) + ' / ' + text(r.protocol),null,true)},
+      {key:'process',label:'Process / service',render:r=>cell(r.process || r.name,'Remote reachability: Unknown')}, {key:'status',label:'Evidence state',render:r=>pill(r.status || 'observed',/unknown|not collected|unsupported|denied/.test(r.status || '') ? 'unknown' : '')},
+      {key:'evidence',label:'Source',render:r=>evidenceCell(r.evidence,r.collected_at || (byId.get(r.asset_id)||{}).collected_at)}],listeners,'Local listener census evidence.','Approved clients, NAT/firewall path and reachability: Unknown.'));
+    currentExports=[...relationships.map(r=>({record_type:'relationship',asset_id:r.asset_id,peer:r.peer,basis:r.basis,protocol:r.protocol,port:r.remote_port,purpose:r.purpose,authority:r.authority,evidence:r.evidence})),...listeners.map(r=>({record_type:'listener',...r}))];
+  }
+  function coverageView(rows, ids, root) {
+    const returned=rows.filter(a=>details[a.asset_id]).length, gaps=rows.flatMap(gapRows);
+    const grid=el('div','metric-grid');
+    join(grid,metric('ASSETS IN VIEW',rows.length,'Filtered asset scope, including manual and expected assets.'),metric('RETURNED CENSUS RECORDS',returned,rows.length - returned + ' assets have no returned census record.'),
+      metric('RECORDED SECTION GAPS',gaps.length,'Partial, missing, denied and unsupported evidence remains explicit.',true),metric('COLLECTION TIMING',known(summary.snapshot_at) ? summary.snapshot_at.slice(0,10) : 'Unknown','Evidence age is relative to the newest collected record.',!known(summary.snapshot_at)));
+    root.append(grid);
+    const cols=[assetColumn,{key:'status',label:'Record state',value:a=>coverage(a).status,render:a=>pill(coverage(a).status,!details[a.asset_id] || coverage(a).gaps.length ? 'warning' : '')},
+      {key:'collected_sections',label:'Returned sections',render:a=>coverageCell(a,'collected')}, {key:'gap_sections',label:'Gaps / incomplete sections',render:a=>coverageCell(a,'gaps')},
+      {key:'evidence',label:'Source',render:a=>evidenceCell(a.evidence || (details[a.asset_id]||{}).evidence,a.collected_at)}];
+    root.append(tablePanel('coverage','Evidence coverage by asset','SCOPE / RETURNED / UNKNOWN','Successful sections can coexist with gaps. An empty or partial response does not prove absence of the target feature.',cols,rows,'Section status, expected-asset scope and per-host source.','Missing source/time and failed sections need follow-up evidence.'));
+    const box=panel('Collection & interpretation limits','KEEP WITH THE PRODUCT','',undefined,'Renderer and collector capability limits; review platform qualification separately.');
+    const body=el('div','finding-list');
+    const limitations=unique([...list(dashboards.limitations),model.interpretation || 'Observed endpoints do not establish initiator, purpose, authorization or criticality.']);
+    limitations.forEach(value=>body.append(join(el('div','finding'),el('p','',value))));
+    box.append(body); root.append(finishPanel(box));
+    currentExports=rows.map(a=>({asset_id:a.asset_id,record_state:coverage(a).status,collected_sections:coverage(a).collected,gap_sections:coverage(a).gaps,collected_at:a.collected_at,evidence:a.evidence}));
+  }
+  function render() {
+    const rows=filteredAssets(), ids=new Set(rows.map(a=>a.asset_id));
+    const view=views[currentView];
+    $('view-title').textContent=view.title; $('view-audience').textContent=view.audience; $('view-description').textContent=view.description;
+    $('filter-count').textContent=rows.length + ' / ' + assets.length + ' assets';
+    const root=$('dashboard-view'); root.replaceChildren(); currentExports=[];
+    if(!rows.length) root.append(callout('No assets match these filters.', 'Adjust the search or reset the platform and criticality filters. This selection has no evidence records.'));
+    ({overview,storage,resources,patch,services,security,dependencies,coverage:coverageView}[currentView])(rows,ids,root);
+  }
+  function selectView(view) {
+    if(!views[view]) return;
+    currentView=view;
+    document.querySelectorAll('.view-button').forEach(button=>{
+      const active=button.dataset.view === view; button.classList.toggle('active',active);
+      if(active) button.setAttribute('aria-current','page'); else button.removeAttribute('aria-current');
+    });
+    render();
+  }
+  function facts(title, pairs) {
+    const section=el('section','drawer-section'), values=el('dl','fact-list');
+    pairs.forEach(([key,value])=>join(values,el('dt','',key),el('dd','',value)));
+    join(section,el('h3','',title),values); return section;
+  }
+  function selectAsset(id) {
+    const asset=byId.get(id); if(!asset) return;
+    const dialog=$('asset-drawer'); lastFocus=document.activeElement;
+    $('drawer-title').textContent=asset.label || id;
+    $('drawer-subtitle').textContent=id + ' · ' + text(asset.platform) + ' · Collected: ' + text(asset.collected_at);
+    $('drawer-map-link').href='dependency-map.html#asset=' + encodeURIComponent(id);
+    const root=$('drawer-content'); root.replaceChildren();
+    root.append(facts('Asset facts', [['Stable ID',id],['Addresses',list(asset.addresses).length ? text(asset.addresses) : 'Unknown'],['OS / kernel',text(asset.os) + ' / ' + text(asset.kernel)],['Boot uptime',duration(asset.uptime_seconds)],['Evidence kind',asset.source_kind || (details[id] ? 'census' : 'Unknown')],['Collection time',asset.collected_at || 'Unknown']]));
+    root.append(facts('Owner & context · attested', [['Owner',asset.owner || 'Unknown'],['Criticality',asset.criticality || 'Unknown'],['Role',asset.role || 'Unknown'],['Backup attestation',text((asset.backup_attestation||{}).value)],['Backup source',list((asset.backup_attestation||{}).entries).map(c=>text(c.source)).join('; ') || 'Unknown'],['Backup reviewed',list((asset.backup_attestation||{}).entries).map(c=>text(c.reviewed_at)).join('; ') || 'Unknown']]));
+    const context=el('section','drawer-section'); context.append(el('h3','','Attribution & manual assertions'));
+    const entries=list(asset.context);
+    if(entries.length) entries.forEach(c=>join(context,el('p','',text(c.field) + ': ' + text(c.value)),el('span','cell-sub','Source: ' + text(c.source) + ' · Reviewed: ' + text(c.reviewed_at)),evidenceList(c.evidence)));
+    else list(asset.manual_information).forEach(c=>join(context,el('p','',text(c.fields)),el('span','cell-sub','Source: ' + text(c.source) + ' · Reviewed: ' + text(c.reviewed_at)),evidenceList(c.evidence)));
+    if(!entries.length && !list(asset.manual_information).length) context.append(el('p','','Unknown — no attributed manual context supplied.'));
+    root.append(context);
+    const evidence=el('section','drawer-section'); evidence.append(el('h3','','Collection sections & gaps'));
+    const entriesSections=Object.entries((details[id]||{}).sections || {}), recordList=el('ul','drawer-evidence');
+    entriesSections.forEach(([name,value])=>join(recordList,join(el('li'),el('strong','',name + ' · ' + text(value.status)),el('span','',((details[id]||{}).evidence || 'Unknown') + '#/sections/' + name),el('span','',value.error || value.reason || 'Collected: ' + text(asset.collected_at)))));
+    gapRows(asset).filter(g=>!entriesSections.some(([name])=>name===g.section)).forEach(g=>recordList.append(join(el('li'),el('strong','',g.section + ' · ' + text(g.status)),el('span','',g.evidence || 'Unknown source'))));
+    if(!recordList.childElementCount) recordList.append(join(el('li'),el('strong','','Unknown / no census record returned'),el('span','','Manual context does not establish observed state.')));
+    evidence.append(recordList); root.append(evidence);
+    const raw=el('details','evidence-details'); raw.append(el('summary','','Inspect source facts (JSON)')); raw.append(el('pre','',JSON.stringify({dashboard_asset:asset,census:details[id] || null},null,2))); root.append(raw);
+    if(!dialog.open) dialog.showModal(); $('close-drawer').focus();
+  }
+  function closeDrawer() { $('asset-drawer').close(); }
+  function csvValue(value) {
+    let result=typeof value==='object' && value!==null ? JSON.stringify(value) : text(value);
+    // Apostrophe prevents spreadsheet formulas, including formulas after spaces.
+    if (/^[\s]*[=+\-@]/.test(result) || /^[\t\r\n]/.test(result)) result="'" + result;
+    return '"' + result.replace(/"/g,'""') + '"';
+  }
+  function exportCSV() {
+    const rows=currentExports, keys=unique(rows.flatMap(r=>Object.keys(r)));
+    if(!keys.length) keys.push('asset_id','evidence');
+    return '\uFEFF' + [keys.map(csvValue).join(','),...rows.map(row=>keys.map(key=>csvValue(row[key])).join(','))].join('\r\n') + '\r\n';
+  }
+  function downloadCSV() {
+    const blob=new Blob([exportCSV()],{type:'text/csv;charset=utf-8'}), url=URL.createObjectURL(blob), link=el('a');
+    link.href=url; link.download='census-' + currentView + '-filtered.csv'; document.body.append(link); link.click(); link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    $('export-status').textContent='Exported ' + currentExports.length + ' records from ' + views[currentView].audience + '. Evidence and attestation labels are retained in the columns.';
+  }
+  function populateFilter(id, values) {
+    unique(values.map(text)).sort((a,b)=>a.localeCompare(b)).forEach(value=>{const option=el('option','',value); option.value=value; $(id).append(option);});
+  }
+  populateFilter('platform-filter',assets.map(a=>a.platform)); populateFilter('criticality-filter',assets.map(a=>a.criticality));
+  $('asset-search').addEventListener('input',render); $('platform-filter').addEventListener('change',render); $('criticality-filter').addEventListener('change',render);
+  $('reset-filters').addEventListener('click',()=>{$('asset-search').value='';$('platform-filter').value='all';$('criticality-filter').value='all';render();});
+  document.querySelectorAll('.view-button').forEach(button=>button.addEventListener('click',()=>selectView(button.dataset.view)));
+  $('export-csv').addEventListener('click',downloadCSV); $('print-view').addEventListener('click',()=>window.print());
+  $('close-drawer').addEventListener('click',closeDrawer); $('drawer-done').addEventListener('click',closeDrawer);
+  $('asset-drawer').addEventListener('close',()=>{if(lastFocus && lastFocus.isConnected) lastFocus.focus();});
+  $('asset-drawer').addEventListener('click',event=>{if(event.target===$('asset-drawer')) {const box=event.target.getBoundingClientRect();if(event.clientX<box.left || event.clientX>box.right || event.clientY<box.top || event.clientY>box.bottom) closeDrawer();}});
+  const snapshot=summary.snapshot_at || 'Unknown';
+  $('snapshot-at').textContent='Collection time: ' + snapshot;
+  $('collection-mode').textContent=model.collection_mode==='manual_only' ? 'Manual only · no census collected' : 'Dated evidence · no refresh';
+  $('run-date').textContent=known(snapshot) ? snapshot.slice(0,10) : 'Unknown';
+  $('run-count').textContent=assets.length + ' assets in this product';
+  const initialHash=new URLSearchParams(location.hash.slice(1));
+  selectView(initialHash.get('view') || 'overview');
+  window.CensusDashboards={selectView,selectAsset,exportCSV,getState:()=>({view:currentView,filtered_assets:filteredAssets().map(a=>a.asset_id),asset_count:assets.length,export_count:currentExports.length})};
+  if(initialHash.get('asset')) selectAsset(initialHash.get('asset'));
+})();
+</script>
+</body>
+</html>

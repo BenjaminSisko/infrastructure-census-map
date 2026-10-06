@@ -1,0 +1,1875 @@
+{
+  "schema_version": 1,
+  "renderer_version": "0.4.0",
+  "nodes": [
+    {
+      "id": "app01",
+      "label": "app01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.10"
+      ],
+      "address_provenance": {
+        "192.0.2.10": "interface observation"
+      },
+      "os": "Example Enterprise Linux 9",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/app01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [
+        {
+          "evidence": "context.json#/assets/0",
+          "source": "Synthetic owner interview, demonstration only",
+          "entered_by": "Fictional operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Fictional application team",
+            "role": "Fictional application host",
+            "criticality": "Operator-stated high",
+            "attributes": {
+              "maintenance_window": "Example Friday 18:00 UTC",
+              "patch_baseline": "Needs Validation",
+              "backup_attestation": "Fictional operator states backup jobs run nightly; no restore evidence supplied",
+              "restore_reviewed_at": "Needs Validation"
+            },
+            "addresses": []
+          }
+        }
+      ],
+      "field_provenance": {
+        "label": "census",
+        "os": "census",
+        "owner": "context.json#/assets/0",
+        "role": "context.json#/assets/0",
+        "criticality": "context.json#/assets/0",
+        "attributes": "context.json#/assets/0"
+      },
+      "owner": "Fictional application team",
+      "role": "Fictional application host",
+      "criticality": "Operator-stated high",
+      "attributes": {
+        "maintenance_window": "Example Friday 18:00 UTC",
+        "patch_baseline": "Needs Validation",
+        "backup_attestation": "Fictional operator states backup jobs run nightly; no restore evidence supplied",
+        "restore_reviewed_at": "Needs Validation"
+      }
+    },
+    {
+      "id": "nas01",
+      "label": "nas01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.50"
+      ],
+      "address_provenance": {
+        "192.0.2.50": "interface observation"
+      },
+      "os": "Example Linux",
+      "domain": "",
+      "collected_at": "2026-10-05T14:01:00Z",
+      "evidence": "hosts/nas01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [
+        {
+          "evidence": "context.json#/assets/1",
+          "source": "Synthetic storage worksheet, demonstration only",
+          "entered_by": "Fictional operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Fictional storage team",
+            "role": "Fictional NFS and SMB provider",
+            "criticality": "Operator-stated high",
+            "attributes": {
+              "risk_context": "Capacity review requested; no SMART or RAID health evidence supplied"
+            },
+            "addresses": []
+          }
+        }
+      ],
+      "field_provenance": {
+        "label": "census",
+        "os": "census",
+        "owner": "context.json#/assets/1",
+        "role": "context.json#/assets/1",
+        "criticality": "context.json#/assets/1",
+        "attributes": "context.json#/assets/1"
+      },
+      "owner": "Fictional storage team",
+      "role": "Fictional NFS and SMB provider",
+      "criticality": "Operator-stated high",
+      "attributes": {
+        "risk_context": "Capacity review requested; no SMART or RAID health evidence supplied"
+      }
+    },
+    {
+      "id": "storage:archive.example.test",
+      "label": "archive.example.test",
+      "platform": "external",
+      "addresses": [],
+      "os": "Unknown",
+      "domain": "",
+      "collected_at": "Unknown",
+      "evidence": "",
+      "external": true,
+      "candidates": []
+    },
+    {
+      "id": "win01",
+      "label": "win01.example.test",
+      "platform": "windows",
+      "addresses": [
+        "192.0.2.30"
+      ],
+      "address_provenance": {
+        "192.0.2.30": "interface observation"
+      },
+      "os": "Example Windows Server",
+      "domain": "",
+      "collected_at": "2026-10-05T14:02:00Z",
+      "evidence": "hosts/win01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [
+        {
+          "evidence": "context.json#/assets/2",
+          "source": "Synthetic inventory worksheet, demonstration only",
+          "entered_by": "Fictional operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Fictional Windows team",
+            "criticality": "Operator-stated medium",
+            "attributes": {
+              "maintenance_window": "Example Saturday 20:00 UTC",
+              "stig_attestation": "Needs Validation"
+            },
+            "addresses": []
+          }
+        }
+      ],
+      "field_provenance": {
+        "label": "census",
+        "os": "census",
+        "owner": "context.json#/assets/2",
+        "criticality": "context.json#/assets/2",
+        "attributes": "context.json#/assets/2"
+      },
+      "owner": "Fictional Windows team",
+      "criticality": "Operator-stated medium",
+      "attributes": {
+        "maintenance_window": "Example Saturday 20:00 UTC",
+        "stig_attestation": "Needs Validation"
+      }
+    }
+  ],
+  "census_nodes": [
+    {
+      "id": "app01",
+      "label": "app01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.10"
+      ],
+      "address_provenance": {
+        "192.0.2.10": "interface observation"
+      },
+      "os": "Example Enterprise Linux 9",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/app01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "nas01",
+      "label": "nas01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.50"
+      ],
+      "address_provenance": {
+        "192.0.2.50": "interface observation"
+      },
+      "os": "Example Linux",
+      "domain": "",
+      "collected_at": "2026-10-05T14:01:00Z",
+      "evidence": "hosts/nas01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "win01",
+      "label": "win01.example.test",
+      "platform": "windows",
+      "addresses": [
+        "192.0.2.30"
+      ],
+      "address_provenance": {
+        "192.0.2.30": "interface observation"
+      },
+      "os": "Example Windows Server",
+      "domain": "",
+      "collected_at": "2026-10-05T14:02:00Z",
+      "evidence": "hosts/win01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "storage:archive.example.test",
+      "label": "archive.example.test",
+      "platform": "external",
+      "addresses": [],
+      "os": "Unknown",
+      "domain": "",
+      "collected_at": "Unknown",
+      "evidence": "",
+      "external": true,
+      "candidates": []
+    }
+  ],
+  "census_details": {
+    "app01": {
+      "evidence": "hosts/app01.json",
+      "collector": {
+        "name": "fictional-synthetic-example",
+        "version": "0.4.0"
+      },
+      "collected_at": "2026-10-05T14:00:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "app01.example.test",
+            "os": "Example Enterprise Linux 9",
+            "kernel": "5.14.0-example"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "address": "192.0.2.10"
+            }
+          ]
+        },
+        "uptime": {
+          "status": "ok",
+          "data": {
+            "uptime_seconds": 432000,
+            "boot_time": "2026-09-30T14:00:00Z"
+          }
+        },
+        "memory": {
+          "status": "ok",
+          "data": {
+            "total_bytes": 8589934592,
+            "available_bytes": 2147483648,
+            "swap_total_bytes": 2147483648,
+            "swap_free_bytes": 2147483648
+          }
+        },
+        "mounts": {
+          "status": "ok",
+          "data": {
+            "filesystems": [
+              {
+                "target": "/",
+                "source": "/dev/mapper/example-root",
+                "fstype": "xfs",
+                "children": [
+                  {
+                    "target": "/srv/content",
+                    "source": "nas01.example.test:/exports/content",
+                    "fstype": "nfs4"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "configured_mounts": {
+          "status": "ok",
+          "data": {
+            "filesystems": [
+              {
+                "target": "/srv/content",
+                "source": "nas01.example.test:/exports/content",
+                "fstype": "nfs4"
+              },
+              {
+                "target": "/srv/archive",
+                "source": "archive.example.test:/exports/archive",
+                "fstype": "nfs4"
+              }
+            ]
+          }
+        },
+        "storage_capacity": {
+          "status": "ok",
+          "data": [
+            {
+              "target": "/",
+              "fstype": "xfs",
+              "total_bytes": 107374182400,
+              "used_bytes": 91268055040,
+              "available_bytes": 16106127360,
+              "used_percent": 85,
+              "inodes_total": 1000000,
+              "inodes_free": 700000
+            }
+          ]
+        },
+        "patch_inventory": {
+          "status": "ok",
+          "data": {
+            "installed_kernels": [
+              {
+                "version": "5.14.0-example",
+                "installed_at": "2026-09-28T17:00:00Z"
+              }
+            ],
+            "latest_package_install_at": "2026-10-01T18:00:00Z",
+            "source": "Fictional local RPM install metadata",
+            "baseline_status": "unknown"
+          }
+        },
+        "reboot_pending": {
+          "status": "unsupported",
+          "reason": "No configured Linux reboot policy"
+        },
+        "services": {
+          "status": "ok",
+          "data": [
+            {
+              "name": "app.service",
+              "load": "loaded",
+              "active": "active",
+              "sub": "running"
+            },
+            {
+              "name": "example-report.service",
+              "load": "loaded",
+              "active": "failed",
+              "sub": "failed"
+            },
+            {
+              "name": "wazuh-agent.service",
+              "load": "loaded",
+              "active": "active",
+              "sub": "running"
+            },
+            {
+              "name": "auditd.service",
+              "load": "loaded",
+              "active": "active",
+              "sub": "running"
+            }
+          ]
+        },
+        "selinux": {
+          "status": "ok",
+          "data": "Enforcing"
+        },
+        "firewall": {
+          "status": "access_denied",
+          "reason": "Fictional evidence gap"
+        },
+        "time_sync": {
+          "status": "ok",
+          "data": "NTPSynchronized=yes\nTimezone=UTC"
+        },
+        "tcp": {
+          "status": "ok",
+          "data": [
+            {
+              "local_address": "0.0.0.0",
+              "local_port": 8443,
+              "remote_address": "0.0.0.0",
+              "remote_port": 0,
+              "state": "LISTEN",
+              "process": "example-app"
+            }
+          ]
+        },
+        "udp": {
+          "status": "ok",
+          "data": []
+        }
+      }
+    },
+    "nas01": {
+      "evidence": "hosts/nas01.json",
+      "collector": {
+        "name": "fictional-synthetic-example",
+        "version": "0.4.0"
+      },
+      "collected_at": "2026-10-05T14:01:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "nas01.example.test",
+            "os": "Example Linux",
+            "kernel": "6.1-example"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "address": "192.0.2.50"
+            }
+          ]
+        },
+        "uptime": {
+          "status": "ok",
+          "data": {
+            "uptime_seconds": 86400,
+            "boot_time": "2026-10-04T14:01:00Z"
+          }
+        },
+        "memory": {
+          "status": "access_denied",
+          "reason": "Fictional evidence gap"
+        },
+        "mounts": {
+          "status": "ok",
+          "data": {
+            "filesystems": [
+              {
+                "target": "/",
+                "source": "/dev/example1",
+                "fstype": "ext4"
+              }
+            ]
+          }
+        },
+        "configured_mounts": {
+          "status": "ok",
+          "data": {
+            "filesystems": []
+          }
+        },
+        "storage_capacity": {
+          "status": "ok",
+          "data": [
+            {
+              "target": "/exports",
+              "fstype": "ext4",
+              "total_bytes": 1099511627776,
+              "used_bytes": 1022545813832,
+              "available_bytes": 76965813944,
+              "used_percent": 93
+            }
+          ]
+        },
+        "patch_inventory": {
+          "status": "unsupported",
+          "reason": "Fictional package metadata capability gap"
+        },
+        "services": {
+          "status": "ok",
+          "data": [
+            {
+              "name": "nfs-server.service",
+              "load": "loaded",
+              "active": "active",
+              "sub": "exited"
+            },
+            {
+              "name": "smb.service",
+              "load": "loaded",
+              "active": "active",
+              "sub": "running"
+            }
+          ]
+        },
+        "selinux": {
+          "status": "ok",
+          "data": "Enforcing"
+        },
+        "time_sync": {
+          "status": "ok",
+          "data": "NTPSynchronized=yes\nTimezone=UTC"
+        },
+        "tcp": {
+          "status": "ok",
+          "data": [
+            {
+              "local_address": "192.0.2.50",
+              "local_port": 2049,
+              "state": "LISTEN",
+              "process": "nfsd"
+            },
+            {
+              "local_address": "192.0.2.50",
+              "local_port": 445,
+              "state": "LISTEN",
+              "process": "smbd"
+            }
+          ]
+        },
+        "udp": {
+          "status": "ok",
+          "data": []
+        }
+      }
+    },
+    "win01": {
+      "evidence": "hosts/win01.json",
+      "collector": {
+        "name": "fictional-synthetic-example",
+        "version": "0.4.0"
+      },
+      "collected_at": "2026-10-05T14:02:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "win01.example.test",
+            "os_name": "Example Windows Server",
+            "os_build": "example-build",
+            "last_boot_utc": "2026-10-03T14:02:00Z"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "address": "192.0.2.30"
+            }
+          ]
+        },
+        "uptime": {
+          "status": "ok",
+          "data": {
+            "uptime_seconds": 172800,
+            "boot_time": "2026-10-03T14:02:00Z"
+          }
+        },
+        "memory": {
+          "status": "ok",
+          "data": {
+            "total_bytes": 17179869184,
+            "available_bytes": 12884901888
+          }
+        },
+        "smb_mappings": {
+          "status": "ok",
+          "data": [
+            {
+              "local_path": "Z:",
+              "remote_path": "\\\\nas01.example.test\\reports",
+              "status": "OK"
+            }
+          ]
+        },
+        "configured_mounts": {
+          "status": "ok",
+          "data": {
+            "filesystems": [
+              {
+                "target": "Z:",
+                "source": "//nas01.example.test/reports",
+                "fstype": "cifs"
+              }
+            ]
+          }
+        },
+        "disks": {
+          "status": "ok",
+          "data": [
+            {
+              "device_id": "C:",
+              "drive_type": 3,
+              "filesystem": "NTFS",
+              "size_bytes": 214748364800,
+              "free_bytes": 128849018880,
+              "provider_name": ""
+            },
+            {
+              "device_id": "Z:",
+              "drive_type": 4,
+              "filesystem": "NTFS",
+              "size_bytes": 1099511627776,
+              "free_bytes": 76965813944,
+              "provider_name": "\\\\nas01.example.test\\reports"
+            }
+          ]
+        },
+        "hotfixes": {
+          "status": "ok",
+          "data": [
+            {
+              "id": "KB-FICTIONAL",
+              "installed_at": "2026-10-02"
+            }
+          ]
+        },
+        "reboot_pending": {
+          "status": "ok",
+          "data": {
+            "pending": true,
+            "indicators": [
+              "Fictional pending reboot marker"
+            ]
+          }
+        },
+        "services": {
+          "status": "ok",
+          "data": [
+            {
+              "name": "ExampleService",
+              "state": "Running",
+              "start_mode": "Auto"
+            },
+            {
+              "name": "WazuhSvc",
+              "state": "Running",
+              "start_mode": "Auto"
+            }
+          ]
+        },
+        "firewall": {
+          "status": "ok",
+          "data": [
+            {
+              "name": "Domain",
+              "enabled": true
+            },
+            {
+              "name": "Private",
+              "enabled": true
+            },
+            {
+              "name": "Public",
+              "enabled": true
+            }
+          ]
+        },
+        "tcp": {
+          "status": "ok",
+          "data": [
+            {
+              "local_address": "192.0.2.30",
+              "local_port": 5986,
+              "state": "Listen",
+              "process": "System"
+            }
+          ]
+        },
+        "udp": {
+          "status": "access_denied",
+          "reason": "Fictional endpoint evidence gap"
+        }
+      }
+    }
+  },
+  "evidence_relationships": [
+    {
+      "source": "app01",
+      "target": "storage:archive.example.test",
+      "kind": "storage_mount",
+      "status": "configured",
+      "source_origin": "configuration evidence",
+      "protocol": "nfs",
+      "remote_port": null,
+      "remote_path": "archive.example.test:/exports/archive",
+      "mount_target": "/srv/archive",
+      "fstype": "nfs4",
+      "mount_state": "configured_only",
+      "remote_address": null,
+      "remote_name": "archive.example.test",
+      "target_resolution_basis": "unresolved",
+      "target_identity_evidence": "Unknown",
+      "purpose": "Remote filesystem configuration; activity unconfirmed",
+      "evidence": [
+        "hosts/app01.json#/sections/configured_mounts/data/filesystems/1"
+      ],
+      "id": "43d70f06a5c1a019"
+    },
+    {
+      "source": "app01",
+      "target": "nas01",
+      "kind": "storage_mount",
+      "status": "observed",
+      "source_origin": "mount observation",
+      "protocol": "nfs",
+      "remote_port": null,
+      "remote_path": "nas01.example.test:/exports/content",
+      "mount_target": "/srv/content",
+      "fstype": "nfs4",
+      "mount_state": "active",
+      "remote_address": null,
+      "remote_name": "nas01.example.test",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/nas01.json",
+      "purpose": "Remote filesystem mount observation",
+      "evidence": [
+        "hosts/app01.json#/sections/configured_mounts/data/filesystems/0",
+        "hosts/app01.json#/sections/mounts/data/filesystems/0/children/0"
+      ],
+      "id": "ec872147e2d76fa1"
+    },
+    {
+      "source": "win01",
+      "target": "nas01",
+      "kind": "storage_mount",
+      "status": "observed",
+      "source_origin": "mount observation",
+      "protocol": "smb",
+      "remote_port": null,
+      "remote_path": "//nas01.example.test/reports",
+      "mount_target": "Z:",
+      "fstype": "cifs",
+      "mount_state": "active",
+      "remote_address": null,
+      "remote_name": "nas01.example.test",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/nas01.json",
+      "purpose": "Remote filesystem mount observation",
+      "evidence": [
+        "hosts/win01.json#/sections/configured_mounts/data/filesystems/0",
+        "hosts/win01.json#/sections/disks/data/1",
+        "hosts/win01.json#/sections/smb_mappings/data/0"
+      ],
+      "id": "2b2a63917ac4de50"
+    }
+  ],
+  "manual_context": {
+    "schema_version": 1,
+    "assets": [
+      {
+        "id": "app01",
+        "owner": "Fictional application team",
+        "criticality": "Operator-stated high",
+        "role": "Fictional application host",
+        "source": "Synthetic owner interview, demonstration only",
+        "reviewed_at": "2026-10-05",
+        "entered_by": "Fictional operator",
+        "attributes": {
+          "maintenance_window": "Example Friday 18:00 UTC",
+          "patch_baseline": "Needs Validation",
+          "backup_attestation": "Fictional operator states backup jobs run nightly; no restore evidence supplied",
+          "restore_reviewed_at": "Needs Validation"
+        }
+      },
+      {
+        "id": "nas01",
+        "owner": "Fictional storage team",
+        "criticality": "Operator-stated high",
+        "role": "Fictional NFS and SMB provider",
+        "source": "Synthetic storage worksheet, demonstration only",
+        "reviewed_at": "2026-10-05",
+        "entered_by": "Fictional operator",
+        "attributes": {
+          "risk_context": "Capacity review requested; no SMART or RAID health evidence supplied"
+        }
+      },
+      {
+        "id": "win01",
+        "owner": "Fictional Windows team",
+        "criticality": "Operator-stated medium",
+        "source": "Synthetic inventory worksheet, demonstration only",
+        "reviewed_at": "2026-10-05",
+        "entered_by": "Fictional operator",
+        "attributes": {
+          "maintenance_window": "Example Saturday 20:00 UTC",
+          "stig_attestation": "Needs Validation"
+        }
+      }
+    ],
+    "relationships": []
+  },
+  "workspace_id": "adb6282686254eaed823b087",
+  "relationships": [
+    {
+      "source": "win01",
+      "target": "nas01",
+      "kind": "storage_mount",
+      "status": "observed",
+      "source_origin": "mount observation",
+      "protocol": "smb",
+      "remote_port": null,
+      "remote_path": "//nas01.example.test/reports",
+      "mount_target": "Z:",
+      "fstype": "cifs",
+      "mount_state": "active",
+      "remote_address": null,
+      "remote_name": "nas01.example.test",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/nas01.json",
+      "purpose": "Remote filesystem mount observation",
+      "evidence": [
+        "hosts/win01.json#/sections/configured_mounts/data/filesystems/0",
+        "hosts/win01.json#/sections/disks/data/1",
+        "hosts/win01.json#/sections/smb_mappings/data/0"
+      ],
+      "id": "2b2a63917ac4de50"
+    },
+    {
+      "source": "app01",
+      "target": "storage:archive.example.test",
+      "kind": "storage_mount",
+      "status": "configured",
+      "source_origin": "configuration evidence",
+      "protocol": "nfs",
+      "remote_port": null,
+      "remote_path": "archive.example.test:/exports/archive",
+      "mount_target": "/srv/archive",
+      "fstype": "nfs4",
+      "mount_state": "configured_only",
+      "remote_address": null,
+      "remote_name": "archive.example.test",
+      "target_resolution_basis": "unresolved",
+      "target_identity_evidence": "Unknown",
+      "purpose": "Remote filesystem configuration; activity unconfirmed",
+      "evidence": [
+        "hosts/app01.json#/sections/configured_mounts/data/filesystems/1"
+      ],
+      "id": "43d70f06a5c1a019"
+    },
+    {
+      "source": "app01",
+      "target": "nas01",
+      "kind": "storage_mount",
+      "status": "observed",
+      "source_origin": "mount observation",
+      "protocol": "nfs",
+      "remote_port": null,
+      "remote_path": "nas01.example.test:/exports/content",
+      "mount_target": "/srv/content",
+      "fstype": "nfs4",
+      "mount_state": "active",
+      "remote_address": null,
+      "remote_name": "nas01.example.test",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/nas01.json",
+      "purpose": "Remote filesystem mount observation",
+      "evidence": [
+        "hosts/app01.json#/sections/configured_mounts/data/filesystems/0",
+        "hosts/app01.json#/sections/mounts/data/filesystems/0/children/0"
+      ],
+      "id": "ec872147e2d76fa1"
+    }
+  ],
+  "gaps": [
+    {
+      "asset_id": "app01",
+      "section": "firewall",
+      "status": "access_denied",
+      "evidence": "hosts/app01.json"
+    },
+    {
+      "asset_id": "app01",
+      "section": "reboot_pending",
+      "status": "unsupported",
+      "evidence": "hosts/app01.json"
+    },
+    {
+      "asset_id": "nas01",
+      "section": "memory",
+      "status": "access_denied",
+      "evidence": "hosts/nas01.json"
+    },
+    {
+      "asset_id": "nas01",
+      "section": "patch_inventory",
+      "status": "unsupported",
+      "evidence": "hosts/nas01.json"
+    },
+    {
+      "asset_id": "win01",
+      "section": "udp",
+      "status": "access_denied",
+      "evidence": "hosts/win01.json"
+    }
+  ],
+  "conflicts": [],
+  "collection_mode": "mixed",
+  "manual_source": {
+    "path": "examples/admin-snapshot/context.json",
+    "sha256": "3198aa6a158c77481c0f5d1dcde442bb327a2cab501b098b22f1cf3717c4456d"
+  },
+  "interpretation": "Observed endpoints do not establish TCP initiator, purpose, authorization, or criticality.",
+  "storage_mounts": [
+    {
+      "provider": "archive.example.test",
+      "remote_path": "archive.example.test:/exports/archive",
+      "target": "/srv/archive",
+      "fstype": "nfs4",
+      "evidence": [
+        "hosts/app01.json#/sections/configured_mounts/data/filesystems/1"
+      ],
+      "active_observed": false,
+      "configured_observed": true,
+      "mapping_observed": false,
+      "reported_fs_types": [
+        "nfs4"
+      ],
+      "reported_mapping_statuses": [],
+      "asset_id": "app01",
+      "provider_asset_id": "storage:archive.example.test",
+      "identity_basis": "unresolved",
+      "provider_identity_evidence": "Unknown",
+      "mount_state": "configured_only",
+      "collection_status": {
+        "active": "ok",
+        "configured": "ok"
+      }
+    },
+    {
+      "provider": "nas01.example.test",
+      "remote_path": "nas01.example.test:/exports/content",
+      "target": "/srv/content",
+      "fstype": "nfs4",
+      "evidence": [
+        "hosts/app01.json#/sections/mounts/data/filesystems/0/children/0",
+        "hosts/app01.json#/sections/configured_mounts/data/filesystems/0"
+      ],
+      "active_observed": true,
+      "configured_observed": true,
+      "mapping_observed": false,
+      "reported_fs_types": [
+        "nfs4"
+      ],
+      "reported_mapping_statuses": [],
+      "asset_id": "app01",
+      "provider_asset_id": "nas01",
+      "identity_basis": "census identity",
+      "provider_identity_evidence": "hosts/nas01.json",
+      "mount_state": "active",
+      "collection_status": {
+        "active": "ok",
+        "configured": "ok"
+      }
+    },
+    {
+      "provider": "nas01.example.test",
+      "remote_path": "//nas01.example.test/reports",
+      "target": "Z:",
+      "fstype": "cifs",
+      "evidence": [
+        "hosts/win01.json#/sections/smb_mappings/data/0",
+        "hosts/win01.json#/sections/disks/data/1",
+        "hosts/win01.json#/sections/configured_mounts/data/filesystems/0"
+      ],
+      "active_observed": true,
+      "configured_observed": true,
+      "mapping_observed": true,
+      "reported_fs_types": [
+        "cifs"
+      ],
+      "reported_mapping_statuses": [
+        "OK",
+        "Unknown"
+      ],
+      "asset_id": "win01",
+      "provider_asset_id": "nas01",
+      "identity_basis": "census identity",
+      "provider_identity_evidence": "hosts/nas01.json",
+      "mount_state": "active",
+      "collection_status": {
+        "active": "ok",
+        "configured": "ok"
+      }
+    }
+  ],
+  "dashboards": {
+    "schema_version": 1,
+    "summary": {
+      "snapshot_at": "2026-10-05T14:02:00+00:00",
+      "asset_count": 3,
+      "collected_asset_count": 3,
+      "expected_asset_count": 3,
+      "collection_gap_count": 5,
+      "assets_with_gaps": 3,
+      "unknown_owner_count": 0,
+      "unknown_criticality_count": 0,
+      "active_storage_mount_count": 2,
+      "configured_only_storage_mount_count": 1,
+      "storage_provider_count": 2,
+      "capacity_warning_count": 1,
+      "capacity_critical_count": 1,
+      "finding_count": 9,
+      "coverage": {
+        "returned": 3,
+        "expected": 3,
+        "percent": 100.0
+      },
+      "capacity_thresholds": {
+        "warning_percent": 80,
+        "critical_percent": 90
+      },
+      "freshness_basis": "relative to latest collection timestamp"
+    },
+    "assets": [
+      {
+        "label": "app01.example.test",
+        "platform": "linux",
+        "collected_at": "2026-10-05T14:00:00Z",
+        "os": "Example Enterprise Linux 9",
+        "source_kind": "census",
+        "role": "Fictional application host",
+        "evidence": "hosts/app01.json",
+        "asset_id": "app01",
+        "addresses": [
+          "192.0.2.10"
+        ],
+        "owner": "Fictional application team",
+        "criticality": "Operator-stated high",
+        "uptime_seconds": 432000,
+        "boot_time": "2026-09-30T14:00:00Z",
+        "memory_available_percent": 25.0,
+        "kernel": "5.14.0-example",
+        "patch_evidence": {
+          "status": "unknown",
+          "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+          "evidence": [
+            "hosts/app01.json#/sections/patch_inventory"
+          ]
+        },
+        "latest_patch_observation": {
+          "status": "observed",
+          "observed_at": "2026-10-01T18:00:00Z",
+          "precision": "instant",
+          "description": "Latest observed package installation",
+          "evidence": [
+            "hosts/app01.json#/sections/patch_inventory"
+          ]
+        },
+        "reboot_pending": {
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            "hosts/app01.json#/sections/reboot_pending"
+          ]
+        },
+        "failed_services": {
+          "status": "observed",
+          "names": [
+            "example-report.service"
+          ],
+          "evidence": [
+            "hosts/app01.json#/sections/services",
+            "hosts/app01.json#/sections/failed_services"
+          ]
+        },
+        "security": {
+          "selinux": {
+            "status": "observed",
+            "value": "Enforcing",
+            "collection_status": "ok",
+            "evidence": [
+              "hosts/app01.json#/sections/selinux"
+            ]
+          },
+          "firewall": {
+            "status": "unknown",
+            "value": "Unknown",
+            "collection_status": "access_denied",
+            "evidence": [
+              "hosts/app01.json#/sections/firewall"
+            ]
+          },
+          "time_sync": {
+            "status": "observed",
+            "value": "NTPSynchronized=yes\nTimezone=UTC",
+            "collection_status": "ok",
+            "evidence": [
+              "hosts/app01.json#/sections/time_sync"
+            ]
+          },
+          "audit": {
+            "status": "unknown",
+            "value": "Unknown",
+            "collection_status": "not collected",
+            "evidence": [
+              "hosts/app01.json#/sections/audit"
+            ]
+          },
+          "service_presence": {
+            "status": "observed",
+            "names": [
+              "app.service",
+              "auditd.service",
+              "example-report.service",
+              "wazuh-agent.service"
+            ],
+            "evidence": [
+              "hosts/app01.json#/sections/services"
+            ]
+          },
+          "agent": {
+            "status": "observed",
+            "names": [
+              "wazuh-agent.service"
+            ],
+            "value": "Presence only; enrollment and received telemetry unknown",
+            "evidence": [
+              "hosts/app01.json#/sections/services"
+            ]
+          },
+          "listeners": {
+            "status": "observed",
+            "items": [
+              {
+                "protocol": "tcp",
+                "address": "0.0.0.0",
+                "port": 8443,
+                "process": "example-app",
+                "evidence": [
+                  "hosts/app01.json#/sections/tcp/data/0"
+                ]
+              }
+            ],
+            "evidence": [
+              "hosts/app01.json#/sections/tcp",
+              "hosts/app01.json#/sections/udp"
+            ]
+          }
+        },
+        "freshness": {
+          "age_seconds": 120,
+          "status": "within_snapshot_day"
+        },
+        "coverage": {
+          "status": "partial",
+          "collected_sections": [
+            "configured_mounts",
+            "identity",
+            "interfaces",
+            "memory",
+            "mounts",
+            "patch_inventory",
+            "selinux",
+            "services",
+            "storage_capacity",
+            "tcp",
+            "time_sync",
+            "udp",
+            "uptime"
+          ],
+          "gap_sections": [
+            "firewall",
+            "reboot_pending"
+          ]
+        },
+        "context": [
+          {
+            "field": "owner",
+            "value": "Fictional application team",
+            "source": "Synthetic owner interview, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/0"
+          },
+          {
+            "field": "criticality",
+            "value": "Operator-stated high",
+            "source": "Synthetic owner interview, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/0"
+          },
+          {
+            "field": "role",
+            "value": "Fictional application host",
+            "source": "Synthetic owner interview, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/0"
+          },
+          {
+            "field": "backup_attestation",
+            "value": "Fictional operator states backup jobs run nightly; no restore evidence supplied",
+            "source": "Synthetic owner interview, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/0"
+          },
+          {
+            "field": "maintenance_window",
+            "value": "Example Friday 18:00 UTC",
+            "source": "Synthetic owner interview, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/0"
+          },
+          {
+            "field": "patch_baseline",
+            "value": "Needs Validation",
+            "source": "Synthetic owner interview, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/0"
+          },
+          {
+            "field": "restore_reviewed_at",
+            "value": "Needs Validation",
+            "source": "Synthetic owner interview, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/0"
+          }
+        ],
+        "backup_attestation": {
+          "status": "manual assertion",
+          "entries": [
+            {
+              "field": "backup_attestation",
+              "value": "Fictional operator states backup jobs run nightly; no restore evidence supplied",
+              "source": "Synthetic owner interview, demonstration only",
+              "reviewed_at": "2026-10-05",
+              "evidence": "context.json#/assets/0"
+            },
+            {
+              "field": "restore_reviewed_at",
+              "value": "Needs Validation",
+              "source": "Synthetic owner interview, demonstration only",
+              "reviewed_at": "2026-10-05",
+              "evidence": "context.json#/assets/0"
+            }
+          ],
+          "value": "Attributed context supplied; restoration not measured"
+        },
+        "storage_consumer_count": 0
+      },
+      {
+        "label": "nas01.example.test",
+        "platform": "linux",
+        "collected_at": "2026-10-05T14:01:00Z",
+        "os": "Example Linux",
+        "source_kind": "census",
+        "role": "Fictional NFS and SMB provider",
+        "evidence": "hosts/nas01.json",
+        "asset_id": "nas01",
+        "addresses": [
+          "192.0.2.50"
+        ],
+        "owner": "Fictional storage team",
+        "criticality": "Operator-stated high",
+        "uptime_seconds": 86400,
+        "boot_time": "2026-10-04T14:01:00Z",
+        "memory_available_percent": null,
+        "kernel": "6.1-example",
+        "patch_evidence": {
+          "status": "unknown",
+          "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+          "evidence": []
+        },
+        "latest_patch_observation": {
+          "status": "unknown",
+          "observed_at": null,
+          "precision": "unknown",
+          "description": "Unknown",
+          "evidence": []
+        },
+        "reboot_pending": {
+          "status": "unknown",
+          "value": null,
+          "evidence": [
+            "hosts/nas01.json#/sections/reboot_pending"
+          ]
+        },
+        "failed_services": {
+          "status": "observed",
+          "names": [],
+          "evidence": [
+            "hosts/nas01.json#/sections/services",
+            "hosts/nas01.json#/sections/failed_services"
+          ]
+        },
+        "security": {
+          "selinux": {
+            "status": "observed",
+            "value": "Enforcing",
+            "collection_status": "ok",
+            "evidence": [
+              "hosts/nas01.json#/sections/selinux"
+            ]
+          },
+          "firewall": {
+            "status": "unknown",
+            "value": "Unknown",
+            "collection_status": "not collected",
+            "evidence": [
+              "hosts/nas01.json#/sections/firewall"
+            ]
+          },
+          "time_sync": {
+            "status": "observed",
+            "value": "NTPSynchronized=yes\nTimezone=UTC",
+            "collection_status": "ok",
+            "evidence": [
+              "hosts/nas01.json#/sections/time_sync"
+            ]
+          },
+          "audit": {
+            "status": "unknown",
+            "value": "Unknown",
+            "collection_status": "not collected",
+            "evidence": [
+              "hosts/nas01.json#/sections/audit"
+            ]
+          },
+          "service_presence": {
+            "status": "observed",
+            "names": [
+              "nfs-server.service",
+              "smb.service"
+            ],
+            "evidence": [
+              "hosts/nas01.json#/sections/services"
+            ]
+          },
+          "agent": {
+            "status": "observed",
+            "names": [],
+            "value": "No matching service observed",
+            "evidence": [
+              "hosts/nas01.json#/sections/services"
+            ]
+          },
+          "listeners": {
+            "status": "observed",
+            "items": [
+              {
+                "protocol": "tcp",
+                "address": "192.0.2.50",
+                "port": 2049,
+                "process": "nfsd",
+                "evidence": [
+                  "hosts/nas01.json#/sections/tcp/data/0"
+                ]
+              },
+              {
+                "protocol": "tcp",
+                "address": "192.0.2.50",
+                "port": 445,
+                "process": "smbd",
+                "evidence": [
+                  "hosts/nas01.json#/sections/tcp/data/1"
+                ]
+              }
+            ],
+            "evidence": [
+              "hosts/nas01.json#/sections/tcp",
+              "hosts/nas01.json#/sections/udp"
+            ]
+          }
+        },
+        "freshness": {
+          "age_seconds": 60,
+          "status": "within_snapshot_day"
+        },
+        "coverage": {
+          "status": "partial",
+          "collected_sections": [
+            "configured_mounts",
+            "identity",
+            "interfaces",
+            "mounts",
+            "selinux",
+            "services",
+            "storage_capacity",
+            "tcp",
+            "time_sync",
+            "udp",
+            "uptime"
+          ],
+          "gap_sections": [
+            "memory",
+            "patch_inventory"
+          ]
+        },
+        "context": [
+          {
+            "field": "owner",
+            "value": "Fictional storage team",
+            "source": "Synthetic storage worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/1"
+          },
+          {
+            "field": "criticality",
+            "value": "Operator-stated high",
+            "source": "Synthetic storage worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/1"
+          },
+          {
+            "field": "role",
+            "value": "Fictional NFS and SMB provider",
+            "source": "Synthetic storage worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/1"
+          },
+          {
+            "field": "risk_context",
+            "value": "Capacity review requested; no SMART or RAID health evidence supplied",
+            "source": "Synthetic storage worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/1"
+          }
+        ],
+        "backup_attestation": {
+          "status": "unknown",
+          "entries": [],
+          "value": "Unknown"
+        },
+        "storage_consumer_count": 2
+      },
+      {
+        "label": "win01.example.test",
+        "platform": "windows",
+        "collected_at": "2026-10-05T14:02:00Z",
+        "os": "Example Windows Server",
+        "source_kind": "census",
+        "role": "Unknown",
+        "evidence": "hosts/win01.json",
+        "asset_id": "win01",
+        "addresses": [
+          "192.0.2.30"
+        ],
+        "owner": "Fictional Windows team",
+        "criticality": "Operator-stated medium",
+        "uptime_seconds": 172800,
+        "boot_time": "2026-10-03T14:02:00Z",
+        "memory_available_percent": 75.0,
+        "kernel": "example-build",
+        "patch_evidence": {
+          "status": "unknown",
+          "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+          "evidence": [
+            "hosts/win01.json#/sections/hotfixes"
+          ]
+        },
+        "latest_patch_observation": {
+          "status": "observed",
+          "observed_at": "2026-10-02",
+          "precision": "day",
+          "description": "Installed hotfix KB-FICTIONAL",
+          "evidence": [
+            "hosts/win01.json#/sections/hotfixes"
+          ]
+        },
+        "reboot_pending": {
+          "status": "observed",
+          "value": true,
+          "evidence": [
+            "hosts/win01.json#/sections/reboot_pending"
+          ]
+        },
+        "failed_services": {
+          "status": "observed",
+          "names": [],
+          "evidence": [
+            "hosts/win01.json#/sections/services",
+            "hosts/win01.json#/sections/failed_services"
+          ]
+        },
+        "security": {
+          "selinux": {
+            "status": "unknown",
+            "value": "Unknown",
+            "collection_status": "not collected",
+            "evidence": [
+              "hosts/win01.json#/sections/selinux"
+            ]
+          },
+          "firewall": {
+            "status": "observed",
+            "value": [
+              {
+                "name": "Domain",
+                "enabled": true
+              },
+              {
+                "name": "Private",
+                "enabled": true
+              },
+              {
+                "name": "Public",
+                "enabled": true
+              }
+            ],
+            "collection_status": "ok",
+            "evidence": [
+              "hosts/win01.json#/sections/firewall"
+            ]
+          },
+          "time_sync": {
+            "status": "unknown",
+            "value": "Unknown",
+            "collection_status": "not collected",
+            "evidence": [
+              "hosts/win01.json#/sections/time_sync"
+            ]
+          },
+          "audit": {
+            "status": "unknown",
+            "value": "Unknown",
+            "collection_status": "not collected",
+            "evidence": [
+              "hosts/win01.json#/sections/audit"
+            ]
+          },
+          "service_presence": {
+            "status": "observed",
+            "names": [
+              "ExampleService",
+              "WazuhSvc"
+            ],
+            "evidence": [
+              "hosts/win01.json#/sections/services"
+            ]
+          },
+          "agent": {
+            "status": "observed",
+            "names": [
+              "WazuhSvc"
+            ],
+            "value": "Presence only; enrollment and received telemetry unknown",
+            "evidence": [
+              "hosts/win01.json#/sections/services"
+            ]
+          },
+          "listeners": {
+            "status": "observed",
+            "items": [
+              {
+                "protocol": "tcp",
+                "address": "192.0.2.30",
+                "port": 5986,
+                "process": "System",
+                "evidence": [
+                  "hosts/win01.json#/sections/tcp/data/0"
+                ]
+              }
+            ],
+            "evidence": [
+              "hosts/win01.json#/sections/tcp",
+              "hosts/win01.json#/sections/udp"
+            ]
+          }
+        },
+        "freshness": {
+          "age_seconds": 0,
+          "status": "within_snapshot_day"
+        },
+        "coverage": {
+          "status": "partial",
+          "collected_sections": [
+            "configured_mounts",
+            "disks",
+            "firewall",
+            "hotfixes",
+            "identity",
+            "interfaces",
+            "memory",
+            "reboot_pending",
+            "services",
+            "smb_mappings",
+            "tcp",
+            "uptime"
+          ],
+          "gap_sections": [
+            "udp"
+          ]
+        },
+        "context": [
+          {
+            "field": "owner",
+            "value": "Fictional Windows team",
+            "source": "Synthetic inventory worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/2"
+          },
+          {
+            "field": "criticality",
+            "value": "Operator-stated medium",
+            "source": "Synthetic inventory worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/2"
+          },
+          {
+            "field": "maintenance_window",
+            "value": "Example Saturday 20:00 UTC",
+            "source": "Synthetic inventory worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/2"
+          },
+          {
+            "field": "stig_attestation",
+            "value": "Needs Validation",
+            "source": "Synthetic inventory worksheet, demonstration only",
+            "reviewed_at": "2026-10-05",
+            "evidence": "context.json#/assets/2"
+          }
+        ],
+        "backup_attestation": {
+          "status": "unknown",
+          "entries": [],
+          "value": "Unknown"
+        },
+        "storage_consumer_count": 0
+      }
+    ],
+    "storage_mounts": [
+      {
+        "provider": "archive.example.test",
+        "remote_path": "archive.example.test:/exports/archive",
+        "target": "/srv/archive",
+        "fstype": "nfs4",
+        "evidence": [
+          "hosts/app01.json#/sections/configured_mounts/data/filesystems/1"
+        ],
+        "active_observed": false,
+        "configured_observed": true,
+        "mapping_observed": false,
+        "reported_fs_types": [
+          "nfs4"
+        ],
+        "reported_mapping_statuses": [],
+        "asset_id": "app01",
+        "provider_asset_id": "storage:archive.example.test",
+        "identity_basis": "unresolved",
+        "provider_identity_evidence": "Unknown",
+        "mount_state": "configured_only",
+        "collection_status": {
+          "active": "ok",
+          "configured": "ok"
+        }
+      },
+      {
+        "provider": "nas01.example.test",
+        "remote_path": "nas01.example.test:/exports/content",
+        "target": "/srv/content",
+        "fstype": "nfs4",
+        "evidence": [
+          "hosts/app01.json#/sections/mounts/data/filesystems/0/children/0",
+          "hosts/app01.json#/sections/configured_mounts/data/filesystems/0"
+        ],
+        "active_observed": true,
+        "configured_observed": true,
+        "mapping_observed": false,
+        "reported_fs_types": [
+          "nfs4"
+        ],
+        "reported_mapping_statuses": [],
+        "asset_id": "app01",
+        "provider_asset_id": "nas01",
+        "identity_basis": "census identity",
+        "provider_identity_evidence": "hosts/nas01.json",
+        "mount_state": "active",
+        "collection_status": {
+          "active": "ok",
+          "configured": "ok"
+        }
+      },
+      {
+        "provider": "nas01.example.test",
+        "remote_path": "//nas01.example.test/reports",
+        "target": "Z:",
+        "fstype": "cifs",
+        "evidence": [
+          "hosts/win01.json#/sections/smb_mappings/data/0",
+          "hosts/win01.json#/sections/disks/data/1",
+          "hosts/win01.json#/sections/configured_mounts/data/filesystems/0"
+        ],
+        "active_observed": true,
+        "configured_observed": true,
+        "mapping_observed": true,
+        "reported_fs_types": [
+          "cifs"
+        ],
+        "reported_mapping_statuses": [
+          "OK",
+          "Unknown"
+        ],
+        "asset_id": "win01",
+        "provider_asset_id": "nas01",
+        "identity_basis": "census identity",
+        "provider_identity_evidence": "hosts/nas01.json",
+        "mount_state": "active",
+        "collection_status": {
+          "active": "ok",
+          "configured": "ok"
+        }
+      }
+    ],
+    "storage_capacity": [
+      {
+        "asset_id": "app01",
+        "target": "/",
+        "fstype": "xfs",
+        "total_bytes": 107374182400,
+        "used_bytes": 91268055040,
+        "available_bytes": 16106127360,
+        "used_percent": 85,
+        "inodes_total": 1000000,
+        "inodes_free": 700000,
+        "scope": "local filesystem",
+        "status": "warning",
+        "evidence": [
+          "hosts/app01.json#/sections/storage_capacity/data/0"
+        ]
+      },
+      {
+        "asset_id": "nas01",
+        "target": "/exports",
+        "fstype": "ext4",
+        "total_bytes": 1099511627776,
+        "used_bytes": 1022545813832,
+        "available_bytes": 76965813944,
+        "used_percent": 93,
+        "inodes_total": null,
+        "inodes_free": null,
+        "scope": "local filesystem",
+        "status": "critical",
+        "evidence": [
+          "hosts/nas01.json#/sections/storage_capacity/data/0"
+        ]
+      },
+      {
+        "asset_id": "win01",
+        "target": "C:",
+        "fstype": "NTFS",
+        "total_bytes": 214748364800,
+        "used_bytes": 85899345920,
+        "available_bytes": 128849018880,
+        "used_percent": 40.0,
+        "inodes_total": null,
+        "inodes_free": null,
+        "scope": "local logical volume",
+        "status": "ok",
+        "evidence": [
+          "hosts/win01.json#/sections/disks/data/0"
+        ]
+      }
+    ],
+    "findings": [
+      {
+        "asset_id": "nas01",
+        "severity": "critical",
+        "category": "capacity",
+        "title": "Filesystem capacity critical",
+        "detail": "/exports is 93% used; threshold 90%. No device health inference.",
+        "evidence": [
+          "hosts/nas01.json#/sections/storage_capacity/data/0"
+        ],
+        "id": "98319af72a124d8d"
+      },
+      {
+        "asset_id": "app01",
+        "severity": "warning",
+        "category": "capacity",
+        "title": "Filesystem capacity warning",
+        "detail": "/ is 85% used; threshold 80%. No device health inference.",
+        "evidence": [
+          "hosts/app01.json#/sections/storage_capacity/data/0"
+        ],
+        "id": "022359c1e9f0d081"
+      },
+      {
+        "asset_id": "app01",
+        "severity": "warning",
+        "category": "services",
+        "title": "Failed service state observed",
+        "detail": "example-report.service; the snapshot does not establish business impact.",
+        "evidence": [
+          "hosts/app01.json#/sections/services",
+          "hosts/app01.json#/sections/failed_services"
+        ],
+        "id": "f83878307a72af59"
+      },
+      {
+        "asset_id": "win01",
+        "severity": "warning",
+        "category": "reboot",
+        "title": "Reboot pending indication",
+        "detail": "Local reboot indicators were observed; review the approved maintenance process.",
+        "evidence": [
+          "hosts/win01.json#/sections/reboot_pending"
+        ],
+        "id": "a0d1e94b485e8db9"
+      },
+      {
+        "asset_id": "app01",
+        "severity": "info",
+        "category": "storage_identity",
+        "title": "Storage provider identity needs review",
+        "detail": "archive.example.test: unresolved.",
+        "evidence": [
+          "hosts/app01.json#/sections/configured_mounts/data/filesystems/1"
+        ],
+        "id": "5a1a99832c5a050c"
+      },
+      {
+        "asset_id": "app01",
+        "severity": "info",
+        "category": "storage_evidence",
+        "title": "Storage mount configured only",
+        "detail": "/srv/archive; absence from active evidence does not prove an outage or disconnected storage.",
+        "evidence": [
+          "hosts/app01.json#/sections/configured_mounts/data/filesystems/1"
+        ],
+        "id": "db2b9f44728d24e2"
+      },
+      {
+        "asset_id": "app01",
+        "severity": "info",
+        "category": "coverage",
+        "title": "Collection evidence gaps",
+        "detail": "firewall, reboot_pending; asset/service health is unknown for these gaps.",
+        "evidence": [
+          "hosts/app01.json"
+        ],
+        "id": "fc0be74960a5de4f"
+      },
+      {
+        "asset_id": "nas01",
+        "severity": "info",
+        "category": "coverage",
+        "title": "Collection evidence gaps",
+        "detail": "memory, patch_inventory; asset/service health is unknown for these gaps.",
+        "evidence": [
+          "hosts/nas01.json"
+        ],
+        "id": "33600e867354b75d"
+      },
+      {
+        "asset_id": "win01",
+        "severity": "info",
+        "category": "coverage",
+        "title": "Collection evidence gaps",
+        "detail": "udp; asset/service health is unknown for these gaps.",
+        "evidence": [
+          "hosts/win01.json"
+        ],
+        "id": "0c886683ecdfd1ba"
+      }
+    ],
+    "limitations": [
+      "A census is a point-in-time snapshot. Uptime is time since boot, not an availability SLA or outage history.",
+      "Patch inventory and install dates do not establish patch currency. An approved applicable baseline and comparison are not supplied.",
+      "Configured storage is not proof of an active mount, remote reachability, required business dependency, or authorization.",
+      "Provider identity uses exact inventory IDs, names, or IPs in this model. No DNS lookup or hostname expansion is performed; manual matches remain assertions.",
+      "Capacity is filesystem or logical-volume evidence, not SMART, RAID, SAN fabric, backup, or restore health.",
+      "Security controls, agents, services and listeners are observations, not a compliance score or proof of effective enforcement or received telemetry.",
+      "Missing or failed collection is an evidence gap, not proof that an asset or service is unhealthy, offline, disconnected, or retired.",
+      "Freshness is relative to the latest valid collection timestamp in this snapshot, not the time this page is opened."
+    ]
+  }
+}

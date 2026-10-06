@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 - 2026-10-06
+
+Added self-contained administrator/security/leadership dashboards, active/configured NFS/SMB storage topology and CSV/JSON summaries in the WinSCP export. Extended read-only Linux/Windows collection with selected uptime/memory/local-capacity/patch/reboot/mapping evidence and bounded static automount configuration handling. Unknown, partial and unsupported evidence remains visible; dashboards do not assert patch currency, hardware health, compliance, SLA availability or approved dependencies. Existing map gains a storage layer and host drill-down links. Source/fixture tests remain separate from live qualification.
+
 ## 0.3.1 - 2026-10-06
 
 Added a self-contained existing-Ansible-repository integration guide, local LLM task/input worksheet, separate wrapper, private inventory overlay and explicit settings templates. Documented config/variable precedence, controller interpreter/dependencies, full-workflow limits, output privacy and production authorization boundaries. Added opt-in fictional nested-parent tests to the qualified Ansible CI job. Existing playbooks and real repositories are not modified or executed by this documentation release.

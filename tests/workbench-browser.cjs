@@ -197,7 +197,32 @@ async function main() {
     }
     assert.deepEqual(exceptions, []);
     assert.deepEqual(remoteRequests, []);
-    console.log(JSON.stringify({result:'PASS', export_path:path.join(tmp,'manual-context.json'), checked:'select/edit/save/export/download/reload/import rejection/hosting validation/identity conflicts/XSS/no network/storage unavailable/zoom/drag/loopback/manual endpoint attribution'}, null, 2));
+    // Storage relationships remain evidence and link from dashboards into a host.
+    const storagePage = await context.newPage();
+    storagePage.on('pageerror', error => exceptions.push(error.message));
+    storagePage.on('request', request => { if (/^https?:/.test(request.url())) remoteRequests.push(request.url()); });
+    await storagePage.goto(pathToFileURL(path.join(root,'examples/admin-snapshot-products/dependency-map.html')).href + '#asset=app01');
+    await storagePage.waitForFunction(() => Boolean(window.CensusWorkbench));
+    const storageState = await storagePage.evaluate(() => window.CensusWorkbench.getState());
+    assert.equal(storageState.selected, 'app01', 'dashboard fragment selects its host');
+    const storageEdges = storageState.relationships.filter(edge => edge.kind === 'storage_mount');
+    assert.ok(storageEdges.length >= 2, 'storage sources create directed relationships');
+    for (const edge of storageEdges) {
+      const label = await storagePage.locator('[data-edge="' + edge.id + '"] .edge-label').textContent();
+      assert.match(label, /^storage · /, 'storage links are not mislabeled TCP observations');
+      assert.ok(label.includes((edge.mount_state || edge.status).replace(/_/g, ' ')), 'graph retains configured/unknown state');
+    }
+    await storagePage.evaluate(() => window.CensusWorkbench.showTab('relationships'));
+    assert.ok(await storagePage.locator('.relationship-card.storage').count());
+    assert.match(await storagePage.locator('#relationships').textContent(), /configured is not necessarily active/);
+    await storagePage.locator('#layer-storage').uncheck();
+    for (const edge of storageEdges) assert.equal(await storagePage.locator('[data-edge="' + edge.id + '"]').count(), 0, 'storage layer can be hidden');
+    await storagePage.locator('#layer-storage').check();
+    assert.ok(await storagePage.locator('.graph-edge').count());
+    await storagePage.close();
+    assert.deepEqual(exceptions, []);
+    assert.deepEqual(remoteRequests, []);
+    console.log(JSON.stringify({result:'PASS', export_path:path.join(tmp,'manual-context.json'), checked:'select/edit/save/export/download/reload/import rejection/hosting validation/identity conflicts/XSS/no network/storage unavailable/zoom/drag/loopback/manual endpoint attribution/storage layer/dashboard host fragment'}, null, 2));
   } finally {
     await browser.close();
   }

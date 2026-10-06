@@ -1,0 +1,22 @@
+---
+# Fictional entered context, not observed compliance or a real policy baseline.
+# Copy into your approved private context folder and retain source/review dates.
+schema_version: 1
+assets:
+  - id: app01
+    owner: Example application team
+    criticality: high
+    source: Fictional owner interview and change record; replace with real references
+    entered_by: Example operator
+    reviewed_at: '2026-10-06'
+    attributes:
+      maintenance_window: Friday 18:00-22:00 local; needs approved change scope
+      patch_baseline: Needs Validation; supply approved package/kernel or WSUS baseline
+      last_approved_patch_date: Needs Validation
+      backup_last_success: Needs Validation; supply dated job evidence
+      backup_last_restore_test: Needs Validation; supply restore-test record
+      stig_review: Needs Validation; supply dated checklist and scope
+      poam_reference: Needs Validation
+      risk_owner: Example system owner; identity Needs Validation
+      support_lifecycle: Needs Validation; verify vendor support and entitlement
+relationships: []

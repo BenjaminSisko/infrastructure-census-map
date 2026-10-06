@@ -41,6 +41,7 @@ python renderer/render.py --evidence examples/synthetic \
   --output examples/synthetic-with-manual-products
 python renderer/render.py --manual examples/manual-only/context.yml --output examples/manual-only-products
 CENSUS_REPORT_PYTHON="$(command -v python)" node tests/workbench-browser.cjs
+CENSUS_REPORT_PYTHON="$(command -v python)" node tests/dashboards-browser.cjs
 ```
 
 Set CENSUS_TEST_BROWSER to an existing Chrome/Chromium executable if your machine already supplies one; do not download a browser in production. The suite uses fictional data, checks editing/provenance/export round trips, and rejects page network requests. Optional CENSUS_TEST_SCREENSHOT writes a preview in your chosen private/developer location.

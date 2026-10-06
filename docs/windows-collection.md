@@ -113,6 +113,11 @@ The default collection includes:
 | `scheduled_tasks` | Task name/state, action executable basename, trigger type/start. |
 | `firewall` | Active profiles and selected rules, port/address filters, actions. |
 | `capabilities` | PowerShell version/language mode and available collector commands. |
+| `uptime`, `memory` | Boot-relative seconds and selected CIM memory counters. |
+| `hotfixes`, `reboot_pending` | Limited local hotfix install evidence and selected registry reboot indicators, not patch currency. |
+| `smb_mappings`, `configured_mounts` | Current-session SMB mapping state and current-account HKCU persisted mappings; not every user's shares. |
+
+Mapped drives are session/account-scoped. A persisted drive or non-OK SMB mapping is not proof of an active, healthy connection. Missing or partial enumeration remains Unknown. Registry reboot indicators are hints, not a complete Windows restart-requirements detector; access failures cannot be reported as false/no reboot needed. Hotfix install dates retain day precision where that is all the source reports. These queries do not start Windows Update, mount a share, load other users' hives, enable remoting or install modules. See [storage mapping](storage-mapping.md) and [dashboards](admin-dashboards.md).
 
 TCP data is a snapshot, and the `state` field separates listeners from connections. An established connection proves traffic was observed; it does not prove business purpose, approved access, or which application initiated it. Process lookup can race with process exit and then return `null`. [Microsoft Get-NetTCPConnection](https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-nettcpconnection?view=windowsserver2025-ps)
 

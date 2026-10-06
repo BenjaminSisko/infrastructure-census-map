@@ -1,0 +1,4 @@
+asset_id,provider,provider_asset_id,remote_path,target,fstype,mount_state,active_observed,configured_observed,identity_basis,provider_identity_evidence,evidence
+app01,archive.example.test,storage:archive.example.test,archive.example.test:/exports/archive,/srv/archive,nfs4,configured_only,False,True,unresolved,Unknown,hosts/app01.json#/sections/configured_mounts/data/filesystems/1
+app01,nas01.example.test,nas01,nas01.example.test:/exports/content,/srv/content,nfs4,active,True,True,census identity,hosts/nas01.json,hosts/app01.json#/sections/mounts/data/filesystems/0/children/0; hosts/app01.json#/sections/configured_mounts/data/filesystems/0
+win01,nas01.example.test,nas01,//nas01.example.test/reports,Z:,cifs,active,True,True,census identity,hosts/nas01.json,hosts/win01.json#/sections/smb_mappings/data/0; hosts/win01.json#/sections/disks/data/1; hosts/win01.json#/sections/configured_mounts/data/filesystems/0

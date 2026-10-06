@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {"id": "app01", "owner": "Fictional application team", "criticality": "Operator-stated high", "role": "Fictional application host", "source": "Synthetic owner interview, demonstration only", "reviewed_at": "2026-10-05", "entered_by": "Fictional operator", "attributes": {"maintenance_window": "Example Friday 18:00 UTC", "patch_baseline": "Needs Validation", "backup_attestation": "Fictional operator states backup jobs run nightly; no restore evidence supplied", "restore_reviewed_at": "Needs Validation"}},
+    {"id": "nas01", "owner": "Fictional storage team", "criticality": "Operator-stated high", "role": "Fictional NFS and SMB provider", "source": "Synthetic storage worksheet, demonstration only", "reviewed_at": "2026-10-05", "entered_by": "Fictional operator", "attributes": {"risk_context": "Capacity review requested; no SMART or RAID health evidence supplied"}},
+    {"id": "win01", "owner": "Fictional Windows team", "criticality": "Operator-stated medium", "source": "Synthetic inventory worksheet, demonstration only", "reviewed_at": "2026-10-05", "entered_by": "Fictional operator", "attributes": {"maintenance_window": "Example Saturday 20:00 UTC", "stig_attestation": "Needs Validation"}}
+  ],
+  "relationships": []
+}

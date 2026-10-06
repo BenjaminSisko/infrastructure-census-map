@@ -71,6 +71,29 @@ function Get-SafeProcessName {
     return $null
 }
 
+function Get-SafeMountSource {
+    param([AllowNull()][string]$Value)
+    if ($null -eq $Value) { return $null }
+    if ($Value.Length -gt 4096 -or $Value -match '[\x00-\x1f\x7f]') {
+        return '[omitted: unsafe source]'
+    }
+    if ($Value -match '(?i)(password|passwd|pass|credentials?|token|secret|api[_-]?key|access[_-]?key|username|user)\s*=') {
+        return '[omitted: credential-bearing source]'
+    }
+    $safe = ($Value -split '[?#]', 2)[0]
+    # Only source identities are retained; no URI userinfo or credential options.
+    $match = [regex]::Match($safe, '^(?<prefix>[A-Za-z][A-Za-z0-9+.-]*://|//|\\\\)(?<authority>[^/\\]*)(?<path>.*)$')
+    if ($match.Success) {
+        $authority = ($match.Groups['authority'].Value -split '@')[-1]
+        if ($authority -notmatch '^(?:[A-Za-z0-9_.-]+|\[[A-Za-z0-9:.%_-]+\])(?::\d+)?$') {
+            return '[omitted: unsafe source]'
+        }
+        return $match.Groups['prefix'].Value + $authority + $match.Groups['path'].Value
+    }
+    if ($safe -match '@') { return '[omitted: unsafe source]' }
+    return $safe
+}
+
 Invoke-CensusSection -Name identity -Commands Get-CimInstance -Query {
     $system = Get-CimInstance -ClassName Win32_ComputerSystem
     $os = Get-CimInstance -ClassName Win32_OperatingSystem
@@ -100,6 +123,97 @@ Invoke-CensusSection -Name identity -Commands Get-CimInstance -Query {
         processors = $processors
     }
 }
+
+Invoke-CensusSection -Name uptime -Commands Get-CimInstance -Query {
+    $os = Get-CimInstance -ClassName Win32_OperatingSystem -OperationTimeoutSec 8
+    if ($null -eq $os.LastBootUpTime) { throw 'boot_time_unavailable' }
+    $bootTime = $os.LastBootUpTime.ToUniversalTime()
+    $elapsed = ([DateTime]::UtcNow - $bootTime).TotalSeconds
+    if ($elapsed -lt 0) { throw 'boot_time_in_future' }
+    [ordered]@{
+        uptime_seconds = $elapsed
+        boot_time = $bootTime.ToString('o')
+    }
+}
+
+Invoke-CensusSection -Name memory -Commands Get-CimInstance -Query {
+    $os = Get-CimInstance -ClassName Win32_OperatingSystem -OperationTimeoutSec 8
+    foreach ($name in @('TotalVisibleMemorySize', 'FreePhysicalMemory',
+        'SizeStoredInPagingFiles', 'FreeSpaceInPagingFiles')) {
+        if ($null -eq $os.$name) { throw 'memory_counter_unavailable' }
+    }
+    [ordered]@{
+        total_bytes = [uint64]$os.TotalVisibleMemorySize * 1024
+        available_bytes = [uint64]$os.FreePhysicalMemory * 1024
+        swap_total_bytes = [uint64]$os.SizeStoredInPagingFiles * 1024
+        swap_free_bytes = [uint64]$os.FreeSpaceInPagingFiles * 1024
+    }
+}
+
+Invoke-CensusSection -Name hotfixes -Commands Get-HotFix -ArrayData -Query {
+    # Win32_QuickFixEngineering is a limited inventory, not update compliance.
+    Get-HotFix | ForEach-Object {
+        $installed = $null
+        try {
+            if ($_.InstalledOn) { $installed = ([DateTime]$_.InstalledOn).ToString('yyyy-MM-dd') }
+        }
+        catch { $installed = $null }
+        [ordered]@{ id = [string]$_.HotFixID; installed_at = $installed }
+    }
+}
+
+Invoke-CensusSection -Name reboot_pending -Commands Test-Path, Get-ItemProperty -Query {
+    $indicators = @()
+    $keys = [ordered]@{
+        component_based_servicing = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'
+        windows_update = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+    }
+    foreach ($name in $keys.Keys) {
+        if (Test-Path -LiteralPath $keys[$name] -ErrorAction Stop) { $indicators += $name }
+    }
+    $sessionManager = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager'
+    if (Test-Path -LiteralPath $sessionManager -ErrorAction Stop) {
+        $state = Get-ItemProperty -LiteralPath $sessionManager -ErrorAction Stop
+        foreach ($name in @('PendingFileRenameOperations', 'PendingFileRenameOperations2')) {
+            if ($state.PSObject.Properties[$name] -and
+                @($state.$name | Where-Object { $null -ne $_ -and [string]$_ -ne '' }).Count -gt 0) {
+                $indicators += $name
+            }
+        }
+    }
+    # Values/paths are omitted: only indicator names leave the local registry.
+    [ordered]@{ pending = [bool]($indicators.Count -gt 0); indicators = $indicators }
+}
+
+Invoke-CensusSection -Name smb_mappings -Commands Get-SmbMapping -ArrayData -Query {
+    Get-SmbMapping | ForEach-Object {
+        [ordered]@{
+            local_path = [string]$_.LocalPath
+            remote_path = Get-SafeMountSource -Value $_.RemotePath
+            status = [string]$_.Status
+        }
+    }
+}
+$script:CensusSections['smb_mappings']['scope'] = 'current collection session; not all users; no reachability probe'
+
+Invoke-CensusSection -Name configured_mounts -Commands Test-Path, Get-ChildItem, Get-ItemProperty -Query {
+    $rows = @()
+    if (Test-Path -LiteralPath 'HKCU:\Network' -ErrorAction Stop) {
+        # The collection account's persisted drive mappings, including inactive ones.
+        $rows = @(Get-ChildItem -LiteralPath 'HKCU:\Network' -ErrorAction Stop | ForEach-Object {
+            if ($_.PSChildName -notmatch '^[A-Za-z]$') { return }
+            $mapping = Get-ItemProperty -LiteralPath $_.PSPath -Name RemotePath -ErrorAction Stop
+            [ordered]@{
+                target = ([string]$_.PSChildName).ToUpperInvariant() + ':'
+                source = Get-SafeMountSource -Value $mapping.RemotePath
+                fstype = 'cifs'
+                configured_via = 'hkcu_network'
+            }
+        })
+    }
+    [ordered]@{ filesystems = $rows }
+}
+$script:CensusSections['configured_mounts']['scope'] = 'persisted HKCU drive mappings for collection account only; declarations only'
 
 Invoke-CensusSection -Name interfaces -Commands Get-NetAdapter, Get-NetIPAddress -ArrayData -Query {
     $addresses = @(Get-NetIPAddress)
@@ -246,7 +360,7 @@ Invoke-CensusSection -Name disks -Commands Get-CimInstance -ArrayData -Query {
             volume_name = [string]$_.VolumeName
             size_bytes = $(if ($null -eq $_.Size) { $null } else { [uint64]$_.Size })
             free_bytes = $(if ($null -eq $_.FreeSpace) { $null } else { [uint64]$_.FreeSpace })
-            provider_name = [string]$_.ProviderName
+            provider_name = Get-SafeMountSource -Value $_.ProviderName
         }
     }
 }
@@ -361,10 +475,15 @@ $script:CensusSections['capabilities'] = [ordered]@{
         powershell_version = $PSVersionTable.PSVersion.ToString()
         language_mode = [string]$ExecutionContext.SessionState.LanguageMode
         optional_role_metadata_requested = $IncludeRoleMetadata
+        smb_mapping_scope = 'current collection session; other user sessions excluded'
+        configured_mount_scope = 'persisted HKCU drive mappings for collection account only'
+        patch_baseline_status = 'unknown; Get-HotFix is limited inventory, not patch currency'
+        memory_scope = 'OS visible physical memory and allocated paging files'
+        reboot_indicator_scope = 'CBS, Windows Update and pending file rename registry indicators only'
         commands = @(@(
             'Get-CimInstance', 'Get-NetAdapter', 'Get-NetTCPConnection',
             'Get-NetUDPEndpoint', 'Get-WindowsFeature', 'Get-ScheduledTask',
-            'Get-NetFirewallRule', 'Get-Website', 'Get-ADDomain'
+            'Get-NetFirewallRule', 'Get-Website', 'Get-ADDomain', 'Get-HotFix', 'Get-SmbMapping'
         ) | ForEach-Object {
             [ordered]@{
                 name = $_
@@ -379,7 +498,7 @@ $document = [ordered]@{
     asset_id = $InventoryId
     platform = 'windows'
     collected_at = [DateTime]::UtcNow.ToString('o')
-    collector = [ordered]@{ name = 'windows_census'; version = '1.0.0' }
+    collector = [ordered]@{ name = 'windows_census'; version = '0.4.0' }
     sections = $script:CensusSections
 }
 Write-Output -NoEnumerate $document

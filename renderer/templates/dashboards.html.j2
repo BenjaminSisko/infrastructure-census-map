@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Infrastructure census · Operations dashboards</title>
+  <style>{{ dashboards_css|safe }}</style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to dashboard</a>
+  <header class="masthead">
+    <a class="wordmark" href="dependency-map.html" aria-label="Open infrastructure workbench"><span class="brand-symbol" aria-hidden="true">▥</span><span><span class="eyebrow">INFRASTRUCTURE CENSUS</span><strong>Operations desk</strong></span></a>
+    <div class="masthead-actions"><a href="dependency-map.html">Open workbench <span aria-hidden="true">↗</span></a><button id="export-csv">Export filtered CSV <span aria-hidden="true">↓</span></button><button id="print-view" aria-label="Print current dashboard">Print</button></div>
+  </header>
+  <div class="snapshot-banner" id="snapshot-banner"><span class="snapshot-mark" aria-hidden="true">◷</span><strong>Snapshot, not live monitoring</strong><span id="snapshot-at">Collection time: Unknown</span><span class="banner-mode" id="collection-mode"></span></div>
+  <div class="desk-layout">
+    <aside class="sidebar" aria-label="Dashboard views">
+      <p class="section-label">AUDIENCE &amp; TASK</p>
+      <nav id="view-navigation" aria-label="Choose dashboard">
+        <button class="view-button active" data-view="overview" aria-current="page"><span class="nav-number">01</span><span>Overview<small>Leadership &amp; operations</small></span></button>
+        <button class="view-button" data-view="storage"><span class="nav-number">02</span><span>Storage<small>Capacity &amp; mount map</small></span></button>
+        <button class="view-button" data-view="resources"><span class="nav-number">03</span><span>Uptime &amp; resources<small>System administration</small></span></button>
+        <button class="view-button" data-view="patch"><span class="nav-number">04</span><span>Patch &amp; reboot<small>Maintenance evidence</small></span></button>
+        <button class="view-button" data-view="services"><span class="nav-number">05</span><span>Services &amp; agents<small>Platform operations</small></span></button>
+        <button class="view-button" data-view="security"><span class="nav-number">06</span><span>Security evidence<small>ISSO review</small></span></button>
+        <button class="view-button" data-view="dependencies"><span class="nav-number">07</span><span>Dependencies &amp; exposure<small>ISSE review</small></span></button>
+        <button class="view-button" data-view="coverage"><span class="nav-number">08</span><span>Evidence coverage<small>Collection &amp; follow-up</small></span></button>
+      </nav>
+      <div class="sidebar-note"><span class="mini-rule" aria-hidden="true"></span><p>Audience labels guide review. Every view contains the same underlying evidence; this file has no access controls or redaction.</p><p>Offline · self-contained<br>No external requests</p></div>
+    </aside>
+    <main id="main-content" tabindex="-1">
+      <div class="page-heading"><div><p class="eyebrow" id="view-audience">LEADERSHIP / OPERATIONS</p><h1 id="view-title">The infrastructure picture.</h1><p id="view-description">A dated view of assets, capacity pressure and the evidence still needed to make decisions.</p></div><div class="run-stamp"><span class="section-label">EVIDENCE SNAPSHOT</span><strong id="run-date">Unknown</strong><span id="run-count">Loading assets…</span></div></div>
+      <section class="filter-bar" aria-label="Global asset filters">
+        <label class="search-control"><span>Find an asset</span><input id="asset-search" type="search" autocomplete="off" placeholder="Name, address, owner, role…"></label>
+        <label><span>Platform</span><select id="platform-filter"><option value="all">All platforms</option></select></label>
+        <label><span>Criticality · attested</span><select id="criticality-filter"><option value="all">All criticality</option></select></label>
+        <button id="reset-filters" class="quiet-button">Reset</button>
+        <span id="filter-count" class="filter-count" role="status" aria-live="polite"></span>
+      </section>
+      <div id="dashboard-view"></div>
+      <div id="export-status" class="export-status" role="status" aria-live="polite"></div>
+      <footer class="desk-footer"><span>INFRASTRUCTURE CENSUS / GENERATED PRODUCT</span><span>Review facts in their source context. Unknown is a useful result.</span></footer>
+    </main>
+  </div>
+  <dialog id="asset-drawer" aria-labelledby="drawer-title">
+    <div class="drawer-heading"><div><p class="eyebrow">ASSET / EVIDENCE RECORD</p><h2 id="drawer-title">Asset</h2><p id="drawer-subtitle"></p></div><button id="close-drawer" aria-label="Close asset details">×</button></div>
+    <div id="drawer-content"></div>
+    <div class="drawer-footer"><a id="drawer-map-link" class="primary-link" href="dependency-map.html">Inspect in workbench ↗</a><button id="drawer-done">Done</button></div>
+  </dialog>
+  <noscript><p class="no-script">Enable JavaScript to explore this offline dashboard. The same evidence is available in map.json, dependency-matrix.csv and collection-report.md.</p></noscript>
+  <script id="dashboard-data" type="application/json">{{ model|tojson }}</script>
+  <script>{{ dashboards_js|safe }}</script>
+</body>
+</html>

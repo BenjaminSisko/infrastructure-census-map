@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "asset_id": "nas01",
+  "platform": "linux",
+  "collected_at": "2026-10-05T14:01:00Z",
+  "collector": {"name": "fictional-synthetic-example", "version": "0.4.0"},
+  "sections": {
+    "identity": {"status": "ok", "data": {"hostname": "nas01.example.test", "os": "Example Linux", "kernel": "6.1-example"}},
+    "interfaces": {"status": "ok", "data": [{"address": "192.0.2.50"}]},
+    "uptime": {"status": "ok", "data": {"uptime_seconds": 86400, "boot_time": "2026-10-04T14:01:00Z"}},
+    "memory": {"status": "access_denied", "reason": "Fictional evidence gap"},
+    "mounts": {"status": "ok", "data": {"filesystems": [{"target": "/", "source": "/dev/example1", "fstype": "ext4"}]}},
+    "configured_mounts": {"status": "ok", "data": {"filesystems": []}},
+    "storage_capacity": {"status": "ok", "data": [{"target": "/exports", "fstype": "ext4", "total_bytes": 1099511627776, "used_bytes": 1022545813832, "available_bytes": 76965813944, "used_percent": 93}]},
+    "patch_inventory": {"status": "unsupported", "reason": "Fictional package metadata capability gap"},
+    "services": {"status": "ok", "data": [{"name": "nfs-server.service", "load": "loaded", "active": "active", "sub": "exited"}, {"name": "smb.service", "load": "loaded", "active": "active", "sub": "running"}]},
+    "selinux": {"status": "ok", "data": "Enforcing"},
+    "time_sync": {"status": "ok", "data": "NTPSynchronized=yes\nTimezone=UTC"},
+    "tcp": {"status": "ok", "data": [{"local_address": "192.0.2.50", "local_port": 2049, "state": "LISTEN", "process": "nfsd"}, {"local_address": "192.0.2.50", "local_port": 445, "state": "LISTEN", "process": "smbd"}]},
+    "udp": {"status": "ok", "data": []}
+  }
+}

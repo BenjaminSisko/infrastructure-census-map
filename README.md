@@ -4,7 +4,17 @@ A portable Ansible census kit for an offline production environment. Collect Lin
 
 ![Fictional offline workbench example](examples/synthetic-with-manual-products/workbench.png)
 
-Version 0.3.1 includes the pilot operator workflow and instructions for integrating alongside existing Ansible playbooks: collect, seal, render, and export a private WinSCP-downloadable archive. The kit has an interactive map and editable notes/context. Local/CI validation is separate from live platform qualification. The generic source contains no real environment address, credential, or service assumption.
+Version 0.4.0 adds administrator, ISSO, ISSE and leadership dashboards, active/configured storage mount mapping and selected read-only health evidence. It retains the collect/seal/render/WinSCP workflow and existing-Ansible integration instructions. Local/CI validation is separate from live platform qualification. The generic source contains no real environment address, credential, or service assumption.
+
+## Administrator and leadership dashboards
+
+Open `products/dashboards.html` for storage, uptime/resources, patch/reboot evidence, services/agents, security observations, dependency/exposure review, leadership summaries and collection coverage. Search/filter assets, drill into evidence, export CSV and switch to the interactive map. No web server, cloud connection or dashboard backend is required.
+
+Storage links identify NFS/SMB clients, providers, share/export paths and local mount points, keeping active, configured-only and unknown state distinct. Local filesystem capacity is collected without probing remote shares. Linux fstab/static supported autofs declarations and Windows current-account mappings supply configured context; unsupported/dynamic maps and other user sessions remain gaps.
+
+These are dated snapshots, not live monitoring. Uptime is time since boot, not availability; local capacity is not SMART/RAID health; installed patches are not proof of an approved baseline; visible security services are not STIG compliance. Missing data remains Unknown. Audience labels do not redact embedded private data. See [dashboard guide](docs/admin-dashboards.md), [storage mapping](docs/storage-mapping.md) and [fictional dashboard example](examples/admin-snapshot-products/dashboards.html).
+
+![Fictional administrator and leadership dashboard preview](examples/admin-snapshot-products/dashboards.png)
 
 ## Quick start and output download
 
@@ -100,6 +110,8 @@ These five fictional assets include Linux, Windows, and switches with TCP and ne
 - docs/winscp-output.md: output location, permissions, download and extraction.
 - docs/qualification.md: platform/account canary acceptance and no-change checks.
 - docs/development.md: repeatable tests, browser setup and release/privacy gate.
+- docs/admin-dashboards.md: role-based snapshot views, interpretation boundaries and inputs for a local LLM.
+- docs/storage-mapping.md: active/configured NFS/SMB records, exact provider matching and gaps.
 
 ## Interpretation limits
 

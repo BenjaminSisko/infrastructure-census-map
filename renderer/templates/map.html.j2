@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
   <title>Infrastructure workbench</title>
-  <style>{{ workbench_css|safe }}</style>
+  <style>{{ workbench_css|safe }}
+  .layer-line.storage{border-color:#3b6c9f}.relationship-card.storage{border-left-color:#3b6c9f}.layer-bar{flex-wrap:wrap}.top-actions a.dark-button{color:inherit;text-decoration:none;padding:9px 12px;border:1px solid #ffffff44;border-radius:4px;font-size:12px}
+  </style>
 </head>
 <body>
   <header class="topbar">
     <div class="brand"><span class="brand-mark" aria-hidden="true">▦</span><div><p class="eyebrow">{% if model.collection_mode == 'manual_only' %}DOCUMENTATION ONLY / NO CENSUS COLLECTED{% else %}CENSUS / CONTEXT / DEPENDENCIES{% endif %}</p><h1>Infrastructure workbench</h1></div></div>
-    <div class="top-actions"><button id="undo" class="dark-button" disabled title="Undo the last context change">Undo</button><button id="import-context" class="dark-button">Import context</button><button id="export-context" class="dark-button">Export context</button><button id="add-host" class="primary">+ Add asset</button></div>
+    <div class="top-actions"><a class="dark-button" href="dashboards.html">Dashboards</a><button id="undo" class="dark-button" disabled title="Undo the last context change">Undo</button><button id="import-context" class="dark-button">Import context</button><button id="export-context" class="dark-button">Export context</button><button id="add-host" class="primary">+ Add asset</button></div>
   </header>
   <div class="summary-strip"><div id="counts"></div><div class="workspace-state"><span class="save-dot" aria-hidden="true"></span><span id="save-state">Loading workspace…</span></div></div>
   <div id="notice" class="notice" role="status" hidden></div>
@@ -24,7 +26,7 @@
     </aside>
     <section class="canvas-panel" aria-label="Interactive dependency graph">
       <div class="canvas-heading"><div><p class="eyebrow">DEPENDENCY EXPLORER</p><h2 id="map-title">Environment overview</h2></div><div class="view-actions"><button id="focus-host" title="Show only the selected asset and direct connections" disabled>Focus asset</button><button id="show-all">Overview</button></div></div>
-      <div class="layer-bar" aria-label="Relationship layers"><label><input id="layer-observed" type="checkbox" checked><span class="layer-line observed"></span>Observed</label><label><input id="layer-neighbor" type="checkbox" checked><span class="layer-line neighbor"></span>Physical</label><label><input id="layer-manual" type="checkbox" checked><span class="layer-line manual"></span>Entered</label><label><input id="layer-declared" type="checkbox" checked><span class="layer-line declared"></span>Declared</label></div>
+      <div class="layer-bar" aria-label="Relationship layers"><label><input id="layer-observed" type="checkbox" checked><span class="layer-line observed"></span>Observed</label><label><input id="layer-neighbor" type="checkbox" checked><span class="layer-line neighbor"></span>Physical</label><label><input id="layer-storage" type="checkbox" checked><span class="layer-line storage"></span>Storage</label><label><input id="layer-manual" type="checkbox" checked><span class="layer-line manual"></span>Entered</label><label><input id="layer-declared" type="checkbox" checked><span class="layer-line declared"></span>Declared</label></div>
       <div class="graph-container" id="graph-container"><svg id="graph" role="group" aria-label="Interactive asset map. Tab to an asset, then press Enter to select it." xmlns="http://www.w3.org/2000/svg"></svg><div id="graph-empty" class="graph-empty" hidden><span>▦</span><h3>Your infrastructure starts here</h3><p>Add an asset and capture what you know. Imported census data will bring measured detail into this workspace.</p><button id="empty-add-host" class="primary">+ Add your first asset</button></div><div class="map-tools"><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="fit-map">Fit</button><button id="export-svg" title="Download the current visible map">SVG ↓</button></div><div class="canvas-help"><span id="zoom-level">100%</span><span>Scroll to zoom · drag background to pan · drag assets to arrange</span></div></div>
       <div class="canvas-footer"><span class="relationship-note">{% if model.collection_mode == 'manual_only' %}Documentation-derived relationships; no live census or health check was performed.{% else %}Observed connections show an association; purpose and approval need context.{% endif %}</span><button id="open-gaps" class="text-button">Collection gaps <span id="gap-count"></span></button></div>
     </section>

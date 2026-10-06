@@ -18,4 +18,12 @@ It omits full process command lines, environment values, service command lines, 
 
 Each command has an execution timeout and retained output limit. Expected command errors, absent tools and timeouts become section statuses. Python and packages are never installed on a target by this playbook. Linux scripts need an executable temporary filesystem according to your controller connection policy; restricted hosts may need an existing approved remote temporary path.
 
+## Dashboard and storage additions
+
+The extended profile reads bounded local uptime/boot, memory and load counters; local RPM installation/kernel metadata; auditd service properties; and a strict local-filesystem capacity query. It does not refresh DNF/YUM metadata, install updates, decide patch currency, run SMART/RAID diagnostics or read application data.
+
+Active mounts and fstab declarations retain only target/source/type. Supported local static autofs declarations are bounded by file count, bytes and records; executable, dynamic/NSS/LDAP, remote-backed, symlinked or unsupported map formats become explicit gaps. No automount executable, mountpoint access or remote share probe is used. Partial configuration does not establish absence. See [storage mapping](storage-mapping.md) and [dashboards](admin-dashboards.md).
+
+Local capacity uses GNU df with --local and an explicit filesystem-type allowlist, no target operands and the existing execution/output limits. Remote NFS/CIFS, autofs, FUSE and unsupported filesystem types are excluded. This is visible local filesystem capacity, not all physical storage, SAN paths, device health or backup success. Existing collector/version/runtime permissions must still be qualified on a canary. [GNU df reference](https://www.gnu.org/software/coreutils/manual/html_node/df-invocation.html)
+
 Reference: [Ansible script module](https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/script_module.html).

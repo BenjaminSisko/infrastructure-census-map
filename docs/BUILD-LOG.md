@@ -4,6 +4,28 @@
 
 Provide a portable infrastructure census for an air-gapped work environment. Operators collect metadata without intentional managed configuration changes, add their own infrastructure notes, and generate editable offline diagrams and reports.
 
+## Release 0.4.0 - storage and administration dashboards
+
+The operator requested active and configured mount relationships plus useful storage, uptime, patching, system-administrator, ISSO, ISSE and leadership dashboards. Implementation extends the same portable offline kit, not the operator's actual parent repository or managed hosts.
+
+Collector queries retain explicit section gaps and avoid remediation, package-repository refresh, remote share probes or automount execution. The renderer reconciles NFS/SMB evidence using exact model identities and keeps ambiguous/manual matches separate. Dashboards consume sealed evidence and attributed context, with a separate storage graph layer and host drill-down. WinSCP export now includes dashboards.html, dashboard-summary.json, storage-mounts.csv and assets-summary.csv.
+
+Verification commands for this increment (fictional or source-only):
+
+```bash
+CENSUS_RUN_INTEGRATION_TESTS=1 python -m unittest discover -s tests -v
+python -m py_compile collectors/linux_census.py renderer/insights.py renderer/render.py tools/census.py
+ansible-playbook -i inventories/example/hosts.yml playbooks/collect-census.yml --syntax-check -e census_run_id=dashboard-syntax
+python renderer/render.py --evidence examples/admin-snapshot --manual examples/admin-snapshot/context.json --output examples/admin-snapshot-products
+node tests/workbench-browser.cjs
+node tests/dashboards-browser.cjs
+python tools/release.py --check-only
+```
+
+Tests use temporary/mocked/fictional evidence and deliberately failed fixture interpreters; they do not query production or Home Lab assets. Browser tests use a developer browser only; generated products have no browser package/CDN dependency. Public source and private output remain separate. Interpretation cautions deliberately prevent recent install dates, long uptime, visible agents or storage capacity from becoming patch-compliance, SLA, logging or hardware-health verdicts.
+
+Results: 76 Python tests passed, including mocked PowerShell, Python 3.6 syntax compatibility and a corrected three-range documentation-address release guard. Both browser suites passed, along with syntax/compilation, doctor, fictional evidence verification and the 136-file public-source/privacy gate. Peer review corrected URI/userinfo handling, partial mount conclusions, non-OK/unlettered Windows mappings, NFS/nfs4 matching, day-only hotfix precision, future-boot timestamps, invalid capacity metrics and configured-storage graph labels. UI review verified attribution, no network requests, formula-safe CSVs, configurable thresholds, bounded previews and distinct-client concentration counts. All live platform/canary gates remain separate.
+
 ## Release 0.3.1 - 2026-10-06
 
 The operator asked for instructions a local LLM can use to integrate the product into their normal Ansible repository alongside current playbooks. Added docs/integrate-existing-ansible.md, docs/llm-integration-prompt.md and model/integration/ templates. Agent routing and README now distinguish a fresh standalone kit from preserving an existing parent repository.

@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "asset_id": "win01",
+  "platform": "windows",
+  "collected_at": "2026-10-05T14:02:00Z",
+  "collector": {"name": "fictional-synthetic-example", "version": "0.4.0"},
+  "sections": {
+    "identity": {"status": "ok", "data": {"hostname": "win01.example.test", "os_name": "Example Windows Server", "os_build": "example-build", "last_boot_utc": "2026-10-03T14:02:00Z"}},
+    "interfaces": {"status": "ok", "data": [{"address": "192.0.2.30"}]},
+    "uptime": {"status": "ok", "data": {"uptime_seconds": 172800, "boot_time": "2026-10-03T14:02:00Z"}},
+    "memory": {"status": "ok", "data": {"total_bytes": 17179869184, "available_bytes": 12884901888}},
+    "smb_mappings": {"status": "ok", "data": [{"local_path": "Z:", "remote_path": "\\\\nas01.example.test\\reports", "status": "OK"}]},
+    "configured_mounts": {"status": "ok", "data": {"filesystems": [{"target": "Z:", "source": "//nas01.example.test/reports", "fstype": "cifs"}]}},
+    "disks": {"status": "ok", "data": [{"device_id": "C:", "drive_type": 3, "filesystem": "NTFS", "size_bytes": 214748364800, "free_bytes": 128849018880, "provider_name": ""}, {"device_id": "Z:", "drive_type": 4, "filesystem": "NTFS", "size_bytes": 1099511627776, "free_bytes": 76965813944, "provider_name": "\\\\nas01.example.test\\reports"}]},
+    "hotfixes": {"status": "ok", "data": [{"id": "KB-FICTIONAL", "installed_at": "2026-10-02"}]},
+    "reboot_pending": {"status": "ok", "data": {"pending": true, "indicators": ["Fictional pending reboot marker"]}},
+    "services": {"status": "ok", "data": [{"name": "ExampleService", "state": "Running", "start_mode": "Auto"}, {"name": "WazuhSvc", "state": "Running", "start_mode": "Auto"}]},
+    "firewall": {"status": "ok", "data": [{"name": "Domain", "enabled": true}, {"name": "Private", "enabled": true}, {"name": "Public", "enabled": true}]},
+    "tcp": {"status": "ok", "data": [{"local_address": "192.0.2.30", "local_port": 5986, "state": "Listen", "process": "System"}]},
+    "udp": {"status": "access_denied", "reason": "Fictional endpoint evidence gap"}
+  }
+}

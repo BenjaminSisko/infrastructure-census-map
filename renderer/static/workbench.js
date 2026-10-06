@@ -20,7 +20,7 @@
   let history = [], storageAvailable = true, dirtyForm = false, modal = null;
   let view = {x: 0, y: 0, scale: 1}, drag = null, initializedFit = false;
   let visibleNodes = [], visibleEdges = [], viewport = null;
-  const layers = {observed: true, neighbor: true, manual: true, declared: true};
+  const layers = {observed: true, neighbor: true, manual: true, declared: true, storage: true};
 
   function element(tag, className, text) {
     const item = document.createElement(tag);
@@ -324,6 +324,7 @@
   }
   function short(value, limit) { const text = String(value || ""); return text.length > limit ? text.slice(0, limit - 1) + "…" : text; }
   function layerOf(edge) {
+    if (edge.kind === "storage_mount") return "storage";
     if (edge.kind === "manual_relationship" || edge.source_origin === "manual") return "manual";
     if (/neighbor/.test(edge.kind)) return "neighbor";
     if (/declared/.test(edge.kind)) return "declared";
@@ -385,8 +386,8 @@
     const defs = svgElement("defs");
     const pattern = svgElement("pattern", {id: "grid", width: 22, height: 22, patternUnits: "userSpaceOnUse"}); pattern.appendChild(svgElement("circle", {cx: 1, cy: 1, r: .65, fill: "#cad0c2"})); defs.appendChild(pattern);
     const shadow = svgElement("filter", {id: "node-shadow", x: "-20%", y: "-20%", width: "150%", height: "160%"}); shadow.appendChild(svgElement("feDropShadow", {dx: 0, dy: 2, stdDeviation: 2, "flood-color": "#244236", "flood-opacity": ".08"})); defs.appendChild(shadow);
-    const colors = {manual: "#17675f", observed: "#a36536", neighbor: "#477383", declared: "#6c7a50"};
-    ["manual", "declared"].forEach(kind => { const marker = svgElement("marker", {id: "arrow-" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse"}); marker.appendChild(svgElement("path", {d: "M 0 0 L 10 5 L 0 10 z", fill: colors[kind]})); defs.appendChild(marker); });
+    const colors = {manual: "#17675f", observed: "#a36536", neighbor: "#477383", declared: "#6c7a50", storage: "#3b6c9f"};
+    ["manual", "declared", "storage"].forEach(kind => { const marker = svgElement("marker", {id: "arrow-" + kind, viewBox: "0 0 10 10", refX: 9, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse"}); marker.appendChild(svgElement("path", {d: "M 0 0 L 10 5 L 0 10 z", fill: colors[kind]})); defs.appendChild(marker); });
     graph.appendChild(defs); graph.appendChild(svgElement("rect", {width: "100%", height: "100%", fill: "url(#grid)", "data-background": "true"}));
     viewport = svgElement("g", {id: "viewport"}); graph.appendChild(viewport);
     const connected = selected ? connectedIds(selected) : null;
@@ -415,9 +416,10 @@
       const group = svgElement("g", {class: "graph-edge" + (selected && edge.source !== selected && edge.target !== selected ? " dimmed" : ""), "data-edge": edge.id});
       const attrs = {class: "edge-path", d: pathData, stroke: colors[layer]};
       if (layer === "observed") attrs["stroke-dasharray"] = "5 4";
-      if (layer === "manual" || layer === "declared") attrs["marker-end"] = "url(#arrow-" + layer + ")";
+      if (layer === "storage" && edge.status !== "observed") attrs["stroke-dasharray"] = "2 4";
+      if (layer === "manual" || layer === "declared" || layer === "storage") attrs["marker-end"] = "url(#arrow-" + layer + ")";
       group.appendChild(svgElement("path", attrs));
-      const label = edge.relationship_type ? edge.relationship_type.replace(/_/g, " ") : layer === "neighbor" ? "physical neighbor" : edge.remote_port ? (edge.protocol || "tcp") + " / " + edge.remote_port : "observed";
+      const label = edge.relationship_type ? edge.relationship_type.replace(/_/g, " ") : layer === "storage" ? "storage · " + (edge.mount_state || edge.status || "unknown").replace(/_/g, " ") : layer === "neighbor" ? "physical neighbor" : edge.remote_port ? (edge.protocol || "tcp") + " / " + edge.remote_port : "observed";
       group.appendChild(svgElement("text", {class: "edge-label", x: mx, y: my - 6, "text-anchor": "middle"}, label));
       group.appendChild(svgElement("title", {}, (lookup.get(edge.source).label || edge.source) + (layer === "observed" || layer === "neighbor" ? " ↔ " : " → ") + (lookup.get(edge.target).label || edge.target) + "\n" + (edge.purpose || label)));
       viewport.appendChild(group);
@@ -514,7 +516,7 @@
     const related = edges.filter(edge => edge.source === selected || edge.target === selected);
     related.forEach(edge => {
       const layer = layerOf(edge), card = element("div", "relationship-card " + layer);
-      const type = edge.relationship_type || (layer === "neighbor" ? "Physical neighbor" : layer === "observed" ? "Observed association" : "Declared dependency");
+      const type = edge.relationship_type || (layer === "storage" ? "Storage mount · " + edge.status : layer === "neighbor" ? "Physical neighbor" : layer === "observed" ? "Observed association" : "Declared dependency");
       const symbol = layer === "observed" || layer === "neighbor" ? " ↔ " : " → ";
       card.appendChild(element("div", "relationship-type", type.replace(/_/g, " ")));
       const heading = element("h4");
@@ -524,6 +526,7 @@
       });
       card.appendChild(heading);
       if (edge.purpose) card.appendChild(element("p", "", edge.purpose));
+      if (layer === "storage") card.appendChild(element("p", "small", "Mount-table evidence only: configured is not necessarily active, reachable, healthy, required or approved."));
       if (edge.remote_port) card.appendChild(element("p", "mono", (edge.protocol || "protocol unspecified") + " / " + edge.remote_port));
       if (edge.target_resolution_basis) card.appendChild(element("p", "small", "Identity: " + edge.target_resolution_basis));
       const details = edge.manual_information;
@@ -695,7 +698,7 @@
   $("focus-host").addEventListener("click", () => { focused = true; renderGraph(); fitMap(); });
   $("show-all").addEventListener("click", () => { focused = false; $("search").value = ""; $("platform").value = "all"; renderNavigator(); renderGraph(); fitMap(); });
   $("search").addEventListener("input", () => { renderNavigator(); renderGraph(); }); $("platform").addEventListener("change", () => { renderNavigator(); renderGraph(); });
-  ["observed", "neighbor", "manual", "declared"].forEach(layer => $("layer-" + layer).addEventListener("change", event => { layers[layer] = event.target.checked; renderGraph(); }));
+  ["observed", "neighbor", "manual", "declared", "storage"].forEach(layer => $("layer-" + layer).addEventListener("change", event => { layers[layer] = event.target.checked; renderGraph(); }));
   document.querySelectorAll(".tab").forEach(button => {
     button.addEventListener("click", () => switchTab(button.dataset.tab));
     button.addEventListener("keydown", event => {
@@ -739,6 +742,13 @@
     $("save-state").textContent = "Export context to keep edits";
   }
   context = validateContext(context); derive(); render();
+  function selectFromHash() {
+    const match = location.hash.match(/^#asset=(.*)$/);
+    if (!match) return;
+    try { const id = decodeURIComponent(match[1]); if (lookup.has(id)) selectHost(id); } catch (_) { /* Invalid fragment is data, not a command. */ }
+  }
+  selectFromHash();
+  window.addEventListener("hashchange", selectFromHash);
   window.CensusWorkbench = Object.freeze({
     getState: () => clone({manual_context: context, nodes, relationships: edges, conflicts, selected, positions}),
     selectHost, saveAsset, addAsset, addRelationship, editRelationship, deleteRelationship, removeAsset, undo, exportContext, importContext,

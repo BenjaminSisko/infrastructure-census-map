@@ -1,0 +1,4 @@
+source,target,kind,relationship_type,status,protocol,local_port,remote_port,source_origin,target_resolution_basis,target_identity_evidence,purpose,evidence
+win01,nas01,storage_mount,,observed,smb,,,mount observation,census identity,hosts/nas01.json,Remote filesystem mount observation,hosts/win01.json#/sections/configured_mounts/data/filesystems/0; hosts/win01.json#/sections/disks/data/1; hosts/win01.json#/sections/smb_mappings/data/0
+app01,storage:archive.example.test,storage_mount,,configured,nfs,,,configuration evidence,unresolved,Unknown,Remote filesystem configuration; activity unconfirmed,hosts/app01.json#/sections/configured_mounts/data/filesystems/1
+app01,nas01,storage_mount,,observed,nfs,,,mount observation,census identity,hosts/nas01.json,Remote filesystem mount observation,hosts/app01.json#/sections/configured_mounts/data/filesystems/0; hosts/app01.json#/sections/mounts/data/filesystems/0/children/0
