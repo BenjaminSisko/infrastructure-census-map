@@ -441,7 +441,7 @@
     ({overview,storage,resources,patch,services,security,dependencies,coverage:coverageView}[currentView])(rows,ids,root);
   }
   function selectView(view) {
-    if(!views[view]) return;
+    if(!Object.prototype.hasOwnProperty.call(views, view)) return;
     currentView=view;
     document.querySelectorAll('.view-button').forEach(button=>{
       const active=button.dataset.view === view; button.classList.toggle('active',active);
@@ -513,7 +513,8 @@
   $('run-date').textContent=known(snapshot) ? snapshot.slice(0,10) : 'Unknown';
   $('run-count').textContent=assets.length + ' assets in this product';
   const initialHash=new URLSearchParams(location.hash.slice(1));
-  selectView(initialHash.get('view') || 'overview');
+  const requestedView = initialHash.get('view');
+  selectView(Object.prototype.hasOwnProperty.call(views, requestedView) ? requestedView : 'overview');
   window.CensusDashboards={selectView,selectAsset,exportCSV,getState:()=>({view:currentView,filtered_assets:filteredAssets().map(a=>a.asset_id),asset_count:assets.length,export_count:currentExports.length})};
   if(initialHash.get('asset')) selectAsset(initialHash.get('asset'));
 })();
