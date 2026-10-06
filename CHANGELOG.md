@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 - 2026-10-06
+
+Final dashboard navigation hardening: only supported own view keys are accepted; invalid or inherited bookmark/API keys safely retain the current view or open Overview. Added browser regressions and regenerated fictional products. This patch release preserves the previously published 0.4.0 tag/archive and includes the complete reviewed dashboard/storage implementation.
+
 ## 0.4.0 - 2026-10-06
 
 Added self-contained administrator/security/leadership dashboards, active/configured NFS/SMB storage topology and CSV/JSON summaries in the WinSCP export. Extended read-only Linux/Windows collection with selected uptime/memory/local-capacity/patch/reboot/mapping evidence and bounded static automount configuration handling. Unknown, partial and unsupported evidence remains visible; dashboards do not assert patch currency, hardware health, compliance, SLA availability or approved dependencies. Existing map gains a storage layer and host drill-down links. Source/fixture tests remain separate from live qualification.

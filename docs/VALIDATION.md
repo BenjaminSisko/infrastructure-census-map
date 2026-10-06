@@ -1,6 +1,10 @@
 # Validation record — 2026-10-05
 
-The current source release is 0.4.0. Earlier version checks below are preserved. No production credentials or host facts are included in the generic release, no live Windows/network collection occurred, and no production remoting, packages or network configuration was changed. Private documentation examples remain outside the public release.
+The current source release is 0.4.1. Earlier version checks below are preserved. No production credentials or host facts are included in the generic release, no live Windows/network collection occurred, and no production remoting, packages or network configuration was changed. Private documentation examples remain outside the public release.
+
+## Final navigation guard - 0.4.1
+
+Browser regressions verify unsupported/inherited view keys are ignored and invalid bookmark fragments fall back to Overview. The 0.4.0 source/archive is retained unchanged; this final patch includes the navigation fix and matching versioned example products. No collector or sealed evidence changes were required.
 
 ## Storage and administration dashboards - 0.4.0
 
