@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Manual infrastructure context v1",
+  "description": "Operator-supplied context complements immutable census evidence. Declarations do not establish observation, authorization or verification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "assets": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/asset"}
+    },
+    "relationships": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/relationship"}
+    }
+  },
+  "$defs": {
+    "assetId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"
+    },
+    "text": {"type": "string"},
+    "reviewDate": {"type": "string", "format": "date"},
+    "safeValue": {
+      "anyOf": [
+        {"type": ["string", "number", "boolean", "null"]},
+        {"type": "array", "items": {"$ref": "#/$defs/safeValue"}},
+        {"type": "object", "propertyNames": {"not": {"enum": ["__proto__", "constructor", "prototype"]}}, "additionalProperties": {"$ref": "#/$defs/safeValue"}}
+      ]
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {"$ref": "#/$defs/assetId"},
+        "platform": {"enum": ["linux", "windows", "network", "infrastructure"]},
+        "label": {"$ref": "#/$defs/text"},
+        "asset_type": {"$ref": "#/$defs/text"},
+        "os": {"$ref": "#/$defs/text"},
+        "domain": {"$ref": "#/$defs/text"},
+        "addresses": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[^%/\\s]+$",
+            "anyOf": [{"format": "ipv4"}, {"format": "ipv6"}]
+          }
+        },
+        "owner": {"$ref": "#/$defs/text"},
+        "role": {"$ref": "#/$defs/text"},
+        "description": {"$ref": "#/$defs/text"},
+        "location": {"$ref": "#/$defs/text"},
+        "criticality": {"$ref": "#/$defs/text"},
+        "source": {"$ref": "#/$defs/text"},
+        "entered_by": {"$ref": "#/$defs/text"},
+        "reviewed_at": {"$ref": "#/$defs/reviewDate"},
+        "notes": {"$ref": "#/$defs/text"},
+        "attributes": {"type": "object", "propertyNames": {"not": {"enum": ["__proto__", "constructor", "prototype"]}}, "additionalProperties": {"$ref": "#/$defs/safeValue"}, "description": "Additional structured infrastructure metadata; no credentials or reserved browser keys."}
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "target", "kind", "purpose"],
+      "allOf": [{"if": {"properties": {"kind": {"const": "hosts"}}}, "then": {"not": {"anyOf": [{"required": ["port"]}, {"required": ["protocol"]}]}}}],
+      "properties": {
+        "source": {"$ref": "#/$defs/assetId"},
+        "target": {"$ref": "#/$defs/assetId"},
+        "kind": {"enum": ["hosts", "depends_on", "uses_storage", "backs_up", "managed_by"]},
+        "purpose": {"type": "string", "minLength": 1},
+        "protocol": {"$ref": "#/$defs/text"},
+        "port": {"type": "integer", "minimum": 1, "maximum": 65535},
+        "source_reference": {"$ref": "#/$defs/text"},
+        "entered_by": {"$ref": "#/$defs/text"},
+        "reviewed_at": {"$ref": "#/$defs/reviewDate"},
+        "notes": {"$ref": "#/$defs/text"}
+      }
+    }
+  }
+}

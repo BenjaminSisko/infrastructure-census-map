@@ -1,0 +1,3 @@
+# Reporting/demo only; no Ansible or target-side packages required.
+Jinja2==3.1.6
+PyYAML==6.0.3

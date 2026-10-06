@@ -1,0 +1,14 @@
+---
+# Controller collections checked against the installed versions on 2026-10-05.
+# Download on the connected staging host; install from transferred tarballs offline.
+collections:
+  - name: ansible.windows
+    version: "3.8.0"
+  - name: ansible.netcommon
+    version: "8.5.2"
+  - name: ansible.utils
+    version: "6.0.2"
+  - name: cisco.ios
+    version: "11.4.1"
+  - name: arista.eos
+    version: "12.1.1"

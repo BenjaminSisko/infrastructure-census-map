@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "asset_id": "switch01",
+  "platform": "network",
+  "collected_at": "2026-10-05T14:00:00Z",
+  "collector": "synthetic-example",
+  "sections": {
+    "identity": {"status": "ok", "data": {"hostname": "switch01.example.test", "os": "Cisco IOS XE"}},
+    "interfaces": {"status": "ok", "data": [{"address": "192.0.2.2"}]},
+    "tcp": {"status": "not_supported", "data": null},
+    "neighbors": {"status": "ok", "data": {"GigabitEthernet1/0/48": [{"host": "router01.example.test", "port": "GigabitEthernet0/0/0"}]}}
+  }
+}

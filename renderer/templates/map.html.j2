@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Infrastructure workbench</title>
+  <style>{{ workbench_css|safe }}</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">▦</span><div><p class="eyebrow">{% if model.collection_mode == 'manual_only' %}DOCUMENTATION ONLY / NO CENSUS COLLECTED{% else %}CENSUS / CONTEXT / DEPENDENCIES{% endif %}</p><h1>Infrastructure workbench</h1></div></div>
+    <div class="top-actions"><button id="undo" class="dark-button" disabled title="Undo the last context change">Undo</button><button id="import-context" class="dark-button">Import context</button><button id="export-context" class="dark-button">Export context</button><button id="add-host" class="primary">+ Add asset</button></div>
+  </header>
+  <div class="summary-strip"><div id="counts"></div><div class="workspace-state"><span class="save-dot" aria-hidden="true"></span><span id="save-state">Loading workspace…</span></div></div>
+  <div id="notice" class="notice" role="status" hidden></div>
+  <main class="workbench">
+    <aside class="navigator" aria-label="Asset navigator">
+      <div class="panel-heading"><h2>Assets</h2><span id="asset-count" class="count"></span></div>
+      <label class="search-wrap"><span class="sr-only">Search assets</span><input id="search" type="search" placeholder="Find host, IP, owner…" autocomplete="off"><span aria-hidden="true">⌕</span></label>
+      <label class="sr-only" for="platform">Platform</label><select id="platform"><option value="all">All platforms</option><option value="linux">Linux</option><option value="windows">Windows</option><option value="network">Network devices</option><option value="infrastructure">Infrastructure / hypervisors</option><option value="external">Unresolved endpoints</option></select>
+      <div id="host-list" class="host-list" role="list" aria-label="Assets"></div>
+      <div class="navigator-footer"><span class="legend-dot measured"></span> Census evidence <span class="legend-dot entered"></span> Entered context<p>Click an asset to inspect it. Drag it on the map to arrange the workspace.</p></div>
+    </aside>
+    <section class="canvas-panel" aria-label="Interactive dependency graph">
+      <div class="canvas-heading"><div><p class="eyebrow">DEPENDENCY EXPLORER</p><h2 id="map-title">Environment overview</h2></div><div class="view-actions"><button id="focus-host" title="Show only the selected asset and direct connections" disabled>Focus asset</button><button id="show-all">Overview</button></div></div>
+      <div class="layer-bar" aria-label="Relationship layers"><label><input id="layer-observed" type="checkbox" checked><span class="layer-line observed"></span>Observed</label><label><input id="layer-neighbor" type="checkbox" checked><span class="layer-line neighbor"></span>Physical</label><label><input id="layer-manual" type="checkbox" checked><span class="layer-line manual"></span>Entered</label><label><input id="layer-declared" type="checkbox" checked><span class="layer-line declared"></span>Declared</label></div>
+      <div class="graph-container" id="graph-container"><svg id="graph" role="group" aria-label="Interactive asset map. Tab to an asset, then press Enter to select it." xmlns="http://www.w3.org/2000/svg"></svg><div id="graph-empty" class="graph-empty" hidden><span>▦</span><h3>Your infrastructure starts here</h3><p>Add an asset and capture what you know. Imported census data will bring measured detail into this workspace.</p><button id="empty-add-host" class="primary">+ Add your first asset</button></div><div class="map-tools"><button id="zoom-in" aria-label="Zoom in">+</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="fit-map">Fit</button><button id="export-svg" title="Download the current visible map">SVG ↓</button></div><div class="canvas-help"><span id="zoom-level">100%</span><span>Scroll to zoom · drag background to pan · drag assets to arrange</span></div></div>
+      <div class="canvas-footer"><span class="relationship-note">{% if model.collection_mode == 'manual_only' %}Documentation-derived relationships; no live census or health check was performed.{% else %}Observed connections show an association; purpose and approval need context.{% endif %}</span><button id="open-gaps" class="text-button">Collection gaps <span id="gap-count"></span></button></div>
+    </section>
+    <aside class="inspector" aria-label="Asset inspector">
+      <div class="inspector-header"><p class="eyebrow" id="inspector-kind">ASSET INSPECTOR</p><h2 id="detail-title">Choose an asset</h2><p id="detail-subtitle">Inspect evidence, add notes, and map relationships.</p></div>
+      <div class="tab-bar" role="tablist" aria-label="Asset detail sections"><button class="tab active" id="tab-details" role="tab" aria-selected="true" aria-controls="pane-details" data-tab="details">Details</button><button class="tab" id="tab-notes" role="tab" aria-selected="false" aria-controls="pane-notes" data-tab="notes" tabindex="-1">Notes</button><button class="tab" id="tab-relationships" role="tab" aria-selected="false" aria-controls="pane-relationships" data-tab="relationships" tabindex="-1">Links</button><button class="tab" id="tab-evidence" role="tab" aria-selected="false" aria-controls="pane-evidence" data-tab="evidence" tabindex="-1">Evidence</button></div>
+      <div id="inspector-empty" class="inspector-empty"><span class="inspector-symbol">⌖</span><h3>Your asset workspace</h3><p>Select a host to see its measured identity, capture your notes, or explain a dependency.</p><p class="small">Changes are saved in this browser. Export context to carry them into your repository or local agent.</p></div>
+      <form id="asset-form" hidden>
+        <section id="pane-details" class="inspector-pane" role="tabpanel" aria-labelledby="tab-details">
+          <div id="measured-facts" class="fact-block"></div>
+          <div id="identity-fields"></div>
+          <p class="section-caption">ENTERED DETAILS</p>
+          <label>Owner / team<input name="owner" autocomplete="off" placeholder="Who maintains this asset?"></label>
+          <label>Role<input name="role" autocomplete="off" placeholder="Application server, hypervisor…"></label>
+          <label>Description<textarea name="description" rows="3" placeholder="What is this asset for?"></textarea></label>
+          <div class="form-pair"><label>Location<input name="location" placeholder="Site / rack / cluster"></label><label>Criticality<select name="criticality"><option value="">Unspecified</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option><option value="Needs Validation">Needs Validation</option></select></label></div>
+          <label>Asset type<input name="asset_type" placeholder="hypervisor, VM, storage…"></label>
+          <details class="advanced"><summary>Additional attributes (JSON)</summary><label><span class="sr-only">Additional attributes JSON</span><textarea name="attributes" rows="5" class="mono" spellcheck="false" placeholder='{"cluster": "Compute A"}'></textarea></label></details>
+          <div id="asset-conflicts" class="conflict-list"></div>
+        </section>
+        <section id="pane-notes" class="inspector-pane" role="tabpanel" aria-labelledby="tab-notes" hidden>
+          <p class="note-intro">Capture what you know in your own words. Record unknowns, sources, maintenance constraints, and troubleshooting history.</p>
+          <label class="notes-label">Asset notes<textarea name="notes" id="asset-notes" rows="15" placeholder="Example: This hypervisor hosts app01 and db01. The virtualization team confirmed placement on Tuesday. Its HA setting still needs validation."></textarea></label>
+          <p class="small">Notes stay as entered text. Your local agent can interpret exported notes and update the structured model using the named evidence.</p>
+        </section>
+        <section id="pane-relationships" class="inspector-pane" role="tabpanel" aria-labelledby="tab-relationships" hidden><div class="subheading"><h3>Connected assets</h3><button id="add-relationship" type="button" class="small-button">+ Add link</button></div><p class="small">Hosting is placement. Dependencies, storage use, backups and management retain their own direction.</p><div id="relationships"></div></section>
+        <section id="pane-evidence" class="inspector-pane" role="tabpanel" aria-labelledby="tab-evidence" hidden><p class="section-caption">COLLECTION RECORD</p><div id="evidence-summary"></div><p class="section-caption">COLLECTION GAPS</p><ul id="gaps" class="evidence-list"></ul><details class="advanced"><summary>Inspect full asset evidence</summary><pre id="raw-evidence"></pre></details></section>
+        <div class="inspector-save"><div class="provenance-fields"><label>Source / reference<input name="source" placeholder="Ticket, export, owner, notes…"></label><div class="form-pair"><label>Entered by<input name="entered_by" placeholder="Name / team"></label><label>Reviewed on<input name="reviewed_at" type="date"></label></div></div><div id="form-error" class="form-error" role="alert" hidden></div><div class="save-actions"><button id="save-asset" type="submit" class="primary">Save details & notes</button><button id="remove-asset" type="button" class="text-button danger" title="Remove entered context">Remove context</button></div><p class="save-guidance">Save stores a browser draft. Export context to save a portable file.</p></div>
+      </form>
+    </aside>
+  </main>
+  <div id="modal-root"></div><input id="context-file" type="file" accept=".json,application/json" hidden>
+  <script id="model-data" type="application/json">{{ model|tojson }}</script>
+  <script>{{ workbench_js|safe }}</script>
+</body>
+</html>

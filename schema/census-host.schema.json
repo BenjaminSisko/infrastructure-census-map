@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Census host evidence v1",
+  "type": "object",
+  "required": ["schema_version", "asset_id", "platform", "collected_at", "collector", "sections"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "asset_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$"},
+    "platform": {"enum": ["linux", "windows", "network"]},
+    "collected_at": {"type": "string", "format": "date-time"},
+    "collector": {"type": "object", "required": ["name", "version"]},
+    "sections": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": {"enum": ["ok", "partial", "not_installed", "not_collected", "unsupported", "access_denied", "unreachable", "timeout", "truncated", "parse_error", "error", "skipped", "budget_exceeded"]},
+          "data": {},
+          "reason": {"type": "string"}
+        }
+      }
+    }
+  }
+}

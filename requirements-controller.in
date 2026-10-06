@@ -1,0 +1,6 @@
+# Build and freeze the final controller environment on a machine matching production.
+ansible-core>=2.16,<2.22
+Jinja2==3.1.6
+PyYAML==6.0.3
+pypsrp[kerberos]>=0.8.1,<1.0.0
+ansible-pylibssh>=1.2,<2

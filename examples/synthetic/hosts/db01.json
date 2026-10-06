@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "asset_id": "db01",
+  "platform": "linux",
+  "collected_at": "2026-10-05T14:00:00Z",
+  "collector": "synthetic-example",
+  "sections": {
+    "identity": {"status": "ok", "data": {"hostname": "db01.example.test", "os": "RHEL 8"}},
+    "interfaces": {"status": "ok", "data": [{"ifname": "ens192", "addr_info": [{"family": "inet", "local": "192.0.2.20", "prefixlen": 24}]}]},
+    "tcp": {"status": "ok", "data": [{"local_address": "192.0.2.20", "local_port": 5432, "remote_address": "192.0.2.10", "remote_port": 48310, "state": "ESTABLISHED", "process": "postgres", "pid": 2215}]},
+    "neighbors": {"status": "skipped", "data": null}
+  }
+}

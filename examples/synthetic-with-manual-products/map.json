@@ -1,0 +1,1178 @@
+{
+  "schema_version": 1,
+  "renderer_version": "0.3.0",
+  "nodes": [
+    {
+      "id": "ad01",
+      "label": "ad01.example.test",
+      "platform": "windows",
+      "addresses": [
+        "192.0.2.30"
+      ],
+      "address_provenance": {
+        "192.0.2.30": "interface observation"
+      },
+      "os": "Windows Server 2022",
+      "domain": "example.test",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/ad01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "app01",
+      "label": "app01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.10"
+      ],
+      "address_provenance": {
+        "192.0.2.10": "interface observation"
+      },
+      "os": "RHEL 9",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/app01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [
+        {
+          "evidence": "manual-context.example.yml#/assets/3",
+          "source": "Fictional example; replace with an application owner or ticket reference.",
+          "entered_by": "Example operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Example application team",
+            "role": "Business application server",
+            "description": "Illustrative owner context for an existing collected Linux asset.",
+            "criticality": "high",
+            "notes": "Fictional operator note: the application owner says this VM is on hv01 and uses db01. Confirm that placement against the virtualization export before the next patch window. The application's startup order is still unknown.",
+            "platform": "linux",
+            "addresses": []
+          }
+        }
+      ],
+      "field_provenance": {
+        "label": "census",
+        "os": "census",
+        "owner": "manual-context.example.yml#/assets/3",
+        "role": "manual-context.example.yml#/assets/3",
+        "description": "manual-context.example.yml#/assets/3",
+        "criticality": "manual-context.example.yml#/assets/3",
+        "notes": "manual-context.example.yml#/assets/3"
+      },
+      "owner": "Example application team",
+      "role": "Business application server",
+      "description": "Illustrative owner context for an existing collected Linux asset.",
+      "criticality": "high",
+      "notes": "Fictional operator note: the application owner says this VM is on hv01 and uses db01. Confirm that placement against the virtualization export before the next patch window. The application's startup order is still unknown."
+    },
+    {
+      "id": "db01",
+      "label": "db01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.20"
+      ],
+      "address_provenance": {
+        "192.0.2.20": "interface observation"
+      },
+      "os": "RHEL 8",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/db01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "hv01",
+      "label": "Hypervisor 01",
+      "platform": "infrastructure",
+      "os": "VMware ESXi (version Needs Validation)",
+      "domain": "",
+      "addresses": [
+        "192.0.2.40"
+      ],
+      "address_provenance": {
+        "192.0.2.40": "manual assertion"
+      },
+      "collected_at": "Not collected",
+      "evidence": "manual-context.example.yml#/assets/0",
+      "external": false,
+      "source_kind": "manual",
+      "field_provenance": {
+        "owner": "manual-context.example.yml#/assets/0",
+        "role": "manual-context.example.yml#/assets/0",
+        "description": "manual-context.example.yml#/assets/0",
+        "location": "manual-context.example.yml#/assets/0",
+        "criticality": "manual-context.example.yml#/assets/0",
+        "asset_type": "manual-context.example.yml#/assets/0",
+        "notes": "manual-context.example.yml#/assets/0",
+        "attributes": "manual-context.example.yml#/assets/0"
+      },
+      "manual_information": [
+        {
+          "evidence": "manual-context.example.yml#/assets/0",
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "entered_by": "Example operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Example virtualization team",
+            "role": "Virtual machine host",
+            "description": "Illustrative hypervisor hosting the fictional app01 and db01 guests.",
+            "location": "Example datacenter, rack A",
+            "criticality": "high",
+            "asset_type": "hypervisor",
+            "notes": "Owner review, platform version and host membership need confirmation.",
+            "attributes": {
+              "cluster": "Example compute cluster",
+              "memory_gib": 256,
+              "cpu_sockets": 2,
+              "datastores": [
+                "Example VM datastore"
+              ],
+              "ha_status": "Needs Validation"
+            },
+            "label": "Hypervisor 01",
+            "os": "VMware ESXi (version Needs Validation)",
+            "platform": "infrastructure",
+            "addresses": [
+              "192.0.2.40"
+            ]
+          }
+        }
+      ],
+      "owner": "Example virtualization team",
+      "role": "Virtual machine host",
+      "description": "Illustrative hypervisor hosting the fictional app01 and db01 guests.",
+      "location": "Example datacenter, rack A",
+      "criticality": "high",
+      "asset_type": "hypervisor",
+      "notes": "Owner review, platform version and host membership need confirmation.",
+      "attributes": {
+        "cluster": "Example compute cluster",
+        "memory_gib": 256,
+        "cpu_sockets": 2,
+        "datastores": [
+          "Example VM datastore"
+        ],
+        "ha_status": "Needs Validation"
+      }
+    },
+    {
+      "id": "nas01",
+      "label": "Shared Storage",
+      "platform": "infrastructure",
+      "os": "Needs Validation",
+      "domain": "",
+      "addresses": [
+        "192.0.2.50"
+      ],
+      "address_provenance": {
+        "192.0.2.50": "manual assertion"
+      },
+      "collected_at": "Not collected",
+      "evidence": "manual-context.example.yml#/assets/2",
+      "external": false,
+      "source_kind": "manual",
+      "field_provenance": {
+        "owner": "manual-context.example.yml#/assets/2",
+        "role": "manual-context.example.yml#/assets/2",
+        "asset_type": "manual-context.example.yml#/assets/2"
+      },
+      "manual_information": [
+        {
+          "evidence": "manual-context.example.yml#/assets/2",
+          "source": "Fictional example; replace with a storage inventory/export reference.",
+          "entered_by": "Example operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Example storage team",
+            "role": "Virtualization datastore storage",
+            "asset_type": "storage_appliance",
+            "label": "Shared Storage",
+            "os": "Needs Validation",
+            "platform": "infrastructure",
+            "addresses": [
+              "192.0.2.50"
+            ]
+          }
+        }
+      ],
+      "owner": "Example storage team",
+      "role": "Virtualization datastore storage",
+      "asset_type": "storage_appliance"
+    },
+    {
+      "id": "router01",
+      "label": "router01.example.test",
+      "platform": "network",
+      "addresses": [
+        "192.0.2.1"
+      ],
+      "address_provenance": {
+        "192.0.2.1": "interface observation"
+      },
+      "os": "Cisco IOS XE",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/router01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "switch01",
+      "label": "switch01.example.test",
+      "platform": "network",
+      "addresses": [
+        "192.0.2.2"
+      ],
+      "address_provenance": {
+        "192.0.2.2": "interface observation"
+      },
+      "os": "Cisco IOS XE",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/switch01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "vcenter01",
+      "label": "Virtualization Management",
+      "platform": "infrastructure",
+      "os": "VMware vCenter Server (version Needs Validation)",
+      "domain": "",
+      "addresses": [
+        "192.0.2.41"
+      ],
+      "address_provenance": {
+        "192.0.2.41": "manual assertion"
+      },
+      "collected_at": "Not collected",
+      "evidence": "manual-context.example.yml#/assets/1",
+      "external": false,
+      "source_kind": "manual",
+      "field_provenance": {
+        "owner": "manual-context.example.yml#/assets/1",
+        "role": "manual-context.example.yml#/assets/1",
+        "asset_type": "manual-context.example.yml#/assets/1"
+      },
+      "manual_information": [
+        {
+          "evidence": "manual-context.example.yml#/assets/1",
+          "source": "Fictional example; replace with a dated management inventory reference.",
+          "entered_by": "Example operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Example virtualization team",
+            "role": "Hypervisor management",
+            "asset_type": "virtualization_manager",
+            "label": "Virtualization Management",
+            "os": "VMware vCenter Server (version Needs Validation)",
+            "platform": "infrastructure",
+            "addresses": [
+              "192.0.2.41"
+            ]
+          }
+        }
+      ],
+      "owner": "Example virtualization team",
+      "role": "Hypervisor management",
+      "asset_type": "virtualization_manager"
+    }
+  ],
+  "census_nodes": [
+    {
+      "id": "ad01",
+      "label": "ad01.example.test",
+      "platform": "windows",
+      "addresses": [
+        "192.0.2.30"
+      ],
+      "address_provenance": {
+        "192.0.2.30": "interface observation"
+      },
+      "os": "Windows Server 2022",
+      "domain": "example.test",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/ad01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "app01",
+      "label": "app01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.10"
+      ],
+      "address_provenance": {
+        "192.0.2.10": "interface observation"
+      },
+      "os": "RHEL 9",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/app01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "db01",
+      "label": "db01.example.test",
+      "platform": "linux",
+      "addresses": [
+        "192.0.2.20"
+      ],
+      "address_provenance": {
+        "192.0.2.20": "interface observation"
+      },
+      "os": "RHEL 8",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/db01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "router01",
+      "label": "router01.example.test",
+      "platform": "network",
+      "addresses": [
+        "192.0.2.1"
+      ],
+      "address_provenance": {
+        "192.0.2.1": "interface observation"
+      },
+      "os": "Cisco IOS XE",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/router01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    },
+    {
+      "id": "switch01",
+      "label": "switch01.example.test",
+      "platform": "network",
+      "addresses": [
+        "192.0.2.2"
+      ],
+      "address_provenance": {
+        "192.0.2.2": "interface observation"
+      },
+      "os": "Cisco IOS XE",
+      "domain": "",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "evidence": "hosts/switch01.json",
+      "external": false,
+      "source_kind": "census",
+      "manual_information": [],
+      "field_provenance": {
+        "label": "census",
+        "os": "census"
+      }
+    }
+  ],
+  "census_details": {
+    "ad01": {
+      "evidence": "hosts/ad01.json",
+      "collector": "synthetic-example",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "ad01.example.test",
+            "os": "Windows Server 2022",
+            "domain": "example.test"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "InterfaceAlias": "Ethernet",
+              "InterfaceIndex": 5,
+              "IPAddress": "192.0.2.30",
+              "PrefixLength": 24
+            }
+          ]
+        },
+        "tcp": {
+          "status": "ok",
+          "data": [
+            {
+              "local_address": "192.0.2.30",
+              "local_port": 636,
+              "remote_address": "192.0.2.10",
+              "remote_port": 48312,
+              "state": "Established",
+              "process": "lsass",
+              "pid": 640
+            }
+          ]
+        },
+        "neighbors": {
+          "status": "not_supported",
+          "data": null
+        }
+      }
+    },
+    "app01": {
+      "evidence": "hosts/app01.json",
+      "collector": "synthetic-example",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "app01.example.test",
+            "os": "RHEL 9"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "ifname": "ens192",
+              "addr_info": [
+                {
+                  "family": "inet",
+                  "local": "192.0.2.10",
+                  "prefixlen": 24
+                }
+              ]
+            }
+          ]
+        },
+        "tcp": {
+          "status": "ok",
+          "data": [
+            {
+              "local_address": "192.0.2.10",
+              "local_port": 48310,
+              "remote_address": "192.0.2.20",
+              "remote_port": 5432,
+              "state": "ESTABLISHED",
+              "process": "java",
+              "pid": 1042
+            },
+            {
+              "local_address": "192.0.2.10",
+              "local_port": 48312,
+              "remote_address": "192.0.2.30",
+              "remote_port": 636,
+              "state": "ESTABLISHED",
+              "process": "sssd",
+              "pid": 770
+            }
+          ]
+        },
+        "neighbors": {
+          "status": "unavailable",
+          "data": null
+        }
+      }
+    },
+    "db01": {
+      "evidence": "hosts/db01.json",
+      "collector": "synthetic-example",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "db01.example.test",
+            "os": "RHEL 8"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "ifname": "ens192",
+              "addr_info": [
+                {
+                  "family": "inet",
+                  "local": "192.0.2.20",
+                  "prefixlen": 24
+                }
+              ]
+            }
+          ]
+        },
+        "tcp": {
+          "status": "ok",
+          "data": [
+            {
+              "local_address": "192.0.2.20",
+              "local_port": 5432,
+              "remote_address": "192.0.2.10",
+              "remote_port": 48310,
+              "state": "ESTABLISHED",
+              "process": "postgres",
+              "pid": 2215
+            }
+          ]
+        },
+        "neighbors": {
+          "status": "skipped",
+          "data": null
+        }
+      }
+    },
+    "router01": {
+      "evidence": "hosts/router01.json",
+      "collector": "synthetic-example",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "router01.example.test",
+            "os": "Cisco IOS XE"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "address": "192.0.2.1"
+            }
+          ]
+        },
+        "tcp": {
+          "status": "not_supported",
+          "data": null
+        },
+        "neighbors": {
+          "status": "ok",
+          "data": {
+            "GigabitEthernet0/0/0": [
+              {
+                "host": "switch01.example.test",
+                "port": "GigabitEthernet1/0/48"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "switch01": {
+      "evidence": "hosts/switch01.json",
+      "collector": "synthetic-example",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "sections": {
+        "identity": {
+          "status": "ok",
+          "data": {
+            "hostname": "switch01.example.test",
+            "os": "Cisco IOS XE"
+          }
+        },
+        "interfaces": {
+          "status": "ok",
+          "data": [
+            {
+              "address": "192.0.2.2"
+            }
+          ]
+        },
+        "tcp": {
+          "status": "not_supported",
+          "data": null
+        },
+        "neighbors": {
+          "status": "ok",
+          "data": {
+            "GigabitEthernet1/0/48": [
+              {
+                "host": "router01.example.test",
+                "port": "GigabitEthernet0/0/0"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "evidence_relationships": [
+    {
+      "id": "a5f23224727b235f",
+      "source": "ad01",
+      "target": "app01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/ad01.json#/sections/tcp/data/0"
+      ],
+      "local_address": "192.0.2.30",
+      "local_port": 636,
+      "remote_address": "192.0.2.10",
+      "remote_port": 48312,
+      "protocol": "tcp",
+      "process": "lsass",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/app01.json",
+      "purpose": "Unconfirmed application relationship"
+    },
+    {
+      "id": "dc4a5c686cc22922",
+      "source": "app01",
+      "target": "db01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/app01.json#/sections/tcp/data/0"
+      ],
+      "local_address": "192.0.2.10",
+      "local_port": 48310,
+      "remote_address": "192.0.2.20",
+      "remote_port": 5432,
+      "protocol": "tcp",
+      "process": "java",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/db01.json",
+      "purpose": "Unconfirmed application relationship"
+    },
+    {
+      "id": "d8f8363c3cba47f8",
+      "source": "app01",
+      "target": "ad01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/app01.json#/sections/tcp/data/1"
+      ],
+      "local_address": "192.0.2.10",
+      "local_port": 48312,
+      "remote_address": "192.0.2.30",
+      "remote_port": 636,
+      "protocol": "tcp",
+      "process": "sssd",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/ad01.json",
+      "purpose": "Unconfirmed application relationship"
+    },
+    {
+      "id": "fe36e0801d93b676",
+      "source": "db01",
+      "target": "app01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/db01.json#/sections/tcp/data/0"
+      ],
+      "local_address": "192.0.2.20",
+      "local_port": 5432,
+      "remote_address": "192.0.2.10",
+      "remote_port": 48310,
+      "protocol": "tcp",
+      "process": "postgres",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/app01.json",
+      "purpose": "Unconfirmed application relationship"
+    },
+    {
+      "id": "d4fb161955940751",
+      "source": "router01",
+      "target": "switch01",
+      "kind": "physical_neighbor",
+      "status": "observed",
+      "evidence": [
+        "hosts/router01.json#/sections/neighbors/data/GigabitEthernet0~10~10/0"
+      ],
+      "local_interface": "GigabitEthernet0/0/0",
+      "remote_interface": "GigabitEthernet1/0/48",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/switch01.json",
+      "remote_name": "switch01.example.test",
+      "purpose": "LLDP/CDP neighbor observation",
+      "source_origin": "unknown"
+    },
+    {
+      "id": "1e1cb0df2bd82303",
+      "source": "switch01",
+      "target": "router01",
+      "kind": "physical_neighbor",
+      "status": "observed",
+      "evidence": [
+        "hosts/switch01.json#/sections/neighbors/data/GigabitEthernet1~10~148/0"
+      ],
+      "local_interface": "GigabitEthernet1/0/48",
+      "remote_interface": "GigabitEthernet0/0/0",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/router01.json",
+      "remote_name": "router01.example.test",
+      "purpose": "LLDP/CDP neighbor observation",
+      "source_origin": "unknown"
+    },
+    {
+      "id": "113db562e090bb99",
+      "source": "app01",
+      "target": "db01",
+      "kind": "declared_dependency",
+      "status": "declared",
+      "evidence": [
+        "declared-dependencies.example.json#/dependencies/0"
+      ],
+      "protocol": "tcp",
+      "remote_port": 5432,
+      "purpose": "Application uses PostgreSQL; confirm with the application owner",
+      "source_origin": "declared",
+      "authority": "Fictional example, not an approval"
+    }
+  ],
+  "manual_context": {
+    "schema_version": 1,
+    "assets": [
+      {
+        "id": "hv01",
+        "platform": "infrastructure",
+        "label": "Hypervisor 01",
+        "asset_type": "hypervisor",
+        "os": "VMware ESXi (version Needs Validation)",
+        "addresses": [
+          "192.0.2.40"
+        ],
+        "owner": "Example virtualization team",
+        "role": "Virtual machine host",
+        "description": "Illustrative hypervisor hosting the fictional app01 and db01 guests.",
+        "location": "Example datacenter, rack A",
+        "criticality": "high",
+        "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05",
+        "notes": "Owner review, platform version and host membership need confirmation.",
+        "attributes": {
+          "cluster": "Example compute cluster",
+          "memory_gib": 256,
+          "cpu_sockets": 2,
+          "datastores": [
+            "Example VM datastore"
+          ],
+          "ha_status": "Needs Validation"
+        }
+      },
+      {
+        "id": "vcenter01",
+        "platform": "infrastructure",
+        "label": "Virtualization Management",
+        "asset_type": "virtualization_manager",
+        "os": "VMware vCenter Server (version Needs Validation)",
+        "addresses": [
+          "192.0.2.41"
+        ],
+        "owner": "Example virtualization team",
+        "role": "Hypervisor management",
+        "source": "Fictional example; replace with a dated management inventory reference.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      },
+      {
+        "id": "nas01",
+        "platform": "infrastructure",
+        "label": "Shared Storage",
+        "asset_type": "storage_appliance",
+        "os": "Needs Validation",
+        "addresses": [
+          "192.0.2.50"
+        ],
+        "owner": "Example storage team",
+        "role": "Virtualization datastore storage",
+        "source": "Fictional example; replace with a storage inventory/export reference.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      },
+      {
+        "id": "app01",
+        "platform": "linux",
+        "owner": "Example application team",
+        "role": "Business application server",
+        "description": "Illustrative owner context for an existing collected Linux asset.",
+        "notes": "Fictional operator note: the application owner says this VM is on hv01 and uses db01. Confirm that placement against the virtualization export before the next patch window. The application's startup order is still unknown.",
+        "criticality": "high",
+        "source": "Fictional example; replace with an application owner or ticket reference.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "hv01",
+        "target": "app01",
+        "kind": "hosts",
+        "purpose": "Hypervisor hosts the application virtual machine.",
+        "source_reference": "Fictional example; replace with a VM inventory export and timestamp.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05",
+        "notes": "This declaration does not prove current guest placement."
+      },
+      {
+        "source": "hv01",
+        "target": "db01",
+        "kind": "hosts",
+        "purpose": "Hypervisor hosts the database virtual machine.",
+        "source_reference": "Fictional example; replace with a VM inventory export and timestamp.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      },
+      {
+        "source": "app01",
+        "target": "ad01",
+        "kind": "depends_on",
+        "purpose": "Application server requires the identity service.",
+        "source_reference": "Fictional example; confirm the actual requirement with the application owner.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05",
+        "notes": "No port is supplied because the identity integration has not been established."
+      },
+      {
+        "source": "hv01",
+        "target": "nas01",
+        "kind": "uses_storage",
+        "purpose": "Hypervisor uses storage from the shared-storage appliance.",
+        "protocol": "tcp",
+        "port": 2049,
+        "source_reference": "Fictional NFS illustration; confirm storage type, mount and protocol.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      },
+      {
+        "source": "hv01",
+        "target": "vcenter01",
+        "kind": "managed_by",
+        "purpose": "Hypervisor is managed by the virtualization management service.",
+        "source_reference": "Fictional example; replace with a management inventory reference.",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    ]
+  },
+  "workspace_id": "4ccd385046e992ac8463d751",
+  "relationships": [
+    {
+      "id": "113db562e090bb99",
+      "source": "app01",
+      "target": "db01",
+      "kind": "declared_dependency",
+      "status": "declared",
+      "evidence": [
+        "declared-dependencies.example.json#/dependencies/0"
+      ],
+      "protocol": "tcp",
+      "remote_port": 5432,
+      "purpose": "Application uses PostgreSQL; confirm with the application owner",
+      "source_origin": "declared",
+      "authority": "Fictional example, not an approval"
+    },
+    {
+      "id": "1e1cb0df2bd82303",
+      "source": "switch01",
+      "target": "router01",
+      "kind": "physical_neighbor",
+      "status": "observed",
+      "evidence": [
+        "hosts/switch01.json#/sections/neighbors/data/GigabitEthernet1~10~148/0"
+      ],
+      "local_interface": "GigabitEthernet1/0/48",
+      "remote_interface": "GigabitEthernet0/0/0",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/router01.json",
+      "remote_name": "router01.example.test",
+      "purpose": "LLDP/CDP neighbor observation",
+      "source_origin": "unknown"
+    },
+    {
+      "id": "5d56f9f7a050a319",
+      "source": "hv01",
+      "target": "vcenter01",
+      "kind": "manual_relationship",
+      "status": "manual_declared",
+      "evidence": [
+        "manual-context.example.yml#/relationships/4"
+      ],
+      "relationship_type": "managed_by",
+      "source_origin": "manual",
+      "protocol": null,
+      "remote_port": null,
+      "purpose": "Hypervisor is managed by the virtualization management service.",
+      "notes": "",
+      "manual_information": {
+        "evidence": "manual-context.example.yml#/relationships/4",
+        "source": "hv01",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    },
+    {
+      "id": "79912a6fe1beb07f",
+      "source": "hv01",
+      "target": "db01",
+      "kind": "manual_relationship",
+      "status": "manual_declared",
+      "evidence": [
+        "manual-context.example.yml#/relationships/1"
+      ],
+      "relationship_type": "hosts",
+      "source_origin": "manual",
+      "protocol": null,
+      "remote_port": null,
+      "purpose": "Hypervisor hosts the database virtual machine.",
+      "notes": "",
+      "manual_information": {
+        "evidence": "manual-context.example.yml#/relationships/1",
+        "source": "hv01",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    },
+    {
+      "id": "8cd7540889cabd53",
+      "source": "app01",
+      "target": "ad01",
+      "kind": "manual_relationship",
+      "status": "manual_declared",
+      "evidence": [
+        "manual-context.example.yml#/relationships/2"
+      ],
+      "relationship_type": "depends_on",
+      "source_origin": "manual",
+      "protocol": null,
+      "remote_port": null,
+      "purpose": "Application server requires the identity service.",
+      "notes": "No port is supplied because the identity integration has not been established.",
+      "manual_information": {
+        "evidence": "manual-context.example.yml#/relationships/2",
+        "source": "app01",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    },
+    {
+      "id": "a5f23224727b235f",
+      "source": "ad01",
+      "target": "app01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/ad01.json#/sections/tcp/data/0"
+      ],
+      "local_address": "192.0.2.30",
+      "local_port": 636,
+      "remote_address": "192.0.2.10",
+      "remote_port": 48312,
+      "protocol": "tcp",
+      "process": "lsass",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/app01.json",
+      "purpose": "Unconfirmed application relationship"
+    },
+    {
+      "id": "b7acf6a5e66b3db1",
+      "source": "hv01",
+      "target": "nas01",
+      "kind": "manual_relationship",
+      "status": "manual_declared",
+      "evidence": [
+        "manual-context.example.yml#/relationships/3"
+      ],
+      "relationship_type": "uses_storage",
+      "source_origin": "manual",
+      "protocol": "tcp",
+      "remote_port": 2049,
+      "purpose": "Hypervisor uses storage from the shared-storage appliance.",
+      "notes": "",
+      "manual_information": {
+        "evidence": "manual-context.example.yml#/relationships/3",
+        "source": "hv01",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    },
+    {
+      "id": "d4fb161955940751",
+      "source": "router01",
+      "target": "switch01",
+      "kind": "physical_neighbor",
+      "status": "observed",
+      "evidence": [
+        "hosts/router01.json#/sections/neighbors/data/GigabitEthernet0~10~10/0"
+      ],
+      "local_interface": "GigabitEthernet0/0/0",
+      "remote_interface": "GigabitEthernet1/0/48",
+      "target_resolution_basis": "census identity",
+      "target_identity_evidence": "hosts/switch01.json",
+      "remote_name": "switch01.example.test",
+      "purpose": "LLDP/CDP neighbor observation",
+      "source_origin": "unknown"
+    },
+    {
+      "id": "d8f8363c3cba47f8",
+      "source": "app01",
+      "target": "ad01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/app01.json#/sections/tcp/data/1"
+      ],
+      "local_address": "192.0.2.10",
+      "local_port": 48312,
+      "remote_address": "192.0.2.30",
+      "remote_port": 636,
+      "protocol": "tcp",
+      "process": "sssd",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/ad01.json",
+      "purpose": "Unconfirmed application relationship"
+    },
+    {
+      "id": "dc4a5c686cc22922",
+      "source": "app01",
+      "target": "db01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/app01.json#/sections/tcp/data/0"
+      ],
+      "local_address": "192.0.2.10",
+      "local_port": 48310,
+      "remote_address": "192.0.2.20",
+      "remote_port": 5432,
+      "protocol": "tcp",
+      "process": "java",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/db01.json",
+      "purpose": "Unconfirmed application relationship"
+    },
+    {
+      "id": "deab87a3907754d8",
+      "source": "hv01",
+      "target": "app01",
+      "kind": "manual_relationship",
+      "status": "manual_declared",
+      "evidence": [
+        "manual-context.example.yml#/relationships/0"
+      ],
+      "relationship_type": "hosts",
+      "source_origin": "manual",
+      "protocol": null,
+      "remote_port": null,
+      "purpose": "Hypervisor hosts the application virtual machine.",
+      "notes": "This declaration does not prove current guest placement.",
+      "manual_information": {
+        "evidence": "manual-context.example.yml#/relationships/0",
+        "source": "hv01",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    },
+    {
+      "id": "fe36e0801d93b676",
+      "source": "db01",
+      "target": "app01",
+      "kind": "observed_connection",
+      "status": "observed",
+      "evidence": [
+        "hosts/db01.json#/sections/tcp/data/0"
+      ],
+      "local_address": "192.0.2.20",
+      "local_port": 5432,
+      "remote_address": "192.0.2.10",
+      "remote_port": 48310,
+      "protocol": "tcp",
+      "process": "postgres",
+      "source_origin": "unknown",
+      "target_resolution_basis": "interface observation",
+      "target_identity_evidence": "hosts/app01.json",
+      "purpose": "Unconfirmed application relationship"
+    }
+  ],
+  "gaps": [
+    {
+      "asset_id": "ad01",
+      "section": "neighbors",
+      "status": "not_supported",
+      "evidence": "hosts/ad01.json"
+    },
+    {
+      "asset_id": "app01",
+      "section": "neighbors",
+      "status": "unavailable",
+      "evidence": "hosts/app01.json"
+    },
+    {
+      "asset_id": "db01",
+      "section": "neighbors",
+      "status": "skipped",
+      "evidence": "hosts/db01.json"
+    },
+    {
+      "asset_id": "router01",
+      "section": "tcp",
+      "status": "not_supported",
+      "evidence": "hosts/router01.json"
+    },
+    {
+      "asset_id": "switch01",
+      "section": "tcp",
+      "status": "not_supported",
+      "evidence": "hosts/switch01.json"
+    }
+  ],
+  "conflicts": [],
+  "collection_mode": "mixed",
+  "manual_source": {
+    "path": "model/manual-context.example.yml",
+    "sha256": "636ca11867751138c6673d8b6d8d67b41cf5113dc9c77e4ee53d0fcfeffa366d"
+  },
+  "interpretation": "Observed endpoints do not establish TCP initiator, purpose, authorization, or criticality."
+}

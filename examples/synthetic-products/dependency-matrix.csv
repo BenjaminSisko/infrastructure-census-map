@@ -1,0 +1,8 @@
+source,target,kind,relationship_type,status,protocol,local_port,remote_port,source_origin,target_resolution_basis,target_identity_evidence,purpose,evidence
+app01,db01,declared_dependency,,declared,tcp,,5432,declared,,,Application uses PostgreSQL; confirm with the application owner,declared-dependencies.example.json#/dependencies/0
+switch01,router01,physical_neighbor,,observed,,,,unknown,census identity,hosts/router01.json,LLDP/CDP neighbor observation,hosts/switch01.json#/sections/neighbors/data/GigabitEthernet1~10~148/0
+ad01,app01,observed_connection,,observed,tcp,636,48312,unknown,interface observation,hosts/app01.json,Unconfirmed application relationship,hosts/ad01.json#/sections/tcp/data/0
+router01,switch01,physical_neighbor,,observed,,,,unknown,census identity,hosts/switch01.json,LLDP/CDP neighbor observation,hosts/router01.json#/sections/neighbors/data/GigabitEthernet0~10~10/0
+app01,ad01,observed_connection,,observed,tcp,48312,636,unknown,interface observation,hosts/ad01.json,Unconfirmed application relationship,hosts/app01.json#/sections/tcp/data/1
+app01,db01,observed_connection,,observed,tcp,48310,5432,unknown,interface observation,hosts/db01.json,Unconfirmed application relationship,hosts/app01.json#/sections/tcp/data/0
+db01,app01,observed_connection,,observed,tcp,5432,48310,unknown,interface observation,hosts/app01.json,Unconfirmed application relationship,hosts/db01.json#/sections/tcp/data/0

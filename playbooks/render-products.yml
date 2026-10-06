@@ -1,0 +1,32 @@
+---
+- name: Render products from an existing evidence bundle
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Require input/output paths
+      ansible.builtin.assert:
+        that:
+          - census_bundle is defined or census_manual_context is defined
+          - census_products is defined
+    - name: Verify collected bundle
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_playbook_python }}"
+          - "{{ playbook_dir }}/../tools/bundle.py"
+          - verify
+          - "{{ census_bundle }}"
+      changed_when: false
+      when: census_bundle is defined
+    - name: Build rendering inputs
+      ansible.builtin.set_fact:
+        census_render_argv: >-
+          {{ [ansible_playbook_python, playbook_dir + '/../renderer/render.py', '--output', census_products]
+             + (['--evidence', census_bundle] if census_bundle is defined else [])
+             + (['--manual', census_manual_context] if census_manual_context is defined else [])
+             + (['--declared', census_declared_dependencies] if census_declared_dependencies is defined else []) }}
+    - name: Generate SVG HTML JSON CSV and Markdown
+      ansible.builtin.command:
+        argv: "{{ census_render_argv }}"
+      changed_when: true

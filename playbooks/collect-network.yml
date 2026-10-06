@@ -1,0 +1,219 @@
+---
+- name: Collect read-only network device census evidence
+  hosts: census_network
+  gather_facts: false
+  serial: 10
+  vars:
+    ansible_become: "{{ census_network_become | default(false) }}"
+    census_output_root: "{{ lookup('ansible.builtin.env', 'HOME') }}/census-output"
+    census_network_adapters:
+      ios: network-cisco-ios.yml
+      eos: network-arista-eos.yml
+      junos: network-junos.yml
+    census_network_os_names:
+      ios: Cisco IOS / IOS XE
+      eos: Arista EOS
+      junos: Juniper Junos
+
+  pre_tasks:
+    - name: Validate evidence destination and asset name
+      ansible.builtin.assert:
+        that:
+          - census_run_id is defined
+          - census_run_id is match('^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$')
+          - census_output_root is match('^/')
+          - inventory_hostname is match('^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$')
+        fail_msg: >-
+          Supply a safe census_run_id, an absolute census_output_root,
+          and inventory host names containing only letters, digits, dot,
+          underscore or dash. Neither run ID nor host name may start with dot.
+      delegate_to: localhost
+      become: false
+      vars: {ansible_become: false}
+
+    - name: Create controller evidence directory
+      ansible.builtin.file:
+        path: "{{ census_output_root }}/{{ census_run_id }}/hosts"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+      become: false
+      vars: {ansible_become: false}
+      run_once: true
+
+  tasks:
+    - name: Initialize results for this host
+      ansible.builtin.set_fact:
+        census_network_base: {}
+        census_network_l2: {}
+        census_network_supported: >-
+          {{ (census_network_os | default('')) in census_network_adapters }}
+      no_log: true
+
+    - name: Collect facts through the configured vendor adapter
+      ansible.builtin.include_tasks:
+        file: "tasks/{{ census_network_adapters[census_network_os] }}"
+      when: census_network_supported | bool
+
+    - name: Retain only the vendor result objects needed for allowlisting
+      ansible.builtin.set_fact:
+        census_network_facts: "{{ census_network_base.ansible_facts | default({}) }}"
+        census_network_resources: >-
+          {{ (census_network_l2.ansible_facts | default({})).get('ansible_network_resources', {}) }}
+        census_network_error: >-
+          {{ (census_network_base.failed | default(false)) or
+             (census_network_base.unreachable | default(false)) }}
+      no_log: true
+
+    - name: Allowlist nested interfaces and neighbors
+      ansible.builtin.set_fact:
+        census_network_interfaces: "{{ interfaces_json | from_json }}"
+        census_network_neighbors: "{{ neighbors_json | from_json }}"
+        census_network_l2_interfaces: "{{ l2_json | from_json }}"
+        census_network_vlans: "{{ vlans_json | from_json }}"
+      vars:
+        interfaces_json: >-
+          {% set out = namespace(items=[]) %}
+          {% set rows = census_network_facts.get('ansible_net_interfaces', {}) %}
+          {% if rows is mapping %}
+          {% for name, row in rows.items() %}
+          {% if row is mapping %}
+          {% set safe = row | dict2items | selectattr('key', 'in',
+             ['state', 'operstatus', 'lineprotocol', 'enabled', 'macaddress',
+              'mtu', 'bandwidth', 'speed', 'duplex', 'type', 'ipv4', 'ipv6']) | list | items2dict %}
+          {% set out.items = out.items + [safe | combine({'name': name})] %}
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+          {{ out.items | to_json }}
+        neighbors_json: >-
+          {% set out = namespace(items={}) %}
+          {% set rows = census_network_facts.get('ansible_net_neighbors', {}) %}
+          {% if rows is mapping %}
+          {% for local_port, entries in rows.items() %}
+          {% set entries = [entries] if entries is mapping else entries %}
+          {% if entries is sequence and entries is not string %}
+          {% set port = namespace(items=[]) %}
+          {% for row in entries %}
+          {% if row is mapping %}
+          {% set safe = row | dict2items | selectattr('key', 'in',
+             ['host', 'port', 'ip', 'platform', 'chassis_id', 'management_address',
+              'neighbor', 'neighbor_interface', 'system_name', 'remote_port']) | list | items2dict %}
+          {% set port.items = port.items + [safe] %}
+          {% endif %}
+          {% endfor %}
+          {% set out.items = out.items | combine({local_port: port.items}) %}
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+          {{ out.items | to_json }}
+        l2_json: >-
+          {% set out = namespace(items=[]) %}
+          {% for row in census_network_resources.get('l2_interfaces', []) %}
+          {% if row is mapping %}
+          {% set safe = row | dict2items | selectattr('key', 'in',
+             ['name', 'mode', 'access', 'trunk', 'native_vlan', 'tagged']) | list | items2dict %}
+          {% set out.items = out.items + [safe] %}
+          {% endif %}
+          {% endfor %}
+          {{ out.items | to_json }}
+        vlans_json: >-
+          {% set out = namespace(items=[]) %}
+          {% for row in census_network_resources.get('vlans', []) %}
+          {% if row is mapping %}
+          {% set safe = row | dict2items | selectattr('key', 'in',
+             ['name', 'vlan_id', 'state', 'enabled']) | list | items2dict %}
+          {% set out.items = out.items + [safe] %}
+          {% endif %}
+          {% endfor %}
+          {{ out.items | to_json }}
+      no_log: true
+
+    - name: Construct evidence envelope with explicit collection limits
+      ansible.builtin.set_fact:
+        census_network_evidence:
+          schema_version: 1
+          asset_id: "{{ inventory_hostname }}"
+          platform: network
+          collected_at: "{{ now(utc=true, fmt='%Y-%m-%dT%H:%M:%SZ') }}"
+          collector:
+            name: vendor-facts
+            version: 0.1.0
+          sections:
+            identity:
+              status: "{{ 'ok' if census_network_facts.get('ansible_net_hostname') else 'partial' }}"
+              data:
+                hostname: "{{ census_network_facts.get('ansible_net_hostname', inventory_hostname) }}"
+                hostname_source: "{{ 'vendor-facts' if census_network_facts.get('ansible_net_hostname') else 'inventory' }}"
+                os: "{{ census_network_os_names.get(census_network_os | default(''), 'Unknown network platform') }}"
+                network_os: "{{ ansible_network_os | default('unknown') }}"
+                management_address: "{{ ansible_host | default(inventory_hostname) }}"
+                version: "{{ census_network_facts.get('ansible_net_version') }}"
+                model: "{{ census_network_facts.get('ansible_net_model') }}"
+                serial_number: "{{ census_network_facts.get('ansible_net_serialnum') }}"
+                memory_total_mb: "{{ census_network_facts.get('ansible_net_memtotal_mb') }}"
+                memory_free_mb: "{{ census_network_facts.get('ansible_net_memfree_mb') }}"
+            interfaces:
+              status: "{{ 'ok' if 'ansible_net_interfaces' in census_network_facts else 'partial' }}"
+              data: "{{ census_network_interfaces }}"
+            neighbors:
+              status: "{{ 'ok' if 'ansible_net_neighbors' in census_network_facts else 'partial' }}"
+              data: "{{ census_network_neighbors }}"
+            l2:
+              status: >-
+                {{ 'not_collected' if not (census_network_collect_l2 | default(false) | bool)
+                   else ('ok' if ('l2_interfaces' in census_network_resources and 'vlans' in census_network_resources)
+                   else 'partial') }}
+              data:
+                interfaces: "{{ census_network_l2_interfaces }}"
+                vlans: "{{ census_network_vlans }}"
+                interpretation: Selected configuration resources; no application traffic evidence
+            collection:
+              status: >-
+                {{ 'unsupported' if not (census_network_supported | bool)
+                   else ('unreachable' if census_network_base.unreachable | default(false)
+                   else ('error' if census_network_error | bool
+                   else ('partial' if ('ansible_net_interfaces' not in census_network_facts or
+                         'ansible_net_neighbors' not in census_network_facts or
+                         ((census_network_collect_l2 | default(false) | bool) and
+                          ('l2_interfaces' not in census_network_resources or 'vlans' not in census_network_resources)))
+                   else 'ok'))) }}
+              data:
+                requested_subsets:
+                  - min
+                  - hardware
+                  - interfaces
+                requested_l2: "{{ census_network_collect_l2 | default(false) | bool }}"
+                transport: "{{ ansible_connection | default('not_configured') }}"
+                full_config_collected: false
+                selected_l2_config_requested: "{{ census_network_collect_l2 | default(false) | bool }}"
+                selected_l2_config_collected: "{{ census_network_resources | length > 0 }}"
+                source: vendor operational facts and optional selected L2 resources
+                limits:
+                  - No running-config backup or full fact-tree export
+                  - LLDP/CDP are neighbor observations, not application dependencies
+                  - No MAC/ARP tables or traffic history are collected by this adapter
+                  - Missing fields may mean unsupported platform, permissions or disabled neighbor discovery
+                reason_code: >-
+                  {{ 'unsupported_network_os' if not (census_network_supported | bool)
+                     else ('connection_unavailable' if census_network_base.unreachable | default(false)
+                     else ('vendor_facts_failed' if census_network_error | bool
+                     else ('l2_facts_failed' if (census_network_l2.failed | default(false)) or
+                                (census_network_l2.unreachable | default(false)) else 'none'))) }}
+      no_log: true
+
+    - name: Write allowlisted network evidence to the controller
+      ansible.builtin.copy:
+        content: "{{ census_network_evidence | to_nice_json }}"
+        dest: "{{ census_output_root }}/{{ census_run_id }}/hosts/{{ inventory_hostname }}.json"
+        mode: "0600"
+      delegate_to: localhost
+      become: false
+      vars: {ansible_become: false}
+      no_log: true
+
+    - name: Report network collection status without raw facts
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }}: {{ census_network_evidence.sections.collection.status }};
+          evidence written to the controller. Review section statuses before interpreting missing data.

@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "dependencies": [
+    {
+      "source": "app01",
+      "target": "db01",
+      "protocol": "tcp",
+      "port": 5432,
+      "purpose": "Application uses PostgreSQL; confirm with the application owner",
+      "authority": "Fictional example, not an approval"
+    }
+  ]
+}

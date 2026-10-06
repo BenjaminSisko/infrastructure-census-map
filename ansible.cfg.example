@@ -1,0 +1,11 @@
+[defaults]
+host_key_checking = True
+retry_files_enabled = False
+forks = 5
+timeout = 20
+interpreter_python = auto_silent
+
+[persistent_connection]
+connect_timeout = 30
+command_timeout = 45
+log_messages = False

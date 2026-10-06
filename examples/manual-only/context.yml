@@ -1,0 +1,33 @@
+---
+schema_version: 1
+assets:
+  - id: hv01
+    platform: infrastructure
+    label: Hypervisor 01
+    asset_type: hypervisor
+    os: Hypervisor OS Needs Validation
+    addresses:
+      - 192.0.2.40
+    owner: Example virtualization team
+    source: Fictional operator-entered example
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+    attributes:
+      cluster: Example cluster A
+      memory_gib: 256
+  - id: app01
+    platform: linux
+    label: Application VM 01
+    asset_type: virtual_machine
+    os: Guest OS Needs Validation
+    source: Fictional operator-entered example
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+relationships:
+  - source: hv01
+    target: app01
+    kind: hosts
+    purpose: Hypervisor hosts this virtual machine.
+    source_reference: Fictional VM inventory declaration
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'

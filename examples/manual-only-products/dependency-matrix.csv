@@ -1,0 +1,2 @@
+source,target,kind,relationship_type,status,protocol,local_port,remote_port,source_origin,target_resolution_basis,target_identity_evidence,purpose,evidence
+hv01,app01,manual_relationship,hosts,manual_declared,,,,manual,,,Hypervisor hosts this virtual machine.,context.yml#/relationships/0

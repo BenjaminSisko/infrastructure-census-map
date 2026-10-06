@@ -1,0 +1,115 @@
+---
+# Fictional illustration for examples/synthetic; these are not verified facts.
+# Copy to a private location. Keep real infrastructure context inside your environment.
+schema_version: 1
+
+assets:
+  - id: hv01
+    platform: infrastructure
+    label: Hypervisor 01
+    asset_type: hypervisor
+    os: VMware ESXi (version Needs Validation)
+    addresses:
+      - 192.0.2.40
+    owner: Example virtualization team
+    role: Virtual machine host
+    description: Illustrative hypervisor hosting the fictional app01 and db01 guests.
+    location: Example datacenter, rack A
+    criticality: high
+    source: Fictional example; replace with a dated hypervisor inventory reference.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+    notes: Owner review, platform version and host membership need confirmation.
+    attributes:
+      cluster: Example compute cluster
+      memory_gib: 256
+      cpu_sockets: 2
+      datastores:
+        - Example VM datastore
+      ha_status: Needs Validation
+
+  - id: vcenter01
+    platform: infrastructure
+    label: Virtualization Management
+    asset_type: virtualization_manager
+    os: VMware vCenter Server (version Needs Validation)
+    addresses:
+      - 192.0.2.41
+    owner: Example virtualization team
+    role: Hypervisor management
+    source: Fictional example; replace with a dated management inventory reference.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+
+  - id: nas01
+    platform: infrastructure
+    label: Shared Storage
+    asset_type: storage_appliance
+    os: Needs Validation
+    addresses:
+      - 192.0.2.50
+    owner: Example storage team
+    role: Virtualization datastore storage
+    source: Fictional example; replace with a storage inventory/export reference.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+
+  # This ID matches a collected asset; metadata complements its census evidence.
+  - id: app01
+    platform: linux
+    owner: Example application team
+    role: Business application server
+    description: Illustrative owner context for an existing collected Linux asset.
+    notes: >-
+      Fictional operator note: the application owner says this VM is on hv01 and
+      uses db01. Confirm that placement against the virtualization export before
+      the next patch window. The application's startup order is still unknown.
+    criticality: high
+    source: Fictional example; replace with an application owner or ticket reference.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+
+relationships:
+  - source: hv01
+    target: app01
+    kind: hosts
+    purpose: Hypervisor hosts the application virtual machine.
+    source_reference: Fictional example; replace with a VM inventory export and timestamp.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+    notes: This declaration does not prove current guest placement.
+
+  - source: hv01
+    target: db01
+    kind: hosts
+    purpose: Hypervisor hosts the database virtual machine.
+    source_reference: Fictional example; replace with a VM inventory export and timestamp.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+
+  - source: app01
+    target: ad01
+    kind: depends_on
+    purpose: Application server requires the identity service.
+    source_reference: Fictional example; confirm the actual requirement with the application owner.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+    notes: No port is supplied because the identity integration has not been established.
+
+  - source: hv01
+    target: nas01
+    kind: uses_storage
+    purpose: Hypervisor uses storage from the shared-storage appliance.
+    protocol: tcp
+    port: 2049
+    source_reference: Fictional NFS illustration; confirm storage type, mount and protocol.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'
+
+  - source: hv01
+    target: vcenter01
+    kind: managed_by
+    purpose: Hypervisor is managed by the virtualization management service.
+    source_reference: Fictional example; replace with a management inventory reference.
+    entered_by: Example operator
+    reviewed_at: '2026-10-05'

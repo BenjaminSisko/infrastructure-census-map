@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "renderer_version": "0.3.0",
+  "nodes": [
+    {
+      "id": "app01",
+      "label": "Application VM 01",
+      "platform": "linux",
+      "os": "Guest OS Needs Validation",
+      "domain": "",
+      "addresses": [],
+      "address_provenance": {},
+      "collected_at": "Not collected",
+      "evidence": "context.yml#/assets/1",
+      "external": false,
+      "source_kind": "manual",
+      "field_provenance": {
+        "asset_type": "context.yml#/assets/1"
+      },
+      "manual_information": [
+        {
+          "evidence": "context.yml#/assets/1",
+          "source": "Fictional operator-entered example",
+          "entered_by": "Example operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "asset_type": "virtual_machine",
+            "label": "Application VM 01",
+            "os": "Guest OS Needs Validation",
+            "platform": "linux",
+            "addresses": []
+          }
+        }
+      ],
+      "asset_type": "virtual_machine"
+    },
+    {
+      "id": "hv01",
+      "label": "Hypervisor 01",
+      "platform": "infrastructure",
+      "os": "Hypervisor OS Needs Validation",
+      "domain": "",
+      "addresses": [
+        "192.0.2.40"
+      ],
+      "address_provenance": {
+        "192.0.2.40": "manual assertion"
+      },
+      "collected_at": "Not collected",
+      "evidence": "context.yml#/assets/0",
+      "external": false,
+      "source_kind": "manual",
+      "field_provenance": {
+        "owner": "context.yml#/assets/0",
+        "asset_type": "context.yml#/assets/0",
+        "attributes": "context.yml#/assets/0"
+      },
+      "manual_information": [
+        {
+          "evidence": "context.yml#/assets/0",
+          "source": "Fictional operator-entered example",
+          "entered_by": "Example operator",
+          "reviewed_at": "2026-10-05",
+          "fields": {
+            "owner": "Example virtualization team",
+            "asset_type": "hypervisor",
+            "attributes": {
+              "cluster": "Example cluster A",
+              "memory_gib": 256
+            },
+            "label": "Hypervisor 01",
+            "os": "Hypervisor OS Needs Validation",
+            "platform": "infrastructure",
+            "addresses": [
+              "192.0.2.40"
+            ]
+          }
+        }
+      ],
+      "owner": "Example virtualization team",
+      "asset_type": "hypervisor",
+      "attributes": {
+        "cluster": "Example cluster A",
+        "memory_gib": 256
+      }
+    }
+  ],
+  "census_nodes": [],
+  "census_details": {},
+  "evidence_relationships": [],
+  "manual_context": {
+    "schema_version": 1,
+    "assets": [
+      {
+        "id": "hv01",
+        "platform": "infrastructure",
+        "label": "Hypervisor 01",
+        "asset_type": "hypervisor",
+        "os": "Hypervisor OS Needs Validation",
+        "addresses": [
+          "192.0.2.40"
+        ],
+        "owner": "Example virtualization team",
+        "source": "Fictional operator-entered example",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05",
+        "attributes": {
+          "cluster": "Example cluster A",
+          "memory_gib": 256
+        }
+      },
+      {
+        "id": "app01",
+        "platform": "linux",
+        "label": "Application VM 01",
+        "asset_type": "virtual_machine",
+        "os": "Guest OS Needs Validation",
+        "source": "Fictional operator-entered example",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    ],
+    "relationships": [
+      {
+        "source": "hv01",
+        "target": "app01",
+        "kind": "hosts",
+        "purpose": "Hypervisor hosts this virtual machine.",
+        "source_reference": "Fictional VM inventory declaration",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    ]
+  },
+  "workspace_id": "7c6800f6865539b9cce140cb",
+  "relationships": [
+    {
+      "id": "3bb4bf20606058c4",
+      "source": "hv01",
+      "target": "app01",
+      "kind": "manual_relationship",
+      "status": "manual_declared",
+      "evidence": [
+        "context.yml#/relationships/0"
+      ],
+      "relationship_type": "hosts",
+      "source_origin": "manual",
+      "protocol": null,
+      "remote_port": null,
+      "purpose": "Hypervisor hosts this virtual machine.",
+      "notes": "",
+      "manual_information": {
+        "evidence": "context.yml#/relationships/0",
+        "source": "hv01",
+        "entered_by": "Example operator",
+        "reviewed_at": "2026-10-05"
+      }
+    }
+  ],
+  "gaps": [],
+  "conflicts": [],
+  "collection_mode": "manual_only",
+  "manual_source": {
+    "path": "examples/manual-only/context.yml",
+    "sha256": "75d80ba79bb266e5d7203ba253d02b1f74206bacfceb100f625f0304d5be2e4b"
+  },
+  "interpretation": "Observed endpoints do not establish TCP initiator, purpose, authorization, or criticality."
+}

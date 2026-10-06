@@ -1,0 +1,9 @@
+{
+  "name": "infrastructure-census-map-dev",
+  "version": "0.3.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Optional browser checks only; generated HTML has no npm runtime dependency.",
+  "scripts": {"test:browser": "node tests/workbench-browser.cjs"},
+  "devDependencies": {"playwright": "1.62.1"}
+}

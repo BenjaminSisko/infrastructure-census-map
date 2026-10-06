@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "asset_id": "ad01",
+  "platform": "windows",
+  "collected_at": "2026-10-05T14:00:00Z",
+  "collector": "synthetic-example",
+  "sections": {
+    "identity": {"status": "ok", "data": {"hostname": "ad01.example.test", "os": "Windows Server 2022", "domain": "example.test"}},
+    "interfaces": {"status": "ok", "data": [{"InterfaceAlias": "Ethernet", "InterfaceIndex": 5, "IPAddress": "192.0.2.30", "PrefixLength": 24}]},
+    "tcp": {"status": "ok", "data": [{"local_address": "192.0.2.30", "local_port": 636, "remote_address": "192.0.2.10", "remote_port": 48312, "state": "Established", "process": "lsass", "pid": 640}]},
+    "neighbors": {"status": "not_supported", "data": null}
+  }
+}

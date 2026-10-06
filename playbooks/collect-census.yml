@@ -1,0 +1,105 @@
+---
+- name: Prepare collection on the controller
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  vars:
+    ansible_become: false
+    census_output_root: "{{ lookup('ansible.builtin.env', 'HOME') }}/census-output"
+  tasks:
+    - name: Require explicit collection identity
+      ansible.builtin.assert:
+        that:
+          - census_run_id is defined
+          - census_run_id is match('^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$')
+          - census_output_root is match('^/')
+          - not ansible_check_mode
+          - (census_render_products | default(true) | bool) or (census_manual_context is not defined and census_declared_dependencies is not defined)
+        fail_msg: >-
+          Supply -e census_run_id=production-YYYYMMDDTHHMMSSZ and an absolute
+          census_output_root. Use a new run ID for each observation window.
+          This collection workflow cannot run in --check mode; use --syntax-check for parsing only.
+
+    - name: Identify selected census hosts
+      ansible.builtin.set_fact:
+        census_expected_hosts: >-
+          {{
+            query('ansible.builtin.inventory_hostnames', ansible_limit | default('all'))
+            | intersect(
+                (groups['census_linux'] | default([]))
+                + (groups['census_windows'] | default([]))
+                + (groups['census_network'] | default([]))
+              ) | unique | sort
+          }}
+
+    - name: Ensure at least one census host was selected
+      ansible.builtin.assert:
+        that: census_expected_hosts | length > 0
+
+    - name: Refuse a conflicting multi-platform inventory identity
+      ansible.builtin.assert:
+        that:
+          - (groups['census_linux'] | default([]) | intersect(groups['census_windows'] | default([]))) | length == 0
+          - (groups['census_linux'] | default([]) | intersect(groups['census_network'] | default([]))) | length == 0
+          - (groups['census_windows'] | default([]) | intersect(groups['census_network'] | default([]))) | length == 0
+        fail_msg: A host must have exactly one census platform profile.
+
+    - name: Inspect destination before creating a new bundle
+      ansible.builtin.stat:
+        path: "{{ census_output_root }}/{{ census_run_id }}"
+      register: census_destination
+
+    - name: Preserve prior evidence bundles
+      ansible.builtin.assert:
+        that: not census_destination.stat.exists
+        fail_msg: This run ID already exists. Select a new run ID.
+
+    - name: Create collection directory
+      ansible.builtin.file:
+        path: "{{ census_output_root }}/{{ census_run_id }}/hosts"
+        state: directory
+        mode: "0700"
+
+    - name: Save expected scope without credentials
+      ansible.builtin.copy:
+        dest: "{{ census_output_root }}/{{ census_run_id }}/expected-assets.json"
+        mode: "0600"
+        content: "{{ {'expected_assets': census_expected_hosts, 'run_id': census_run_id} | to_nice_json }}"
+
+- ansible.builtin.import_playbook: collect-linux.yml
+- ansible.builtin.import_playbook: collect-windows.yml
+- ansible.builtin.import_playbook: collect-network.yml
+
+- name: Seal the evidence bundle on the controller
+  hosts: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  vars:
+    ansible_become: false
+    census_output_root: "{{ lookup('ansible.builtin.env', 'HOME') }}/census-output"
+  tasks:
+    - name: Create manifest and checksums
+      ansible.builtin.command:
+        argv:
+          - "{{ ansible_playbook_python }}"
+          - "{{ playbook_dir }}/../tools/bundle.py"
+          - seal
+          - "{{ census_output_root }}/{{ census_run_id }}"
+      changed_when: true
+
+    - name: Prepare the private WinSCP transfer export on the controller
+      ansible.builtin.command:
+        argv: >-
+          {{ [ansible_playbook_python, playbook_dir + '/../tools/census.py', 'finish',
+              '--bundle', census_output_root + '/' + census_run_id]
+             + ([] if (census_render_products | default(true) | bool) else ['--no-render'])
+             + (['--manual', census_manual_context] if census_manual_context is defined else [])
+             + (['--declared', census_declared_dependencies] if census_declared_dependencies is defined else []) }}
+      register: census_export_result
+      changed_when: true
+
+    - name: Report the exact WinSCP download paths
+      ansible.builtin.debug:
+        msg: "{{ census_export_result.stdout_lines }}"

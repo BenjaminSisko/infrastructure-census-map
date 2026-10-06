@@ -1,0 +1,76 @@
+---
+- name: Collect Linux census through existing SSH access
+  hosts: census_linux
+  gather_facts: false
+  become: "{{ census_linux_become | default(false) }}"
+  serial: 10
+  vars:
+    ansible_become: "{{ census_linux_become | default(false) }}"
+    census_output_root: "{{ lookup('ansible.builtin.env', 'HOME') }}/census-output"
+  pre_tasks:
+    - name: Validate evidence file identities
+      ansible.builtin.assert:
+        that:
+          - census_run_id is defined
+          - census_run_id is match('^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$')
+          - inventory_hostname is match('^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$')
+          - census_output_root is match('^/')
+      delegate_to: localhost
+      become: false
+      vars: {ansible_become: false}
+
+    - name: Ensure controller output exists
+      ansible.builtin.file:
+        path: "{{ census_output_root }}/{{ census_run_id }}/hosts"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+      become: false
+      vars: {ansible_become: false}
+
+  tasks:
+    - name: Run allowlisted bounded Python collector
+      ansible.builtin.script:
+        cmd: "{{ playbook_dir }}/../collectors/linux_census.py {{ inventory_hostname | quote }}"
+        executable: "{{ census_python | default('/usr/bin/python3') }}"
+      register: census_linux_result
+      changed_when: false
+      ignore_errors: true
+      ignore_unreachable: true
+      no_log: true
+
+    - name: Persist sanitized successful result on controller
+      ansible.builtin.copy:
+        dest: "{{ census_output_root }}/{{ census_run_id }}/hosts/{{ inventory_hostname }}.json"
+        content: "{{ (census_linux_result.stdout | from_json) | to_nice_json }}"
+        mode: "0600"
+      delegate_to: localhost
+      become: false
+      vars: {ansible_become: false}
+      no_log: true
+      when:
+        - not (census_linux_result.failed | default(false))
+        - not (census_linux_result.unreachable | default(false))
+        - census_linux_result.rc | default(1) == 0
+
+    - name: Retain failed collection as an explicit gap
+      ansible.builtin.copy:
+        dest: "{{ census_output_root }}/{{ census_run_id }}/hosts/{{ inventory_hostname }}.json"
+        content: >-
+          {{ {
+              'schema_version': 1, 'asset_id': inventory_hostname, 'platform': 'linux',
+              'collected_at': now(utc=true, fmt='%Y-%m-%dT%H:%M:%SZ'),
+              'collector': {'name': 'linux-census', 'version': '0.1.0'},
+              'sections': {'collection': {
+                'status': 'unreachable' if census_linux_result.unreachable | default(false) else 'error',
+                'reason': 'SSH or collector failed; review connection/Python permissions locally'
+              }}
+          } | to_nice_json }}
+        mode: "0600"
+      delegate_to: localhost
+      become: false
+      vars: {ansible_become: false}
+      when: >-
+        census_linux_result.failed | default(false)
+        or census_linux_result.unreachable | default(false)
+        or census_linux_result.rc | default(1) != 0

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "sealed_at": "2026-10-06T03:14:57.198616+00:00",
+  "run_id": "synthetic",
+  "assets": [
+    "ad01",
+    "app01",
+    "db01",
+    "router01",
+    "switch01"
+  ],
+  "expected_assets": [
+    "ad01",
+    "app01",
+    "db01",
+    "router01",
+    "switch01"
+  ],
+  "missing_assets": [],
+  "unexpected_assets": [],
+  "section_gaps": [
+    {
+      "asset_id": "ad01",
+      "section": "neighbors",
+      "status": "not_supported"
+    },
+    {
+      "asset_id": "app01",
+      "section": "neighbors",
+      "status": "unavailable"
+    },
+    {
+      "asset_id": "db01",
+      "section": "neighbors",
+      "status": "skipped"
+    },
+    {
+      "asset_id": "router01",
+      "section": "tcp",
+      "status": "not_supported"
+    },
+    {
+      "asset_id": "switch01",
+      "section": "tcp",
+      "status": "not_supported"
+    }
+  ],
+  "files": [
+    {
+      "path": "hosts/ad01.json",
+      "sha256": "88b9443b5e95e7a9b928ead37ee0d19c0c6045a1756ee28b9b1f828dc06804a5"
+    },
+    {
+      "path": "hosts/app01.json",
+      "sha256": "271ef6ccc84221a20219dfb0bd253a28b8b8b5f0f9908a496f65b9afcd634e3d"
+    },
+    {
+      "path": "hosts/db01.json",
+      "sha256": "2bf2c1a016823240db566ff78a3a7499606cfdc94ec7cab5f7a689f306538e74"
+    },
+    {
+      "path": "hosts/router01.json",
+      "sha256": "d63d14b82f6e57023a7c3d924ff00fe992020184c34654cd49ed5c61d4e9c11b"
+    },
+    {
+      "path": "hosts/switch01.json",
+      "sha256": "53c7613497e61452cffd8d107b6825be76fd256744ac48ac10c5180b9b7168c5"
+    }
+  ]
+}

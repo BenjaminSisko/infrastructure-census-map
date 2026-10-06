@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "asset_id": "app01",
+  "platform": "linux",
+  "collected_at": "2026-10-05T14:00:00Z",
+  "collector": "synthetic-example",
+  "sections": {
+    "identity": {"status": "ok", "data": {"hostname": "app01.example.test", "os": "RHEL 9"}},
+    "interfaces": {"status": "ok", "data": [{"ifname": "ens192", "addr_info": [{"family": "inet", "local": "192.0.2.10", "prefixlen": 24}]}]},
+    "tcp": {"status": "ok", "data": [{"local_address": "192.0.2.10", "local_port": 48310, "remote_address": "192.0.2.20", "remote_port": 5432, "state": "ESTABLISHED", "process": "java", "pid": 1042}, {"local_address": "192.0.2.10", "local_port": 48312, "remote_address": "192.0.2.30", "remote_port": 636, "state": "ESTABLISHED", "process": "sssd", "pid": 770}]},
+    "neighbors": {"status": "unavailable", "data": null}
+  }
+}

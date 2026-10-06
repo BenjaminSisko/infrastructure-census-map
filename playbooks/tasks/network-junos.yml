@@ -1,0 +1,31 @@
+---
+# Compatibility adapter for junipernetworks.junos 11.0.0. Qualify before use.
+# NETCONF must already exist; this playbook never enables it or commits config.
+- name: Collect operational Junos facts using NETCONF
+  junipernetworks.junos.junos_facts:
+    gather_subset:
+      - min
+      - hardware
+      - interfaces
+  register: census_network_base
+  changed_when: false
+  ignore_errors: true
+  ignore_unreachable: true
+  no_log: true
+
+- name: Collect optional allowlisted Junos L2 resource facts
+  junipernetworks.junos.junos_facts:
+    gather_subset:
+      - min
+    gather_network_resources:
+      - l2_interfaces
+      - vlans
+  register: census_network_l2
+  when:
+    - census_network_collect_l2 | default(false) | bool
+    - not (census_network_base.failed | default(false))
+    - not (census_network_base.unreachable | default(false))
+  changed_when: false
+  ignore_errors: true
+  ignore_unreachable: true
+  no_log: true

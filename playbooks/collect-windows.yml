@@ -1,0 +1,75 @@
+---
+- name: Collect Windows census evidence
+  hosts: census_windows
+  gather_facts: false
+  become: false
+  serial: 10
+  vars:
+    ansible_become: false
+    census_output_root: "{{ lookup('ansible.builtin.env', 'HOME') }}/census-output"
+    census_windows_role_metadata: false
+  pre_tasks:
+    - name: Require safe run and inventory file identifiers
+      ansible.builtin.assert:
+        that:
+          - census_run_id | default('') is match('^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$')
+          - inventory_hostname is match('^[A-Za-z0-9][A-Za-z0-9_.-]{0,127}$')
+          - census_output_root is match('^/')
+        fail_msg: "Supply a safe census_run_id and inventory alias (letters, numbers, dot, dash, underscore; max 128)."
+      delegate_to: localhost
+      become: false
+
+    - name: Create controller-side Windows evidence directory
+      ansible.builtin.file:
+        path: "{{ census_output_root }}/{{ census_run_id }}/hosts"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+      become: false
+      run_once: true
+
+  tasks:
+    - name: Collect selected Windows metadata through PowerShell
+      ansible.windows.win_powershell:
+        script: "{{ lookup('ansible.builtin.file', playbook_dir + '/../collectors/windows_census.ps1') }}"
+        parameters:
+          InventoryId: "{{ inventory_hostname }}"
+          IncludeRoleMetadata: "{{ census_windows_role_metadata | bool }}"
+        depth: 16
+        error_action: stop
+      register: census_windows_result
+      changed_when: false
+      ignore_unreachable: true
+      ignore_errors: true
+      no_log: true
+
+    - name: Persist returned evidence or a bounded collection-failure record
+      ansible.builtin.copy:
+        dest: "{{ census_output_root }}/{{ census_run_id }}/hosts/{{ inventory_hostname }}.json"
+        mode: "0600"
+        content: >-
+          {% if census_windows_result.output is defined and
+                census_windows_result.output | length == 1 and
+                census_windows_result.output[0] is mapping and
+                census_windows_result.output[0].schema_version | default(0) == 1 and
+                census_windows_result.output[0].asset_id | default('') == inventory_hostname %}
+          {{ census_windows_result.output[0] | to_nice_json }}
+          {% else %}
+          {{ {
+            'schema_version': 1,
+            'asset_id': inventory_hostname,
+            'platform': 'windows',
+            'collected_at': now(utc=true, fmt='%Y-%m-%dT%H:%M:%SZ'),
+            'collector': {'name': 'windows_census', 'version': '1.0.0'},
+            'sections': {'collection': {
+              'status': 'unreachable' if census_windows_result.unreachable | default(false)
+                        else ('skipped' if census_windows_result.skipped | default(false) else 'error'),
+              'reason': 'remote_connection_unavailable' if census_windows_result.unreachable | default(false)
+                        else ('collector_skipped' if census_windows_result.skipped | default(false)
+                              else 'collector_did_not_return_valid_document')
+            }}
+          } | to_nice_json }}
+          {% endif %}
+      delegate_to: localhost
+      become: false
+      no_log: true

@@ -1,0 +1,6 @@
+---
+# Optional deprecated compatibility adapter; separate from the primary dependency set.
+# Confirm collection/core/ncclient/platform compatibility before use in production.
+collections:
+  - name: junipernetworks.junos
+    version: "11.0.0"
