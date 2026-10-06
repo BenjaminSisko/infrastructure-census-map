@@ -44,6 +44,7 @@ jobs:
       - run: python renderer/render.py --manual examples/manual-only/context.yml --output examples/manual-only-products
       - run: node --check renderer/static/workbench.js
       - run: CENSUS_REPORT_PYTHON="$(command -v python)" node tests/workbench-browser.cjs
+      - run: CENSUS_REPORT_PYTHON="$(command -v python)" node tests/dashboards-browser.cjs
   powershell:
     runs-on: windows-latest
     steps:
@@ -57,3 +58,11 @@ jobs:
           [void][System.Management.Automation.Language.Parser]::ParseFile(
             "$PWD/collectors/windows_census.ps1", [ref]$parseTokens, [ref]$parseErrors)
           if ($parseErrors.Count -gt 0) { $parseErrors; exit 1 }
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Exercise selected Windows queries with every host query mocked
+        shell: pwsh
+        run: |
+          $env:PYTHONPATH = Join-Path $PWD 'tests'
+          python -m unittest test_health_collectors.WindowsHealthCollectorTests -v

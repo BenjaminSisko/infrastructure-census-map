@@ -4,11 +4,17 @@ import argparse
 import csv
 import hashlib
 import html
+import importlib.util
 import ipaddress
 import json
 from pathlib import Path
 import re
 import sys
+
+# Support direct CLI execution and tests that load this file by absolute spec.
+_INSIGHTS_SPEC = importlib.util.spec_from_file_location("census_insights", Path(__file__).with_name("insights.py"))
+insights = importlib.util.module_from_spec(_INSIGHTS_SPEC)
+_INSIGHTS_SPEC.loader.exec_module(insights)
 
 try:
     from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -190,7 +196,7 @@ def validate_hosting(edges):
         visit(node)
 
 
-def normalize(evidence=None, declared=None, manual=None):
+def normalize(evidence=None, declared=None, manual=None, capacity_warning_percent=80, capacity_critical_percent=90):
     document = load_manual(manual)
     if evidence and not (Path(evidence) / "hosts").is_dir():
         raise ValueError("Evidence directory must contain a hosts folder; omit --evidence for manual-only maps")
@@ -222,6 +228,7 @@ def normalize(evidence=None, declared=None, manual=None):
             raise ValueError(f"{path.name}: platform must be linux, windows, or network")
         if not isinstance(host.get("sections"), dict):
             raise ValueError(f"{path.name}: sections must be an object")
+        host = insights.sanitize_storage_host(host)
         identity = section(host, "identity") or {}
         if not isinstance(identity, dict):
             identity = {}
@@ -365,6 +372,8 @@ def normalize(evidence=None, declared=None, manual=None):
                      remote_port=edge.get("port"), purpose=str(edge.get("purpose") or "Declared dependency"),
                      source_origin="declared", authority=str(edge.get("authority") or "Needs Validation"))
 
+    storage_mounts, storage_edges = insights.storage_topology(raw_hosts, nodes)
+    relationships.update({edge["id"]: edge for edge in storage_edges})
     census_nodes.extend(json.loads(json.dumps([node for node in nodes.values() if node.get('external')])))
     evidence_relationships = json.loads(json.dumps(list(relationships.values())))
     for number, edge in enumerate(document.get("relationships", [])):
@@ -398,7 +407,7 @@ def normalize(evidence=None, declared=None, manual=None):
 
     context = {'schema_version': 1, 'assets': document.get('assets', []), 'relationships': document.get('relationships', [])}
     workspace_data = {'census': census_details, 'manual_context': context, 'evidence_relationships': evidence_relationships}
-    return {"schema_version": 1, "renderer_version": "0.3.1", "nodes": sorted(nodes.values(), key=lambda node: node["id"]),
+    model = {"schema_version": 1, "renderer_version": "0.4.0", "nodes": sorted(nodes.values(), key=lambda node: node["id"]),
             "census_nodes": census_nodes, "census_details": census_details,
             "evidence_relationships": evidence_relationships, "manual_context": context,
             "workspace_id": hashlib.sha256(json.dumps(workspace_data, sort_keys=True).encode()).hexdigest()[:24],
@@ -407,6 +416,9 @@ def normalize(evidence=None, declared=None, manual=None):
             "conflicts": conflicts, "collection_mode": "mixed" if evidence and manual else "census" if evidence else "manual_only",
             "manual_source": {"path": str(manual), "sha256": hashlib.sha256(Path(manual).read_bytes()).hexdigest()} if manual else None,
             "interpretation": "Observed endpoints do not establish TCP initiator, purpose, authorization, or criticality."}
+    model["storage_mounts"] = storage_mounts
+    model["dashboards"] = insights.dashboard_model(model, raw_hosts, capacity_warning_percent, capacity_critical_percent)
+    return model
 
 
 def draw_svg(model):
@@ -421,11 +433,11 @@ def draw_svg(model):
            '<style>text{font-family:Arial,sans-serif} .node{cursor:pointer} .edge{fill:none;stroke-width:2} .edge.selected{stroke-width:5} .dim{opacity:.12}</style>',
            f'<rect width="{width}" height="{height}" fill="#f4f7fb"/>',
            '<text x="30" y="30" font-size="24" font-weight="bold" fill="#233753">Infrastructure census map</text>',
-           '<defs><marker id="manual-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7c3aed"/></marker></defs>',
+           '<defs><marker id="manual-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7c3aed"/></marker><marker id="storage-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#0e817a"/></marker></defs>',
            f'<text x="30" y="54" font-size="12" fill="#526981">{esc("Manual information only; census not collected." if model.get("collection_mode") == "manual_only" else "Observed relationships retain evidence; manual context retains source and review date.")}</text>']
     for column, platform in enumerate(platforms):
         svg.append(f'<text x="{45 + column * 300}" y="90" font-size="18" fill="#233753">{esc(platform.upper())}</text>')
-    colors = {"observed_connection": "#b46b14", "physical_neighbor": "#3974b7", "declared_dependency": "#487c56", "manual_relationship": "#7c3aed"}
+    colors = {"observed_connection": "#b46b14", "physical_neighbor": "#3974b7", "declared_dependency": "#487c56", "manual_relationship": "#7c3aed", "storage_mount": "#0e817a"}
     for edge in model["relationships"]:
         x1, y1 = positions[edge["source"]]
         x2, y2 = positions[edge["target"]]
@@ -435,8 +447,10 @@ def draw_svg(model):
             a, b = (x1 + 265, x2) if x2 > x1 else (x1, x2 + 265)
             mid = (a + b) / 2
             d = f"M{a},{y1+38} C{mid},{y1+38} {mid},{y2+38} {b},{y2+38}"
-        marker = ' marker-end="url(#manual-arrow)"' if edge['kind'] == 'manual_relationship' else ''
-        svg.append(f'<path class="edge" data-edge="{esc(edge["id"])}" d="{d}" stroke="{colors[edge["kind"]]}" stroke-dasharray="{("6 4" if edge["kind"] == "observed_connection" else "none")}"{marker}><title>{esc(edge.get("relationship_type", edge["kind"]))}: {esc(edge["purpose"])}</title></path>')
+        marker = ' marker-end="url(#manual-arrow)"' if edge['kind'] == 'manual_relationship' else ' marker-end="url(#storage-arrow)"' if edge['kind'] == 'storage_mount' else ''
+        dash = "6 4" if edge["kind"] == "observed_connection" else "2 4" if edge["kind"] == "storage_mount" and edge["status"] != "observed" else "none"
+        title = edge["purpose"] + ("; " + edge.get("mount_target", "") + " → " + edge.get("remote_path", "") + "; " + edge.get("mount_state", "unknown") if edge["kind"] == "storage_mount" else "")
+        svg.append(f'<path class="edge" data-edge="{esc(edge["id"])}" d="{d}" stroke="{colors[edge["kind"]]}" stroke-dasharray="{dash}"{marker}><title>{esc(edge.get("relationship_type", edge["kind"]))}: {esc(title)}</title></path>')
     for node in model["nodes"]:
         x, y = positions[node["id"]]
         svg.append(f'<g class="node" data-node="{esc(node["id"])}" tabindex="0" role="button" aria-label="{esc(node["label"])}"><title>{esc(node["id"])}</title><rect x="{x}" y="{y}" width="265" height="80" rx="10" fill="white" stroke="#899bb4"/>')
@@ -447,6 +461,7 @@ def draw_svg(model):
     svg.append(f'<text x="30" y="{height-24}" font-size="12" fill="#b46b14">Amber dashed: observed TCP</text>')
     svg.append(f'<text x="300" y="{height-24}" font-size="12" fill="#3974b7">Blue: physical neighbor</text>')
     svg.append(f'<text x="560" y="{height-24}" font-size="12" fill="#487c56">Green: declared dependency</text>')
+    svg.append(f'<text x="560" y="{height-6}" font-size="12" fill="#0e817a">Teal: storage observation/configuration</text>')
     svg.append(f'<text x="30" y="{height-6}" font-size="12" fill="#7c3aed">Purple: manual relationship; arrow direction follows its declared meaning</text>')
     svg.append('</svg>')
     return "".join(svg)
@@ -466,6 +481,33 @@ def write_products(model, output):
     document = environment.get_template("map.html.j2").render(model=model, svg=svg,
                                                              workbench_js=workbench_js, workbench_css=workbench_css)
     (output / "dependency-map.html").write_text(document, encoding="utf-8")
+    dashboard_template = environment.get_template("dashboards.html.j2")
+    dashboard_document = dashboard_template.render(model=model,
+        dashboards_js=(static / "dashboards.js").read_text(encoding="utf-8"),
+        dashboards_css=(static / "dashboards.css").read_text(encoding="utf-8"))
+    (output / "dashboards.html").write_text(dashboard_document, encoding="utf-8")
+    (output / "dashboard-summary.json").write_text(json.dumps(model["dashboards"], indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    summary_columns = ["asset_id", "label", "platform", "addresses", "collected_at", "owner", "criticality", "uptime_seconds", "boot_time", "memory_available_percent", "kernel", "patch_currency", "latest_patch_observation", "reboot_pending", "failed_services", "backup_attestation", "context", "evidence"]
+    asset_rows = []
+    for asset in model["dashboards"]["assets"]:
+        row = {key: asset.get(key) for key in summary_columns}
+        row["patch_currency"] = asset["patch_evidence"]["status"]
+        row["latest_patch_observation"] = asset["latest_patch_observation"]["observed_at"] or "Unknown"
+        row["reboot_pending"] = asset["reboot_pending"]["value"] if asset["reboot_pending"]["value"] is not None else "Unknown"
+        row["failed_services"] = "; ".join(asset["failed_services"]["names"]) if asset["failed_services"]["status"] == "observed" else "Unknown"
+        for key in ("addresses", "backup_attestation", "context"):
+            row[key] = json.dumps(row[key], sort_keys=True, allow_nan=False)
+        asset_rows.append(row)
+    mount_columns = ["asset_id", "provider", "provider_asset_id", "remote_path", "target", "fstype", "mount_state", "active_observed", "configured_observed", "identity_basis", "provider_identity_evidence", "evidence"]
+    for filename, columns, rows in (("assets-summary.csv", summary_columns, asset_rows), ("storage-mounts.csv", mount_columns, model["storage_mounts"])):
+        with (output / filename).open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=columns, extrasaction="ignore", lineterminator="\n")
+            writer.writeheader()
+            for item in rows:
+                row = {key: item.get(key) if item.get(key) is not None else "Unknown" for key in columns}
+                if isinstance(row.get("evidence"), list):
+                    row["evidence"] = "; ".join(row["evidence"])
+                writer.writerow({key: ("'" + value if isinstance(value, str) and re.match(r"^[\s\x00]*[=+\-@]", value) else value) for key, value in row.items()})
     columns = ["source", "target", "kind", "relationship_type", "status", "protocol", "local_port", "remote_port", "source_origin", "target_resolution_basis", "target_identity_evidence", "purpose", "evidence"]
     with (output / "dependency-matrix.csv").open("w", newline="", encoding="utf-8") as stream:
         writer = csv.DictWriter(stream, fieldnames=columns, extrasaction="ignore", lineterminator="\n")
@@ -490,9 +532,11 @@ def main():
     parser.add_argument("--output", required=True)
     parser.add_argument("--declared")
     parser.add_argument("--manual", help="Manual YAML/JSON assets, context and relationships")
+    parser.add_argument("--capacity-warning-percent", type=float, default=80, help="Local filesystem/logical-volume warning threshold (default: 80)")
+    parser.add_argument("--capacity-critical-percent", type=float, default=90, help="Local filesystem/logical-volume critical threshold (default: 90)")
     args = parser.parse_args()
     try:
-        model = normalize(args.evidence, args.declared, args.manual)
+        model = normalize(args.evidence, args.declared, args.manual, args.capacity_warning_percent, args.capacity_critical_percent)
         write_products(model, args.output)
     except (ValueError, OSError, KeyError, TypeError) as exc:
         parser.exit(2, f"Census map error: {exc}\n")

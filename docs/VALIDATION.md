@@ -1,6 +1,16 @@
 # Validation record — 2026-10-05
 
-The current source release is 0.3.1. Earlier version checks below are preserved. No production credentials or host facts are included in the generic release, no live Windows/network collection occurred, and no production remoting, packages or network configuration was changed. Private documentation examples remain outside the public release.
+The current source release is 0.4.0. Earlier version checks below are preserved. No production credentials or host facts are included in the generic release, no live Windows/network collection occurred, and no production remoting, packages or network configuration was changed. Private documentation examples remain outside the public release.
+
+## Storage and administration dashboards - 0.4.0
+
+The new source adds bounded read-only health/configuration metadata, NFS/SMB storage normalization and offline role-based views. Test coverage must exercise active/configured reconciliation, partial/unavailable collection, credential exclusion, ambiguous/manual provider identity, Windows non-OK/unlettered mappings, NFS type differences, numeric/threshold safety, patch date precision and no invented health/compliance verdicts. Transfer tests include all new products and reject symlink destinations before writes.
+
+Live Linux distribution/util-linux/coreutils/autofs formats, Windows 5.1 endpoint permissions/session mappings and device/runtime behavior remain canary requirements. No real mount, patch, remote capacity probe, storage-health test or production configuration deployment is claimed. Local/CI checks and the fictional example do not replace those qualifications.
+
+Local results: all 76 Python tests passed with fictional parent integration enabled, including 15 collector cases, 22 insights cases, the SVG storage-arrow regression and the release address-allowlist regression. Both complete browser suites passed. Dashboard tests cover all eight views, filtering/sorting, keyboard drawers/focus, source attribution, Unknown patch state, configurable thresholds, invalid capacity, STIG/POA&M manual references, distinct storage clients, formula-safe exports, print/mobile/empty states and zero HTTP requests. Workbench checks include storage-layer filtering and dashboard-to-host fragment selection without labeling configured storage as observed TCP.
+
+Python/JavaScript source checks, combined Ansible syntax, local reporting doctor, Windows PowerShell parser and mocked-query tests passed. The sealed fictional admin example has three host records with attributed manual context, one unresolved storage provider and three storage relationships. Its collection gaps remain explicit. The public-source/privacy gate passed for 136 reviewed generic files. No test result is a live production qualification.
 
 ## Existing-repository integration - 0.3.1
 

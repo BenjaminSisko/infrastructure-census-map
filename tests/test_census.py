@@ -34,6 +34,8 @@ class CensusWorkflowTests(unittest.TestCase):
             with tarfile.open(archive) as package:
                 names = package.getnames()
                 self.assertIn('run01/products/dependency-map.html', names)
+                for product in ('dashboards.html', 'dashboard-summary.json', 'storage-mounts.csv', 'assets-summary.csv'):
+                    self.assertIn('run01/products/' + product, names)
                 self.assertIn('run01/hosts/host01.json', names)
                 self.assertIn('run01/context/manual-context.json', names)
                 self.assertNotIn('run01/private-passwords.txt', names)
@@ -78,7 +80,7 @@ class CensusWorkflowTests(unittest.TestCase):
                 census.run_id(value)
 
     def test_generated_symlinks_are_rejected_before_any_outside_write(self):
-        for relative in ('products', 'products/map.json', 'context', 'context/manual-context.json', 'START-HERE.md', 'TRANSFER-SHA256SUMS'):
+        for relative in ('products', 'products/map.json', 'products/dashboards.html', 'products/dashboard-summary.json', 'products/storage-mounts.csv', 'products/assets-summary.csv', 'context', 'context/manual-context.json', 'START-HERE.md', 'TRANSFER-SHA256SUMS'):
             with self.subTest(relative=relative), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 run = self.fixture(root)

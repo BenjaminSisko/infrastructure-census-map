@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "asset_id": "app01",
+  "platform": "linux",
+  "collected_at": "2026-10-05T14:00:00Z",
+  "collector": {"name": "fictional-synthetic-example", "version": "0.4.0"},
+  "sections": {
+    "identity": {"status": "ok", "data": {"hostname": "app01.example.test", "os": "Example Enterprise Linux 9", "kernel": "5.14.0-example"}},
+    "interfaces": {"status": "ok", "data": [{"address": "192.0.2.10"}]},
+    "uptime": {"status": "ok", "data": {"uptime_seconds": 432000, "boot_time": "2026-09-30T14:00:00Z"}},
+    "memory": {"status": "ok", "data": {"total_bytes": 8589934592, "available_bytes": 2147483648, "swap_total_bytes": 2147483648, "swap_free_bytes": 2147483648}},
+    "mounts": {"status": "ok", "data": {"filesystems": [{"target": "/", "source": "/dev/mapper/example-root", "fstype": "xfs", "children": [{"target": "/srv/content", "source": "nas01.example.test:/exports/content", "fstype": "nfs4"}]}]}},
+    "configured_mounts": {"status": "ok", "data": {"filesystems": [{"target": "/srv/content", "source": "nas01.example.test:/exports/content", "fstype": "nfs4"}, {"target": "/srv/archive", "source": "archive.example.test:/exports/archive", "fstype": "nfs4"}]}},
+    "storage_capacity": {"status": "ok", "data": [{"target": "/", "fstype": "xfs", "total_bytes": 107374182400, "used_bytes": 91268055040, "available_bytes": 16106127360, "used_percent": 85, "inodes_total": 1000000, "inodes_free": 700000}]},
+    "patch_inventory": {"status": "ok", "data": {"installed_kernels": [{"version": "5.14.0-example", "installed_at": "2026-09-28T17:00:00Z"}], "latest_package_install_at": "2026-10-01T18:00:00Z", "source": "Fictional local RPM install metadata", "baseline_status": "unknown"}},
+    "reboot_pending": {"status": "unsupported", "reason": "No configured Linux reboot policy"},
+    "services": {"status": "ok", "data": [{"name": "app.service", "load": "loaded", "active": "active", "sub": "running"}, {"name": "example-report.service", "load": "loaded", "active": "failed", "sub": "failed"}, {"name": "wazuh-agent.service", "load": "loaded", "active": "active", "sub": "running"}, {"name": "auditd.service", "load": "loaded", "active": "active", "sub": "running"}]},
+    "selinux": {"status": "ok", "data": "Enforcing"},
+    "firewall": {"status": "access_denied", "reason": "Fictional evidence gap"},
+    "time_sync": {"status": "ok", "data": "NTPSynchronized=yes\nTimezone=UTC"},
+    "tcp": {"status": "ok", "data": [{"local_address": "0.0.0.0", "local_port": 8443, "remote_address": "0.0.0.0", "remote_port": 0, "state": "LISTEN", "process": "example-app"}]},
+    "udp": {"status": "ok", "data": []}
+  }
+}

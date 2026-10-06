@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "sealed_at": "2026-10-06T12:25:24.891937+00:00",
+  "run_id": "admin-snapshot",
+  "assets": [
+    "app01",
+    "nas01",
+    "win01"
+  ],
+  "expected_assets": [
+    "app01",
+    "nas01",
+    "win01"
+  ],
+  "missing_assets": [],
+  "unexpected_assets": [],
+  "section_gaps": [
+    {
+      "asset_id": "app01",
+      "section": "reboot_pending",
+      "status": "unsupported"
+    },
+    {
+      "asset_id": "app01",
+      "section": "firewall",
+      "status": "access_denied"
+    },
+    {
+      "asset_id": "nas01",
+      "section": "memory",
+      "status": "access_denied"
+    },
+    {
+      "asset_id": "nas01",
+      "section": "patch_inventory",
+      "status": "unsupported"
+    },
+    {
+      "asset_id": "win01",
+      "section": "udp",
+      "status": "access_denied"
+    }
+  ],
+  "files": [
+    {
+      "path": "hosts/app01.json",
+      "sha256": "4406d091a8310bba6f4b5dacb360b96bb9b0fff58ab19ad5871c217838b07bd5"
+    },
+    {
+      "path": "hosts/nas01.json",
+      "sha256": "72403937b06e5aeda25ef5715ddbdc8e20a33d9c401982c2373c86de86738137"
+    },
+    {
+      "path": "hosts/win01.json",
+      "sha256": "977a20143afcb2145b0602e15ee250dba0bcfadcc5620eb36a49ce48be8faf82"
+    }
+  ]
+}

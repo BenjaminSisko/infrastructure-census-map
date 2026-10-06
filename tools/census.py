@@ -16,7 +16,7 @@ import tempfile
 import bundle
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = '0.3.1'
+VERSION = '0.4.0'
 
 
 def run_id(value=None):
@@ -54,7 +54,8 @@ def finish(path, manual=None, declared=None, render=True):
     if path.is_symlink() or path in (Path('/'), Path.home()):
         raise ValueError('refusing a broad or symlink bundle path')
     bundle.verify(path)
-    product_names = ('dependency-map.html', 'dependency-map.svg', 'map.json', 'dependency-matrix.csv', 'collection-report.md')
+    product_names = ('dependency-map.html', 'dependency-map.svg', 'map.json', 'dependency-matrix.csv', 'collection-report.md',
+                     'dashboards.html', 'dashboard-summary.json', 'storage-mounts.csv', 'assets-summary.csv')
     for target in [path / 'products', path / 'context', path / 'START-HERE.md', path / 'TRANSFER-SHA256SUMS', path / 'context/manual-context.json', path / 'context/declared-dependencies.json'] + [path / 'products' / name for name in product_names]:
         safe_output(path, target)
     saved_manual = path / 'context/manual-context.json'
@@ -81,7 +82,8 @@ def finish(path, manual=None, declared=None, render=True):
     (path / 'START-HERE.md').write_text(
         '# Census output\n\nRun: ' + path.name + '\n\n'
         'Read COLLECTION-SUMMARY.md first. Gaps are missing evidence, not proof of failed services.\n\n'
-        'If products were generated, open products/dependency-map.html directly in a browser. '
+        'If products were generated, open products/dashboards.html for administrator/security/leadership views '
+        'or products/dependency-map.html for the interactive dependency map. These are dated snapshots, not live monitoring. '
         'Manual context exports belong in approved private storage. Browser drafts are not the durable record.\n\n'
         'For a local agent: verify this evidence with tools/bundle.py from the census source kit; '
         'read its AGENTS.md and docs/agent-workflow.md; inspect hosts/, the collection summary, '

@@ -26,6 +26,10 @@ Collection, evidence verification, product rendering and export happen in that c
 │   ├── TRANSFER-SHA256SUMS            Transfer file checksums
 │   ├── context/manual-context.json   Entered context for the local agent
 │   └── products/
+│       ├── dashboards.html           Administrator/security/leadership views
+│       ├── dashboard-summary.json
+│       ├── storage-mounts.csv
+│       ├── assets-summary.csv
 │       ├── dependency-map.html       Clickable offline workbench
 │       ├── dependency-map.svg
 │       ├── map.json
@@ -39,7 +43,7 @@ Collection, evidence verification, product rendering and export happen in that c
 2. Browse to the exact **Controller folder** printed by the command.
 3. Download the `census-...tar.gz` archive and matching `.sha256` file. You can instead download the readable run folder, but the archive avoids missing individual files.
 4. Retain the checksum through the approved transfer process. On a Linux/reporting machine, verify with `sha256sum -c <archive-name>.sha256`. On Windows, compare `Get-FileHash -Algorithm SHA256 <archive-name>` with the checksum file.
-5. Extract with approved archive software, then open `products/dependency-map.html` locally. The map needs no web server, network access or model connection.
+5. Extract with approved archive software, then open `products/dashboards.html` or `products/dependency-map.html` locally. Both need no web server, network access or model connection. The views contain private evidence; audience labels are not access restrictions.
 6. Give the extracted evidence/context and the source kit's AGENTS.md instructions to the approved local agent.
 
 These checksums are not encryption and require no decryption key. They detect changes against the retained baseline; they do not authenticate the original source by themselves.

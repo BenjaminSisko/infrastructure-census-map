@@ -13,8 +13,10 @@ ROOT = Path(__file__).resolve().parents[1]
 FAMILIES = {'collectors', 'docs', 'inventories', 'model', 'schema', 'playbooks', 'renderer', 'tests', 'tools', 'examples', '.github'}
 PRIVATE = {'output', 'evidence', 'dist', '.venv', 'node_modules', 'wheelhouse', 'collections', '__pycache__'}
 ROOT_FILES = {'.gitignore', 'AGENTS.md', 'CLAUDE.md', 'CONTEXT.md', 'CHANGELOG.md', 'README.md', 'LICENSE', 'VERSION', 'SECURITY.md', 'THIRD-PARTY-NOTICES.md', 'ansible.cfg.example', 'requirements-controller.in', 'requirements-reporting.txt', 'requirements.yml', 'requirements-junos.yml', 'package.json', 'package-lock.json'}
-EXAMPLES = {'synthetic', 'synthetic-products', 'synthetic-with-manual-products', 'manual-only', 'manual-only-products'}
+EXAMPLES = {'synthetic', 'synthetic-products', 'synthetic-with-manual-products', 'manual-only', 'manual-only-products', 'admin-snapshot', 'admin-snapshot-products'}
 EXTENSIONS = {'.md', '.py', '.ps1', '.js', '.cjs', '.css', '.j2', '.yml', '.yaml', '.json', '.html', '.svg', '.txt', '.png', '.csv'}
+# All three TEST-NET blocks are reserved examples (RFC 5737).
+DOCUMENTATION_IPV4 = tuple(ipaddress.ip_network(value) for value in ('192.0.2.0/24', '198.51.100.0/24', '203.0.113.0/24'))
 
 
 def public_paths():
@@ -49,7 +51,7 @@ def public_paths():
                     value = ipaddress.ip_address(address)
                 except ValueError:
                     continue
-                if value.is_private and value not in ipaddress.ip_network('192.0.2.0/24') and not value.is_loopback and not value.is_unspecified:
+                if value.is_private and not any(value in network for network in DOCUMENTATION_IPV4) and not value.is_loopback and not value.is_unspecified:
                     raise ValueError('non-documentation private IP in public source: ' + name)
         files.append((relative, source))
     return files

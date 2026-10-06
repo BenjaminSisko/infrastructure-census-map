@@ -1,0 +1,1207 @@
+{
+  "schema_version": 1,
+  "summary": {
+    "snapshot_at": "2026-10-05T14:00:00+00:00",
+    "asset_count": 8,
+    "collected_asset_count": 5,
+    "expected_asset_count": 5,
+    "collection_gap_count": 5,
+    "assets_with_gaps": 5,
+    "unknown_owner_count": 4,
+    "unknown_criticality_count": 6,
+    "active_storage_mount_count": 0,
+    "configured_only_storage_mount_count": 0,
+    "storage_provider_count": 0,
+    "capacity_warning_count": 0,
+    "capacity_critical_count": 0,
+    "finding_count": 5,
+    "coverage": {
+      "returned": 5,
+      "expected": 5,
+      "percent": 100.0
+    },
+    "capacity_thresholds": {
+      "warning_percent": 80,
+      "critical_percent": 90
+    },
+    "freshness_basis": "relative to latest collection timestamp"
+  },
+  "assets": [
+    {
+      "label": "ad01.example.test",
+      "platform": "windows",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "os": "Windows Server 2022",
+      "source_kind": "census",
+      "role": "Unknown",
+      "evidence": "hosts/ad01.json",
+      "asset_id": "ad01",
+      "addresses": [
+        "192.0.2.30"
+      ],
+      "owner": "Unknown",
+      "criticality": "Unknown",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "hosts/ad01.json#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "hosts/ad01.json#/sections/services",
+          "hosts/ad01.json#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/ad01.json#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/ad01.json#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/ad01.json#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/ad01.json#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "hosts/ad01.json#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "hosts/ad01.json#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "observed",
+          "items": [],
+          "evidence": [
+            "hosts/ad01.json#/sections/tcp",
+            "hosts/ad01.json#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": 0,
+        "status": "within_snapshot_day"
+      },
+      "coverage": {
+        "status": "partial",
+        "collected_sections": [
+          "identity",
+          "interfaces",
+          "tcp"
+        ],
+        "gap_sections": [
+          "neighbors"
+        ]
+      },
+      "context": [],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    },
+    {
+      "label": "app01.example.test",
+      "platform": "linux",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "os": "RHEL 9",
+      "source_kind": "census",
+      "role": "Business application server",
+      "evidence": "hosts/app01.json",
+      "asset_id": "app01",
+      "addresses": [
+        "192.0.2.10"
+      ],
+      "owner": "Example application team",
+      "criticality": "high",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "hosts/app01.json#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "hosts/app01.json#/sections/services",
+          "hosts/app01.json#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/app01.json#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/app01.json#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/app01.json#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/app01.json#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "hosts/app01.json#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "hosts/app01.json#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "observed",
+          "items": [],
+          "evidence": [
+            "hosts/app01.json#/sections/tcp",
+            "hosts/app01.json#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": 0,
+        "status": "within_snapshot_day"
+      },
+      "coverage": {
+        "status": "partial",
+        "collected_sections": [
+          "identity",
+          "interfaces",
+          "tcp"
+        ],
+        "gap_sections": [
+          "neighbors"
+        ]
+      },
+      "context": [
+        {
+          "field": "owner",
+          "value": "Example application team",
+          "source": "Fictional example; replace with an application owner or ticket reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/3"
+        },
+        {
+          "field": "criticality",
+          "value": "high",
+          "source": "Fictional example; replace with an application owner or ticket reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/3"
+        },
+        {
+          "field": "role",
+          "value": "Business application server",
+          "source": "Fictional example; replace with an application owner or ticket reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/3"
+        },
+        {
+          "field": "notes",
+          "value": "Fictional operator note: the application owner says this VM is on hv01 and uses db01. Confirm that placement against the virtualization export before the next patch window. The application's startup order is still unknown.",
+          "source": "Fictional example; replace with an application owner or ticket reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/3"
+        }
+      ],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    },
+    {
+      "label": "db01.example.test",
+      "platform": "linux",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "os": "RHEL 8",
+      "source_kind": "census",
+      "role": "Unknown",
+      "evidence": "hosts/db01.json",
+      "asset_id": "db01",
+      "addresses": [
+        "192.0.2.20"
+      ],
+      "owner": "Unknown",
+      "criticality": "Unknown",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "hosts/db01.json#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "hosts/db01.json#/sections/services",
+          "hosts/db01.json#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/db01.json#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/db01.json#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/db01.json#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/db01.json#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "hosts/db01.json#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "hosts/db01.json#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "observed",
+          "items": [],
+          "evidence": [
+            "hosts/db01.json#/sections/tcp",
+            "hosts/db01.json#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": 0,
+        "status": "within_snapshot_day"
+      },
+      "coverage": {
+        "status": "partial",
+        "collected_sections": [
+          "identity",
+          "interfaces",
+          "tcp"
+        ],
+        "gap_sections": [
+          "neighbors"
+        ]
+      },
+      "context": [],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    },
+    {
+      "label": "Hypervisor 01",
+      "platform": "infrastructure",
+      "collected_at": "Not collected",
+      "os": "VMware ESXi (version Needs Validation)",
+      "source_kind": "manual",
+      "role": "Virtual machine host",
+      "evidence": "manual-context.example.yml#/assets/0",
+      "asset_id": "hv01",
+      "addresses": [
+        "192.0.2.40"
+      ],
+      "owner": "Example virtualization team",
+      "criticality": "high",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "manual-context.example.yml#/assets/0#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "manual-context.example.yml#/assets/0#/sections/services",
+          "manual-context.example.yml#/assets/0#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/0#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/0#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/0#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/0#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "manual-context.example.yml#/assets/0#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "manual-context.example.yml#/assets/0#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "unknown",
+          "items": [],
+          "evidence": [
+            "manual-context.example.yml#/assets/0#/sections/tcp",
+            "manual-context.example.yml#/assets/0#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": null,
+        "status": "unknown"
+      },
+      "coverage": {
+        "status": "not collected",
+        "collected_sections": [],
+        "gap_sections": []
+      },
+      "context": [
+        {
+          "field": "owner",
+          "value": "Example virtualization team",
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "criticality",
+          "value": "high",
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "role",
+          "value": "Virtual machine host",
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "notes",
+          "value": "Owner review, platform version and host membership need confirmation.",
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "cluster",
+          "value": "Example compute cluster",
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "cpu_sockets",
+          "value": 2,
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "datastores",
+          "value": [
+            "Example VM datastore"
+          ],
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "ha_status",
+          "value": "Needs Validation",
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        },
+        {
+          "field": "memory_gib",
+          "value": 256,
+          "source": "Fictional example; replace with a dated hypervisor inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/0"
+        }
+      ],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    },
+    {
+      "label": "Shared Storage",
+      "platform": "infrastructure",
+      "collected_at": "Not collected",
+      "os": "Needs Validation",
+      "source_kind": "manual",
+      "role": "Virtualization datastore storage",
+      "evidence": "manual-context.example.yml#/assets/2",
+      "asset_id": "nas01",
+      "addresses": [
+        "192.0.2.50"
+      ],
+      "owner": "Example storage team",
+      "criticality": "Unknown",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "manual-context.example.yml#/assets/2#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "manual-context.example.yml#/assets/2#/sections/services",
+          "manual-context.example.yml#/assets/2#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/2#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/2#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/2#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/2#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "manual-context.example.yml#/assets/2#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "manual-context.example.yml#/assets/2#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "unknown",
+          "items": [],
+          "evidence": [
+            "manual-context.example.yml#/assets/2#/sections/tcp",
+            "manual-context.example.yml#/assets/2#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": null,
+        "status": "unknown"
+      },
+      "coverage": {
+        "status": "not collected",
+        "collected_sections": [],
+        "gap_sections": []
+      },
+      "context": [
+        {
+          "field": "owner",
+          "value": "Example storage team",
+          "source": "Fictional example; replace with a storage inventory/export reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/2"
+        },
+        {
+          "field": "role",
+          "value": "Virtualization datastore storage",
+          "source": "Fictional example; replace with a storage inventory/export reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/2"
+        }
+      ],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    },
+    {
+      "label": "router01.example.test",
+      "platform": "network",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "os": "Cisco IOS XE",
+      "source_kind": "census",
+      "role": "Unknown",
+      "evidence": "hosts/router01.json",
+      "asset_id": "router01",
+      "addresses": [
+        "192.0.2.1"
+      ],
+      "owner": "Unknown",
+      "criticality": "Unknown",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "hosts/router01.json#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "hosts/router01.json#/sections/services",
+          "hosts/router01.json#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/router01.json#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/router01.json#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/router01.json#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/router01.json#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "hosts/router01.json#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "hosts/router01.json#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "unknown",
+          "items": [],
+          "evidence": [
+            "hosts/router01.json#/sections/tcp",
+            "hosts/router01.json#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": 0,
+        "status": "within_snapshot_day"
+      },
+      "coverage": {
+        "status": "partial",
+        "collected_sections": [
+          "identity",
+          "interfaces",
+          "neighbors"
+        ],
+        "gap_sections": [
+          "tcp"
+        ]
+      },
+      "context": [],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    },
+    {
+      "label": "switch01.example.test",
+      "platform": "network",
+      "collected_at": "2026-10-05T14:00:00Z",
+      "os": "Cisco IOS XE",
+      "source_kind": "census",
+      "role": "Unknown",
+      "evidence": "hosts/switch01.json",
+      "asset_id": "switch01",
+      "addresses": [
+        "192.0.2.2"
+      ],
+      "owner": "Unknown",
+      "criticality": "Unknown",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "hosts/switch01.json#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "hosts/switch01.json#/sections/services",
+          "hosts/switch01.json#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/switch01.json#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/switch01.json#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/switch01.json#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "hosts/switch01.json#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "hosts/switch01.json#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "hosts/switch01.json#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "unknown",
+          "items": [],
+          "evidence": [
+            "hosts/switch01.json#/sections/tcp",
+            "hosts/switch01.json#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": 0,
+        "status": "within_snapshot_day"
+      },
+      "coverage": {
+        "status": "partial",
+        "collected_sections": [
+          "identity",
+          "interfaces",
+          "neighbors"
+        ],
+        "gap_sections": [
+          "tcp"
+        ]
+      },
+      "context": [],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    },
+    {
+      "label": "Virtualization Management",
+      "platform": "infrastructure",
+      "collected_at": "Not collected",
+      "os": "VMware vCenter Server (version Needs Validation)",
+      "source_kind": "manual",
+      "role": "Hypervisor management",
+      "evidence": "manual-context.example.yml#/assets/1",
+      "asset_id": "vcenter01",
+      "addresses": [
+        "192.0.2.41"
+      ],
+      "owner": "Example virtualization team",
+      "criticality": "Unknown",
+      "uptime_seconds": null,
+      "boot_time": "Unknown",
+      "memory_available_percent": null,
+      "kernel": "Unknown",
+      "patch_evidence": {
+        "status": "unknown",
+        "reason": "No approved applicable baseline and comparison supplied; install evidence is not currency",
+        "evidence": []
+      },
+      "latest_patch_observation": {
+        "status": "unknown",
+        "observed_at": null,
+        "precision": "unknown",
+        "description": "Unknown",
+        "evidence": []
+      },
+      "reboot_pending": {
+        "status": "unknown",
+        "value": null,
+        "evidence": [
+          "manual-context.example.yml#/assets/1#/sections/reboot_pending"
+        ]
+      },
+      "failed_services": {
+        "status": "unknown",
+        "names": [],
+        "evidence": [
+          "manual-context.example.yml#/assets/1#/sections/services",
+          "manual-context.example.yml#/assets/1#/sections/failed_services"
+        ]
+      },
+      "security": {
+        "selinux": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/1#/sections/selinux"
+          ]
+        },
+        "firewall": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/1#/sections/firewall"
+          ]
+        },
+        "time_sync": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/1#/sections/time_sync"
+          ]
+        },
+        "audit": {
+          "status": "unknown",
+          "value": "Unknown",
+          "collection_status": "not collected",
+          "evidence": [
+            "manual-context.example.yml#/assets/1#/sections/audit"
+          ]
+        },
+        "service_presence": {
+          "status": "unknown",
+          "names": [],
+          "evidence": [
+            "manual-context.example.yml#/assets/1#/sections/services"
+          ]
+        },
+        "agent": {
+          "status": "unknown",
+          "names": [],
+          "value": "Unknown",
+          "evidence": [
+            "manual-context.example.yml#/assets/1#/sections/services"
+          ]
+        },
+        "listeners": {
+          "status": "unknown",
+          "items": [],
+          "evidence": [
+            "manual-context.example.yml#/assets/1#/sections/tcp",
+            "manual-context.example.yml#/assets/1#/sections/udp"
+          ]
+        }
+      },
+      "freshness": {
+        "age_seconds": null,
+        "status": "unknown"
+      },
+      "coverage": {
+        "status": "not collected",
+        "collected_sections": [],
+        "gap_sections": []
+      },
+      "context": [
+        {
+          "field": "owner",
+          "value": "Example virtualization team",
+          "source": "Fictional example; replace with a dated management inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/1"
+        },
+        {
+          "field": "role",
+          "value": "Hypervisor management",
+          "source": "Fictional example; replace with a dated management inventory reference.",
+          "reviewed_at": "2026-10-05",
+          "evidence": "manual-context.example.yml#/assets/1"
+        }
+      ],
+      "backup_attestation": {
+        "status": "unknown",
+        "entries": [],
+        "value": "Unknown"
+      },
+      "storage_consumer_count": 0
+    }
+  ],
+  "storage_mounts": [],
+  "storage_capacity": [],
+  "findings": [
+    {
+      "asset_id": "ad01",
+      "severity": "info",
+      "category": "coverage",
+      "title": "Collection evidence gaps",
+      "detail": "neighbors; asset/service health is unknown for these gaps.",
+      "evidence": [
+        "hosts/ad01.json"
+      ],
+      "id": "9aee3141eed33d3a"
+    },
+    {
+      "asset_id": "app01",
+      "severity": "info",
+      "category": "coverage",
+      "title": "Collection evidence gaps",
+      "detail": "neighbors; asset/service health is unknown for these gaps.",
+      "evidence": [
+        "hosts/app01.json"
+      ],
+      "id": "02fa75147b2b1cde"
+    },
+    {
+      "asset_id": "db01",
+      "severity": "info",
+      "category": "coverage",
+      "title": "Collection evidence gaps",
+      "detail": "neighbors; asset/service health is unknown for these gaps.",
+      "evidence": [
+        "hosts/db01.json"
+      ],
+      "id": "50c8ac6c69521468"
+    },
+    {
+      "asset_id": "router01",
+      "severity": "info",
+      "category": "coverage",
+      "title": "Collection evidence gaps",
+      "detail": "tcp; asset/service health is unknown for these gaps.",
+      "evidence": [
+        "hosts/router01.json"
+      ],
+      "id": "bd1b78c8518e63ad"
+    },
+    {
+      "asset_id": "switch01",
+      "severity": "info",
+      "category": "coverage",
+      "title": "Collection evidence gaps",
+      "detail": "tcp; asset/service health is unknown for these gaps.",
+      "evidence": [
+        "hosts/switch01.json"
+      ],
+      "id": "5a9ba1e3ddece582"
+    }
+  ],
+  "limitations": [
+    "A census is a point-in-time snapshot. Uptime is time since boot, not an availability SLA or outage history.",
+    "Patch inventory and install dates do not establish patch currency. An approved applicable baseline and comparison are not supplied.",
+    "Configured storage is not proof of an active mount, remote reachability, required business dependency, or authorization.",
+    "Provider identity uses exact inventory IDs, names, or IPs in this model. No DNS lookup or hostname expansion is performed; manual matches remain assertions.",
+    "Capacity is filesystem or logical-volume evidence, not SMART, RAID, SAN fabric, backup, or restore health.",
+    "Security controls, agents, services and listeners are observations, not a compliance score or proof of effective enforcement or received telemetry.",
+    "Missing or failed collection is an evidence gap, not proof that an asset or service is unhealthy, offline, disconnected, or retired.",
+    "Freshness is relative to the latest valid collection timestamp in this snapshot, not the time this page is opened."
+  ]
+}
