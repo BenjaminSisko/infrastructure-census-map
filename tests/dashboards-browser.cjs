@@ -63,8 +63,9 @@ async function main() {
   page.on('pageerror',error => exceptions.push(error.message));
   page.on('request',request => {if(/^https?:/.test(request.url())) remoteRequests.push(request.url());});
   try {
-    await page.goto(pathToFileURL(input).href);
+    await page.goto(pathToFileURL(input).href + '#view=constructor');
     await page.waitForFunction(() => Boolean(window.CensusDashboards));
+    assert.equal((await page.evaluate(() => window.CensusDashboards.getState())).view, 'overview', 'unsupported fragments fall back to overview');
     const assetCount = (await page.evaluate(() => window.CensusDashboards.getState())).asset_count;
     assert.ok(assetCount >= 1,'asset register is available');
     assert.match(await page.locator('#snapshot-banner').textContent(),/Snapshot, not live monitoring/);
@@ -78,6 +79,10 @@ async function main() {
       assert.ok(await page.locator('.panel-evidence').count(),'view includes evidence basis / collection time');
     }
     await page.locator('.view-button[data-view="patch"]').click();
+    for (const invalid of ['constructor', '__proto__', 'missing-view']) {
+      await page.evaluate(value => window.CensusDashboards.selectView(value), invalid);
+      assert.equal((await page.evaluate(() => window.CensusDashboards.getState())).view, 'patch', 'unsupported view keys are ignored');
+    }
     assert.match(await page.locator('#dashboard-view').textContent(),/Patch currentness: Unknown/);
     assert.ok(!/fully patched|compliant|SLA attained/i.test(await page.locator('#dashboard-view').textContent()));
 
