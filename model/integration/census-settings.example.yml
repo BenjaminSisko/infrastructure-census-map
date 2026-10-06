@@ -1,0 +1,12 @@
+---
+# Private options file supplied with -e @/absolute/path/census-settings.yml.
+# Change this ID before every run. No passwords/keys/tokens belong in this file.
+census_run_id: pilot-CHANGE-ME
+census_output_root: "{{ lookup('ansible.builtin.env', 'HOME') }}/census-output"
+census_render_products: true
+census_linux_become: false
+census_network_become: false
+census_windows_role_metadata: false
+# Optional absolute controller paths, only when rendering is enabled:
+# census_manual_context: /path/to/private/manual-context.json
+# census_declared_dependencies: /path/to/private/dependencies.json

@@ -1,0 +1,45 @@
+---
+# Private inventory OVERLAY, loaded after the existing inventory.
+# Replace existing_* group names with verified parent inventory groups.
+# Remove unused platform mappings. Keep localhost out of every census group.
+# If an existing group contains localhost or unsupported assets, use an explicit
+# list of exact existing aliases instead of inheriting that entire group.
+# Do not copy target addresses, users, credentials or transport variables here.
+# Verify exactly one vendor adapter group per network alias. The kit's overlap
+# guard checks Linux/Windows/network, not IOS/EOS/Junos child-group conflicts.
+# Higher-precedence host_vars/localhost or extra-vars may override these inline
+# localhost settings. Qualify effective controller values before execution.
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+      ansible_host: 127.0.0.1
+      ansible_python_interpreter: "{{ ansible_playbook_python }}"
+      ansible_become: false
+      ansible_shell_type: sh
+      ansible_shell_executable: /bin/sh
+  children:
+    census_linux:
+      children:
+        existing_linux: {}
+    census_windows:
+      children:
+        existing_windows: {}
+    census_network:
+      children:
+        census_ios:
+          children:
+            existing_ios: {}
+          vars:
+            census_network_os: ios
+        census_eos:
+          children:
+            existing_eos: {}
+          vars:
+            census_network_os: eos
+        # Optional Junos needs its separately qualified dependencies and NETCONF:
+        # census_junos:
+        #   children:
+        #     existing_junos: {}
+        #   vars:
+        #     census_network_os: junos
